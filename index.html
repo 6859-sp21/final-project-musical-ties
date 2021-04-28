@@ -14,10 +14,12 @@
 
 <script>
 
-var data; 
+var data = {}; 
 
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListData.json").then(playlistData => {
-  data = playlistData; 
+  console.log(playlistData); 
+  data = {...playlistData}; // tried to make a copy of dict to put in global variable but does not work
+  // not sure if we have to do all our work within this .then() thing 
 }); 
 
 console.log(data); 
