@@ -26,16 +26,10 @@
 
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListData.json").then(playlistData => {
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/trackData.json").then(trackData => {
-  console.log(playlistData); 
-  console.log(trackData); 
-
-
-   
 
   // trying to just visualize one playlist, so one stacked bar for every song 
   var examplePlaylist = playlistData[Object.keys(playlistData)[0]]; 
   var features = ["valence", "danceability", "speechiness", "liveness", "energy"]; 
-  // var features = ["valence"]; 
   
   // TODO width and height will probs need to be different when not in full screen viewing
   var svg = d3.select("svg").attr("preserveAspectRatio", "xMinYMin meet"),
@@ -52,7 +46,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .attr("fill-opacity", .4)
       .attr('r', "15");
 
-  // // I think these things we can leave for now 
   var x = d3.scaleBand()
     .range([0, 2 * Math.PI])
     .align(0)
@@ -61,9 +54,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var y = d3.scaleRadial()
     .range([innerRadius, outerRadius])
     .domain([0, 5]);
-
-  var z = d3.scaleOrdinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
   var colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]; 
 
@@ -75,70 +65,28 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .append('path')
       .attr("fill", colors[i])
         .attr("d", d3.arc() 
-            .innerRadius(function(d) { return getFeatureStartPos(d, i); })
-            .outerRadius(function(d) { return getFeatureEndPos(d, i); })
+            .innerRadius(function(d) { return y(getFeatureStartPos(d, i)); })
+            .outerRadius(function(d) { return y(getFeatureEndPos(d, i)); })
             .startAngle(function(d) { return x(d); })
             .endAngle(function(d) { return x(d) + x.bandwidth(); })
             .padAngle(0.01)
             .padRadius(innerRadius))
     }); 
 
-  //   svg.append
 
     function getFeatureStartPos(songId, featureIndex){
-      console.log("woo"); 
-      if(featureIndex == 0){
-        return innerRadius; 
+      var total = 0;  
+      for(var i = 0; i < featureIndex; i++){
+        total += trackData[songId]["features"][features[i]];
       }
-      else{
-        var total = 0;  
-        for(var i = 0; i < featureIndex; i++){
-          total += trackData[songId]["features"][features[i]];
-        }
-        return y(total); 
-      }
+      return total; 
     }
 
     function getFeatureEndPos(songId, featureIndex){
-      var total = 0;  
-      for(var i = 0; i <= featureIndex; i++){
-        total += trackData[songId]["features"][features[i]];
-      }
-      return y(total); 
+      var total = getFeatureStartPos(songId, featureIndex);  
+      total += trackData[songId]["features"][features[featureIndex]];
+      return total; 
     }
-
-
-  // got rid of this cause we already have the data, also i don't really know what they're doing here
-  // d3.csv(trackData, function(d, i, columns) {
-  //     for (i = 1, t = 0; i < columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
-  //     d.total = t;
-  //     return d;
-  //   }, 
-  //   function(error, data) {
-  //     if (error) throw error;
-
-  // TODO we need to rewrite these functions for our own purposes 
-  //     x.domain(data.map(function(d) { return d.State; }));
-  //     y.domain([0, d3.max(data, function(d) { return d.total; })]);
-  //     z.domain(data.columns.slice(1));
-
-  //   var displayedFeatures = ["energy", "speechiness", "danceability"];
-
-  //   g.append("g")
-  //     .selectAll("g")
-  //     .data(examplePlaylist) // I'm not sure what the format of this data is supposed to be  
-  //     .enter().append("g") // idk what this does 
-  //       .attr("fill", function(d) { return z(d.feature); }) //changed name of this var to feature so it's more clear 
-  //     .selectAll("path")
-  //     .data(function(d) { return d; })
-  //     .enter().append("path")
-  //       .attr("feature", d3.arc()
-  //           .innerRadius(function(d) { return y(d[0]); }) // 
-  //           .outerRadius(function(d) { return y(d[1]); })
-  //           .startAngle(function(d) { return x(d.data.State); })
-  //           .endAngle(function(d) { return x(d.data.State) + x.bandwidth(); })
-  //           .padAngle(0.01)
-  //           .padRadius(innerRadius));
 
   //     var label = g.append("g")
   //       .selectAll("g")
