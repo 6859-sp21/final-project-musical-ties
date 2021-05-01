@@ -51,12 +51,16 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   var colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]; 
 
+  function drawPlaylist(){
   features.forEach((feature, i) => {
     g.append('g')
       .selectAll('path')
       .data(examplePlaylist['track_ids'])
-      .enter()
-      .append('path')
+      .join(
+        enter => enter.append('path'),
+        update => update,
+        exit   => exit.remove()
+      )
       .attr("fill", colors[i])
         .attr("d", d3.arc() 
             .innerRadius(function(d) { return y(getFeatureStartPos(d, i)); })
@@ -74,6 +78,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
               updatePlaylistDisplayInfo([examplePlaylist["name"]])
             })
     }); 
+  }
 
     function displaySongInfoPlaylist(songID, featureIndex){
       var highlightedFeature = features[featureIndex]; 
@@ -105,11 +110,31 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       else{
         g.selectAll("text.playlistInfo").attr("transform", `translate(0,0)`);
       }
-
-      
     }
 
+    function sortByFeature(songs, feature){
+      // TODO might be better to not sort the original array? how do you get back to original config... hmm 
+      songs.sort(function(a, b) {
+        return trackData[a]["features"][feature] - trackData[b]["features"][feature]; 
+      }); 
+      x = d3.scaleBand()
+        .range([0, 2 * Math.PI])
+        .align(0)
+        .domain(songs);
+      return songs; 
+    }
+    console.log(examplePlaylist['track_ids']); 
+    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'energy'); 
+    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'liveness'); 
+    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'speechiness'); 
+    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'danceability'); 
+    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'valence'); 
+    
+    console.log(examplePlaylist['track_ids']); 
+    drawPlaylist(); 
+
     updatePlaylistDisplayInfo([examplePlaylist["name"]]); 
+    
 
 
 
