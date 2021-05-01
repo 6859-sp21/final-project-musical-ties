@@ -37,14 +37,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     height = $("svg").height(),
     innerRadius = Math.min(width, height) / 6,
     outerRadius = Math.min(width, height) / 2,
-    g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-    d3.select("g")
-      .append("circle")
-      .style("fill", "black")
-      .attr("stroke-width", 2)
-      .attr("fill-opacity", .4)
-      .attr('r', "15");
+    g = svg.append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
 
   var x = d3.scaleBand()
     .range([0, 2 * Math.PI])
@@ -72,6 +66,25 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
             .padAngle(0.01)
             .padRadius(innerRadius))
     }); 
+
+    // middle of playlist text
+    g.selectAll("text.playlistInfo").data([examplePlaylist["name"]]).enter()
+      .append("text")
+      .style("fill", "black")
+      .attr("stroke-width", 2)
+      .attr("fill-opacity", .4)
+      .classed('playlistInfo', true)
+      .text(d => d);
+
+    // text in middle
+    // legend = g => g.append('g')
+    //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+    //   .selectAll('g').data(examplePlaylist)
+    //   .join('g')
+    //   .call(g => g.append("text")
+    //   .attr('x', width / 2)
+    //   .attr('y', height / 2)
+    //   .text("HELLOOOOOO")); 
 
 
     function getFeatureStartPos(songId, featureIndex){
