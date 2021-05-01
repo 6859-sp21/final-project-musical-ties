@@ -64,17 +64,40 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
             .startAngle(function(d) { return x(d); })
             .endAngle(function(d) { return x(d) + x.bandwidth(); })
             .padAngle(0.01)
-            .padRadius(innerRadius))
+            .padRadius(innerRadius)
+            )
+            .on("mouseover", function(event, d, i){
+              displaySongInfoPlaylist(d, i)
+            })
+            .on("mouseout", function(event, d, i){
+              // TODO i'm not sure this will work when we scale up
+              updatePlaylistDisplayInfo(examplePlaylist["name"])
+            })
     }); 
 
-    // middle of playlist text
-    g.selectAll("text.playlistInfo").data([examplePlaylist["name"]]).enter()
-      .append("text")
+    function displaySongInfoPlaylist(songID, featureIndex){
+      var highlightedFeature = features[featureIndex]; 
+      var songInfo = trackData[songID]; 
+      updatePlaylistDisplayInfo(songInfo['title']); 
+    }
+
+    function updatePlaylistDisplayInfo(title){
+      // middle of playlist text
+      g.selectAll("text.playlistInfo").data([title]).join(
+        enter => enter.append("text"),
+        update => update,
+        exit   => exit.remove()
+      )
       .style("fill", "black")
       .attr("stroke-width", 2)
       .attr("fill-opacity", .4)
       .classed('playlistInfo', true)
-      .text(d => d);
+      .text(d => d); 
+    }
+
+    updatePlaylistDisplayInfo(examplePlaylist["name"]); 
+
+
 
     // text in middle
     // legend = g => g.append('g')
