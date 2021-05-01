@@ -50,34 +50,64 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .domain([0, 5]);
 
   var colors = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]; 
+  var selectedSong = ""; 
 
   function drawPlaylist(){
-  features.forEach((feature, i) => {
-    g.append('g')
-      .selectAll('path')
-      .data(examplePlaylist['track_ids'])
-      .join(
-        enter => enter.append('path'),
-        update => update,
-        exit   => exit.remove()
-      )
-      .attr("fill", colors[i])
+    features.forEach((feature, i) => {
+      g.append('g')
+        .selectAll('path')
+        .data(examplePlaylist['track_ids'])
+        .join(
+          enter => enter.append('path'),
+          update => update,
+          exit   => exit.remove()
+        )
+        .style("fill", colors[i])
+          .attr("d", d3.arc() 
+              .innerRadius(function(d) { return y(getFeatureStartPos(d, i)); })
+              .outerRadius(function(d) { return y(getFeatureEndPos(d, i)); })
+              .startAngle(function(d) { return x(d); })
+              .endAngle(function(d) { return x(d) + x.bandwidth(); })
+              .padAngle(0.01)
+              .padRadius(innerRadius)
+              )
+      }); 
+
+      g.append('g')
+        .selectAll('path')
+        .data(examplePlaylist['track_ids'])
+        .join(
+          enter => enter.append('path'),
+          update => update,
+          exit   => exit.remove()
+        )
+        .attr("opacity","0")
         .attr("d", d3.arc() 
-            .innerRadius(function(d) { return y(getFeatureStartPos(d, i)); })
-            .outerRadius(function(d) { return y(getFeatureEndPos(d, i)); })
-            .startAngle(function(d) { return x(d); })
-            .endAngle(function(d) { return x(d) + x.bandwidth(); })
-            .padAngle(0.01)
-            .padRadius(innerRadius)
-            )
-            .on("mouseover", function(event, d, i){
-              displaySongInfoPlaylist(d, i)
-            })
-            .on("mouseout", function(event, d, i){
-              // TODO i'm not sure this will work when we scale up
-              updatePlaylistDisplayInfo([examplePlaylist["name"]])
-            })
-    }); 
+          .innerRadius(function(d) { return y(0); })
+          .outerRadius(function(d) { return y(5); }) // this val could be improved but whatever for now
+          .startAngle(function(d) { return x(d); })
+          .endAngle(function(d) { return x(d) + x.bandwidth(); })
+          .padAngle(0.01)
+          .padRadius(innerRadius)
+          )
+        .on("mouseenter", function(event, d, i){
+          displaySongInfoPlaylist(d, i); 
+          console.log("here"); 
+          var selectedSong = d; 
+          svg.selectAll("path")
+            .filter(d => d == selectedSong)
+            .style("fill", function(d){ return d3.rgb(this.style.fill).brighter([1]) })
+        })
+        .on("mouseout", function(event, d, i){
+          // TODO i'm not sure this will work when we scale up
+          updatePlaylistDisplayInfo([examplePlaylist["name"]])
+          var selectedSong = d;
+          svg.selectAll("path")
+            .filter(d => d == selectedSong)
+            .style("fill", function(d){ return d3.rgb(this.style.fill).darker([1]) })
+        })
+
+
   }
 
     function displaySongInfoPlaylist(songID, featureIndex){
