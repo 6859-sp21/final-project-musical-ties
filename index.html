@@ -54,13 +54,30 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   function getBrighterByFeature(feature){
     var ind = features.indexOf(feature); 
-    console.log(colorsBright[ind]); 
     return colorsBright[ind];
   }
 
   function getDarkerByFeature(feature){
     var ind = features.indexOf(feature); 
     return colors[ind];
+  }
+
+  function getBrighterByColor(color){
+    for(var i = 0; i < colors.length; i++){
+      if(d3.rgb(colors[i]) == color){
+        return colorsBright[i]; 
+      }
+    }
+  }
+
+  function getDarkerByColor(color){
+    console.log(color); 
+    for(var i = 0; i < colorsBright.length; i++){
+      if(d3.rgb(colorsBright[i]) == color){
+        console.log("heyyyy"); 
+        return colors[i]; 
+      }
+    }
   }
 
   // var colorsBright = ["#b7b6de", "#bd9fd1", "#cc89cc", "#db8279", "#f29f6b", "#ffba66"]; 
@@ -110,7 +127,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           var selectedSong = d; 
           svg.selectAll("path")
             .filter(d => d == selectedSong)
-            // .style("fill", getBrighter(this.attr["class"]))
+            .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
         })
         .on("mouseout", function(event, d, i){
           // TODO i'm not sure this will work when we scale up
@@ -118,7 +135,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           var selectedSong = d;
           svg.selectAll("path")
             .filter(d => d == selectedSong)
-            // .style("fill", getDarker(this.style.fill))
+            .style("fill", function(d){ return getDarkerByColor(this.style.fill)})
         })
 
 
