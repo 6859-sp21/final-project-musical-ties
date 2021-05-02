@@ -77,9 +77,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         // examplePlaylist = playlistData[Object.keys(playlistData)[10]]; 
         console.log(playlistData[Object.keys(playlistData)[10]]);
         examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
+        console.log('playlist');
         console.log(examplePlaylist);
-        drawPlaylist(examplePlaylist);
-        drawPlaylistLegend();
+        drawPlaylist();
       })
       .on("mouseover", function(event, d){
         d3.select(this).attr("stroke", function(d){ return d3.rgb("#69a2b2").brighter(2) })
@@ -159,7 +159,11 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // var colorsBright = ["#b7b6de", "#bd9fd1", "#cc89cc", "#db8279", "#f29f6b", "#ffba66"]; 
   var selectedSong = ""; 
 
-  function drawPlaylist(examplePlaylist){
+  function drawPlaylist(){
+    svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
+    drawPlaylistLegend();
+    updatePlaylistDisplayInfo([examplePlaylist["name"]]);
+
     var x = d3.scaleBand()
     .range([0, 2 * Math.PI])
     .align(0)
@@ -305,17 +309,17 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         .domain(songs);
       return songs; 
     }
-    console.log(examplePlaylist['track_ids']); 
-    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'energy'); 
-    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'liveness'); 
-    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'speechiness'); 
-    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'danceability'); 
-    examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'valence'); 
+    // console.log(examplePlaylist['track_ids']); 
+    // examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'energy'); 
+    // examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'liveness'); 
+    // examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'speechiness'); 
+    // examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'danceability'); 
+    // examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], 'valence'); 
     
-    console.log(examplePlaylist['track_ids']); 
-    // drawPlaylist(); 
+    // console.log(examplePlaylist['track_ids']); 
+    // // drawPlaylist(); 
 
-    updatePlaylistDisplayInfo([examplePlaylist["name"]]); 
+    // updatePlaylistDisplayInfo([examplePlaylist["name"]]); 
     
 
 
@@ -332,8 +336,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
 
     function getFeatureStartPos(songId, featureIndex){
-      console.log('start')
-      console.log(trackData[songId])
+      // console.log('start')
+      // console.log(trackData[songId])
       var total = 0;  
       for(var i = 0; i < featureIndex; i++){
         total += trackData[songId]["features"][features[i]];
@@ -344,9 +348,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     function getFeatureEndPos(songId, featureIndex){
       // console.log('end')
       // console.log(songId);
-      // var total = getFeatureStartPos(songId, featureIndex);  
-      // total += trackData[songId]["features"][features[featureIndex]];
-      // return total; 
+      var total = getFeatureStartPos(songId, featureIndex);  
+      total += trackData[songId]["features"][features[featureIndex]];
+      return total; 
     }
 
   //     var label = g.append("g")
