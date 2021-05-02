@@ -126,6 +126,37 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .domain([0, 5]);
 
   var colors = ["#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]; 
+  var colorsBright = ["#aaa8e6", "#c69de3", "#db8cdb", "#ed8b80", "#ff9c5e", "#ffa83d"]; 
+
+  function getBrighterByFeature(feature){
+    var ind = features.indexOf(feature); 
+    return colorsBright[ind];
+  }
+
+  function getDarkerByFeature(feature){
+    var ind = features.indexOf(feature); 
+    return colors[ind];
+  }
+
+  function getBrighterByColor(color){
+    for(var i = 0; i < colors.length; i++){
+      if(d3.rgb(colors[i]) == color){
+        return colorsBright[i]; 
+      }
+    }
+  }
+
+  function getDarkerByColor(color){
+    console.log(color); 
+    for(var i = 0; i < colorsBright.length; i++){
+      if(d3.rgb(colorsBright[i]) == color){
+        console.log("heyyyy"); 
+        return colors[i]; 
+      }
+    }
+  }
+
+  // var colorsBright = ["#b7b6de", "#bd9fd1", "#cc89cc", "#db8279", "#f29f6b", "#ffba66"]; 
   var selectedSong = ""; 
 
   function drawPlaylist(examplePlaylist){
@@ -174,11 +205,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           )
         .on("mouseenter", function(event, d, i){
           displaySongInfoPlaylist(d, i); 
-          console.log("here"); 
           var selectedSong = d; 
           svg.selectAll("path")
             .filter(d => d == selectedSong)
-            .style("fill", function(d){ return d3.rgb(this.style.fill).brighter([1])})
+            .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
         })
         .on("mouseout", function(event, d, i){
           // TODO i'm not sure this will work when we scale up
@@ -186,14 +216,13 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           var selectedSong = d;
           svg.selectAll("path")
             .filter(d => d == selectedSong)
-            .style("fill", function(d){ return d3.rgb(this.style.fill).darker([1])})
+            .style("fill", function(d){ return getDarkerByColor(this.style.fill)})
         })
 
 
   }
 
-    function displaySongInfoPlaylist(songID, featureIndex){
-      var highlightedFeature = features[featureIndex]; 
+    function displaySongInfoPlaylist(songID){
       var songInfo = trackData[songID]; 
       var songFeatures = [songInfo['title']]; 
       for(var i = 0; i < features.length; i++){
@@ -209,6 +238,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         update => update,
         exit   => exit.remove()
       )
+      .style('cursor', 'pointer')
       .style("fill", function(d) {return colors[features.indexOf(d)]})
       .attr("stroke-width", 2)
       .attr("fill-opacity", .4)
@@ -219,20 +249,34 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .text(d => d)
       .attr("transform", (d, i) => `translate(-20,${(i * 20 + 5)})`)
       .on("mouseenter", function(event, d){
-        console.log("fuck"); 
         var objClass = "path." + d; 
-        console.log(objClass); 
-        svg.selectAll(objClass).style("fill", function(d){ return d3.rgb(this.style.fill).brighter([1])})
+        console.log(d); 
+        var something = d; 
+        console.log(d3.rgb(getBrighterByFeature(d))); 
+        svg.selectAll(objClass).style("fill", getBrighterByFeature(d))
       })
       .on("mouseout", function(event, d){
         var objClass = "path." + d; 
-        svg.selectAll(objClass).style("fill", function(d){ return d3.rgb(this.style.fill).darker([1])})
+        svg.selectAll(objClass).style("fill", getDarkerByFeature(d))
+      })
+      .on("click", function(event, d){
+        var objClass = "path." + d; 
+        examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], d); 
+        // svg.selectAll(objClass).style("fill", getBrighter(this.style.fill))
+        drawPlaylist(); 
+        svg.selectAll(objClass).style("fill", getBrighterByFeature(d)); 
       })
     }
 
     // drawPlaylistLegend(); 
 
     function updatePlaylistDisplayInfo(title){
+      if(title.length == 1){
+        for(var i = 0; i < features.length; i++){
+          title.push(features[i]); 
+        }
+      }
+
       // middle of playlist text
       g.selectAll("text.playlistInfo").data(title).join(
         enter => enter.append("text"),
@@ -244,13 +288,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .attr("fill-opacity", .4)
       .classed('playlistInfo', true)
       .text(d => d)
-
-      if(title.length > 1){
-        g.selectAll("text.playlistInfo").attr("transform", (d, i) => `translate(0,${(i * 20)})`); 
-      }
-      else{
-        g.selectAll("text.playlistInfo").attr("transform", `translate(0,0)`);
-      }
+      .attr("transform", (d, i) => `translate(0,${(i * 20)})`); 
     }
 
     function sortByFeature(songs, feature){
@@ -258,6 +296,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       songs.sort(function(a, b) {
         return trackData[a]["features"][feature] - trackData[b]["features"][feature]; 
       }); 
+
+      svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
+
       x = d3.scaleBand()
         .range([0, 2 * Math.PI])
         .align(0)
