@@ -21,22 +21,22 @@
   <h4>Filter Playlist Attributes</h4>
   <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
     <div style="display: flex; flex-direction: row;">
-      <div><p>valence</p></div>
       <div>
+        <label for="valence_min" class="form-label">valence</label>
         <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="valence_min">1.0</p>
         <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="valence_max">1.0</p>
       </div>
     </div>
     <div style="display: flex; flex-direction: row;">
-      <div><p>danceability</p></div>
       <div>
+        <label for="valence_min" class="form-label">danceability</label>
         <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="danceability_min">1.0</p>
         <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="danceability_max">1.0</p>
       </div>
     </div>
     <div style="display: flex; flex-direction: row;">
-      <div><p>speechiness</p></div>
       <div>
+        <label for="valence_min" class="form-label">speechiness</label>
         <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="speechiness_min">1.0</p>
         <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="speechiness_max">1.0</p>
       </div>
@@ -45,15 +45,15 @@
 
   <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
     <div style="display: flex; flex-direction: row;">
-      <div><p>liveness</p></div>
       <div>
+        <label for="valence_min" class="form-label">liveness</label>
         <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="liveness_min">1.0</p>
         <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="liveness_max">1.0</p>
       </div>
     </div>
     <div style="display: flex; flex-direction: row;">
-      <div><p>energy</p></div>
       <div>
+        <label for="valence_min" class="form-label">energy</label>
         <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="energy_min">1.0</p>
         <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="energy_max">1.0</p>
       </div>
@@ -149,7 +149,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   // Initialize the circle: all located at the center of the svg area
   function drawBubbles(data) {
-        svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     var node = svgHome.append("g")
       .selectAll("circle")
       .data(data)
