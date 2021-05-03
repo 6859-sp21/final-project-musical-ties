@@ -36,7 +36,10 @@
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/trackData.json").then(trackData => {
 
+  // playlistData = playlistData.filter(playlist => !(playlist['name'] in ['mint', 'Lorem', 'Heart of Texas'])); 
+
   var examplePlaylist;
+  var firstClick = true; 
    // = playlistData[Object.keys(playlistData)[0]]; 
   // console.log(playlistData);
   // console.log(examplePlaylist);
@@ -52,9 +55,11 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // create dummy data -> just one element per circle
   var bubbleData = [];
   for (p of playlistData) {
-    let bubble = {};
-    bubble.name = p.id;
-    bubbleData.push(bubble);
+    if(!(['mint', 'Lorem', 'Heart Of Texas', "Today's Top Hits", 'POLLEN', 'Beast Mode Hip-Hop', 'RADAR Country', 'Rock This', "Chillin' on a Dirt Road", "Ultimate Indie", "my life is a movie", "Breakout Country", "Pop Rising", "Teen Beats",  "I Love My '00s R&B"].includes(p.name))){
+      let bubble = {};
+      bubble.name = p.id;
+      bubbleData.push(bubble);
+    }
   }
 
   // Initialize the circle: all located at the center of the svg area
@@ -71,8 +76,16 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .attr("stroke", "#69a2b2")
       .style("stroke-width", 4)
       .on("click", function(event, d){
+        console.log("why"); 
         // window.location = 'index.html';
         // examplePlaylist = playlistData[Object.keys(playlistData)[10]]; 
+        if(!firstClick){
+          svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
+        }
+        else{
+          firstClick = false; 
+        }
+        
         examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
         drawPlaylist();
       })
@@ -153,19 +166,18 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var selectedSong = ""; 
 
   function drawPlaylist(){
-    svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
     drawPlaylistLegend();
     updatePlaylistDisplayInfo([examplePlaylist["name"]]);
 
-    console.log("here"); 
-    console.log(examplePlaylist); 
+    // console.log("here"); 
+    // console.log(examplePlaylist); 
 
     for(var i = 0; i < examplePlaylist['track_ids'].length; i++){
       var playlist = examplePlaylist['track_ids']; 
 
-      console.log(trackData[playlist[i]]); 
-      console.log(trackData[playlist[i]]['features']); 
-      console.log("good"); 
+      // console.log(trackData[playlist[i]]); 
+      // console.log(trackData[playlist[i]]['features']); 
+      // console.log("good"); 
       // if(examplePlaylist['track_ids'][i] in trackData){
       //   var song = trackData[examplePlaylist['track_ids'][i]]; 
       //   console.log(song); 
@@ -204,7 +216,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
               .outerRadius(function(d) { return y(getFeatureEndPos(d, i)); })
               .startAngle(function(d) { return x(d); })
               .endAngle(function(d) { return x(d) + x.bandwidth(); })
-              .padAngle(0.01)
+              .padAngle(0.005)
               .padRadius(innerRadius)
               )
       }); 
