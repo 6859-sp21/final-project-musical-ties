@@ -169,18 +169,24 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   function colorBubbles(feature){
     var fIndex = features.indexOf(feature); 
-
+    currentColor = colors[fIndex];
+    
     svgHome.selectAll("circle")
     .style("fill-opacity", function(d) {
       return getAverage(d, feature); 
-    }).style("fill", colors[fIndex]); 
+    }).style("fill", currentColor); 
   }
 
+  var currentColor = "#69b3a2";
+  var currentOpacity = 0.3;
+
   // Initialize the circle: all located at the center of the svg area
-  function drawBubbles(data) {
-    var node = svgHome.append("g")
+  function drawBubbles() {
+    var node = 
+    // svgHome.append("g")
+    svgHome
       .selectAll("circle")
-      .data(data)
+      .data(bubbleData)
       .join(
             enter  => enter.append('circle'),
             update => update,
@@ -191,8 +197,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         .attr("r", 40)
         .attr("cx", widthHome / 2)
         .attr("cy", heightHome / 2)
-        .style("fill", "#69b3a2")
-        .style("fill-opacity", 0.3)
+        // .style("fill", "#69b3a2")
+        // .style("fill-opacity", 0.3)
+        .style("fill", currentColor)
+        .style("fill-opacity", currentOpacity)
         .attr("stroke", "#363636")
         .style("stroke-width", 4)
         .on("click", function(event, d){
@@ -224,7 +232,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // Apply these forces to the nodes and update their positions.
     // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
     simulation
-      .nodes(data)
+      .nodes(bubbleData)
       .on("tick", function(d){
         node
             .attr("cx", function(d){ return d.x; })
@@ -239,52 +247,61 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   //how do i make this cleaner?
   d3.select('#valence_min').on("input", function() {
     svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    data = getBubbleData().filter(b => getAverage(b, 'valence') >= this.value);
+    bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') >= this.value);
 
-    drawBubbles(data);
+    drawBubbles();
   });
 
   d3.select('#danceability_min').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') >= this.value);
     drawBubbles();
   });
 
   d3.select('#speechiness_min').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') >= this.value);
     drawBubbles();
   });
 
   d3.select('#liveness_min').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') >= this.value);
     drawBubbles();
   });
 
   d3.select('#energy_min').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') >= this.value);
     drawBubbles();
   });
 
   d3.select('#valence_max').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') <= this.value);
     drawBubbles();
   });
 
   d3.select('#danceability_max').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') <= this.value);
     drawBubbles();
   });
 
   d3.select('#speechiness_max').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') <= this.value);
     drawBubbles();
   });
 
   d3.select('#liveness_max').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') <= this.value);
     drawBubbles();
   });
 
   d3.select('#energy_max').on("input", function() {
+    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
     bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') <= this.value);
     drawBubbles();
   });
