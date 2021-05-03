@@ -84,6 +84,7 @@
 </div>
 <div style="display: flex; justify-content: center; width: 100vw; height: 100vh; margin: 0; padding: 0; max-width:100%; max-height:100%;">
   <div>
+    (click a song to add/remove)
     <ul class="list-group" id="new_playlist"></ul>
   </div>
   
@@ -170,7 +171,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   function colorBubbles(feature){
     var fIndex = features.indexOf(feature); 
     currentColor = colors[fIndex];
-    
+
     svgHome.selectAll("circle")
     .style("fill-opacity", function(d) {
       return getAverage(d, feature); 
