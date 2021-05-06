@@ -134,7 +134,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var widthHome = $("svg#home").width()
   var heightHome = $("svg#home").height()
   
-  var features = ["valence", "danceability", "speechiness", "liveness", "energy"]; 
+  var features = [ "danceability", "energy", "valence", "liveness", "speechiness"]; 
+  features = features.reverse(); 
 
   function getBubbleData() {
     let data = [];
@@ -165,9 +166,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           sum += trackData[song]['features'][feature]; 
         }
         total = p['track_ids'].length; 
+        return sum / total; 
       }
     }
-      return sum / total; 
+      
   }
 
   function colorBubbles(feature){
@@ -187,13 +189,28 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   function drawMiniPlaylist(playlist, centerX, centerY){
     var myx = d3.scaleLinear()
     .range([0, 2 * Math.PI])
-    .domain([0, 2]);
+    .domain([0, 1]);
 
-    var myy = d3.scaleRadial()
+    var myy = d3.scaleLinear()
     .range([10, 40])
-    .domain([0, 6]);
+    .domain([0, 5]);
 
     var c = "p" + playlist; 
+    var darker = "#222029";
+    var lighter = "#302E38";
+
+    svgHome.append('g').selectAll('circle.disk' + c)
+      .data([5, 4, 3, 2, 1, 0])
+      .join(
+        enter => enter.append('circle'),
+        update => update,
+        exit   => exit.remove()
+      )
+      .classed('disk' + c, true)
+      .style("fill", function(d) { if(d % 2 == 0){ return darker} return lighter })
+      .attr('r', function(d) {return myy(d)})
+      .attr("transform", "translate(" + centerX + "," + centerY + ")"); 
+
 
     svgHome.append('g')
       .selectAll('path.' + c)
@@ -210,8 +227,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
             .outerRadius(function(d) { return myy(features.indexOf(d) + 1); })
             // .startAngle(function(d) { return myx(0); })
             // .endAngle(function(d) { console.log(getAverageFromID(playlist, d)); return myx(getAverageFromID(playlist, d)); })
-            .startAngle(function(d) { console.log(myx(getAverageFromID(playlist, d))); return myx(getAverageFromID(playlist, d)); })
-            .endAngle(function(d) { return 5; })
+            .startAngle(function(d) { return 0 })
+            .endAngle(function(d) { return myx(getAverageFromID(playlist, d)); })
             .padAngle(0.005)
             .padRadius(innerRadius)
             )
@@ -358,6 +375,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .domain([0, 5]);
 
   var colors = ["#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]; 
+  var colors = ["#FFB0C2", "#FF6DB5", "#FF29D8", "#C02CE6", "#7C30FF"]; 
+  // colors = colors.reverse(); 
+
   var colorsBright = ["#aaa8e6", "#c69de3", "#db8cdb", "#ffb3ab", "#ff9c5e", "#ffa83d"]; 
 
   function getBrighterByFeature(feature){
