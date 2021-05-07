@@ -143,6 +143,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       if(!(['mint', 'Lorem', 'Heart Of Texas', "Today's Top Hits", 'POLLEN', 'Beast Mode Hip-Hop', 'RADAR Country', 'Rock This', "Chillin' on a Dirt Road", "Ultimate Indie", "my life is a movie", "Breakout Country", "Pop Rising", "Teen Beats",  "I Love My '00s R&B"].includes(p.name))){
         let bubble = {};
         bubble.name = p['id'];
+        bubble.disk = [5, 4, 3, 2, 1, 0]; 
         data.push(bubble);
       }
     }
@@ -239,22 +240,22 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   // Initialize the circle: all located at the center of the svg area
   function drawBubbles() {
-    var node = svgHome.selectAll("circle")
+    var node = svgHome.selectAll("g")
       .data(bubbleData)
       .join(
-            enter  => enter.append('circle'),
+            enter  => enter.append('g'),
             update => update,
             exit   => exit.remove()
           )
-        .attr("r", 40)
-        .attr("cx", widthHome / 2)
-        .attr("cy", heightHome / 2)
-        // .style("fill", "#69b3a2")
-        // .style("fill-opacity", 0.3)
-        .style("fill", currentColor)
-        .style("fill-opacity", currentOpacity)
-        .attr("stroke", "#363636")
-        .style("stroke-width", 4)
+        // .attr("r", 40)
+        // .attr("cx", widthHome / 2)
+        // .attr("cy", heightHome / 2)
+        // // .style("fill", "#69b3a2")
+        // // .style("fill-opacity", 0.3)
+        // .style("fill", currentColor)
+        // .style("fill-opacity", currentOpacity)
+        // .attr("stroke", "#363636")
+        // .style("stroke-width", 4)
         .on("click", function(event, d){
           if(!firstClick){
             svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
@@ -278,6 +279,52 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           d3.select(this).attr("stroke", '#363636')
         }); 
 
+        var myx = d3.scaleLinear()
+        .range([0, 2 * Math.PI])
+        .domain([0, 1]);
+
+        var myy = d3.scaleLinear()
+        .range([10, 40])
+        .domain([0, 5]);
+
+        var darker = "#222029";
+        var lighter = "#302E38";
+
+    node
+      .append("g")
+      .selectAll("g")
+      .data(function(d) { return d.disk; })
+      .enter().append("circle")
+      .classed('disk', true)
+      .style("fill", function(d) { if(d % 2 == 0){ return darker} return lighter })
+      .attr('r', function(d) {return myy(d)})
+
+    // node.selectAll('circle.disk')
+    // .data([5, 4, 3, 2, 1, 0])
+    // .join(
+    //   enter => enter.append('circle'),
+    //   update => update,
+    //   exit   => exit.remove()
+    // )
+    // .classed('disk', true)
+    // .style("fill", function(d) { if(d % 2 == 0){ return darker} return lighter })
+    // .attr('r', function(d) {return myy(d)})
+    // .attr("transform", function(d) {return "translate(" + node.x + "," + node.y + ")"}); 
+
+    node.each(function(d) {
+      console.log(d); 
+    // .data([5, 4, 3, 2, 1, 0])
+    // .join(
+    //   enter => enter.append('circle'),
+    //   update => update,
+    //   exit   => exit.remove()
+    // )
+    // .classed('disk' + c, true)
+    // .style("fill", function(d) { if(d % 2 == 0){ return darker} return lighter })
+    // .attr('r', function(d) {return myy(d)})
+    // .attr("transform", "translate(" + centerX + "," + centerY + ")"); 
+    })
+
    // Features of the forces applied to the nodes:
     var simulation = d3.forceSimulation()
       .force("center", d3.forceCenter().x(widthHome / 2).y(heightHome / 2)) // Attraction to the center of the svg area
@@ -289,9 +336,13 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     simulation
       .nodes(bubbleData)
       .on("tick", function(d){
-        node
-            .attr("cx", function(d){ return d.x; })
-            .attr("cy", function(d){ return d.y; })
+        // node
+        //     .attr("cx", function(d){ return d.x; })
+        //     .attr("cy", function(d){ return d.y; })
+        node.selectAll('g')
+          .attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")"});
+            // .attr("cx", function(d){ return d.x; })
+            // .attr("cy", function(d){ return d.y; })
       });
   }
   drawBubbles(bubbleData);
