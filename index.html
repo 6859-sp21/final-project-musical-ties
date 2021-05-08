@@ -15,7 +15,7 @@
 
 <!-- font from Google API -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@350&display=swap" rel="stylesheet">
 
 <!-- icons from Material Design -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -101,22 +101,26 @@
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
 <div class="row" style="overflow:hidden; position: sticky; height:100vh; width:100vw; top: 0;left: 0; right: 0;">
   <div class="col-1" id="menubar">
-    <span class="material-icons">
+    <span class="material-icons section-title" style="font-size: 40px">
       menu
     </span>
+    <div>Do you know how to make this column as narrow as possible?</div>
   </div>
   <div class="col section-view" id="playlist-view">
     <!-- PLAYLIST EXPLORATION -->
     <div class="section-title">playlist exploration</div>
+    <div> Also im unsure how to make these circles show up higher and not overflow</div>
     <svg id='home' class="collapse show" width="100%" height="100%"></svg>
     <svg id='playlist' class="collpase" width="100%" height="100%"></svg>
   </div>
   <div class="col">
-    <div class="row"><div class="col section-view" id="filter-playlist"> 
+    <div class="row"><div class="col section-view section-view-right" id="filter-playlist"> 
       <!-- FILTER PLAYLIST -->
+      <div class="section-title">filter playlist</div>
     </div></div>
-    <div class="row"><div class="col section-view" id="sort-playlist"> 
+    <div class="row"><div class="col section-view section-view-right section-view-bottom" id="sort-playlist"> 
       <!-- SORT PLAYLIST? (MAYBE) -->
+      <div class="section-title">select playlist feature?</div>
       <!-- THIS IS TEMPORARY SO CODE DOESNT BREAK-->
       <select class="form-select" id="sort">
         <!-- <option selected>none</option>
@@ -127,7 +131,8 @@
         <option>energy</option> -->
       </select>
     </div></div>
-    <div class="row"><div class="col section-view" id="your-playlist"> 
+    <div class="row"><div class="col section-view section-view-right section-view-bottom" id="your-playlist"> 
+      <div class="section-title">your playlist</div>
       <!-- YOUR PLAYIST -->
     </div></div>
   </div>
@@ -146,15 +151,27 @@
 body {
   background-color: var(--background-light);
   color: var(--text-light);
-  font-family: 'Reem Kufi', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300; 
 }
 
 .section-view{
   background-color: var(--background-dark);
+  margin: 10px; 
+  border-radius: 5px; 
+}
+/* super jank way of doing the spacing but oh well */
+.section-view-right{
+  margin-left: 0px; 
+}
+.section-view-bottom{
+  margin-top: 0px; 
 }
 
 .section-title{
   font-size: 30px;
+  padding-top: 15px; 
+  padding-left: 5px; 
 }
 </style>
 
@@ -175,8 +192,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var darkerRecord = "#2d2b36";
   var lighterRecord = "#413f4a";
   
-  var bubbleSize = 50; 
-  var bubbleDistance = 20; 
+  var bubbleSize = 45; 
+  var bubbleDistance = 15; 
 
   // order and values can be changed
   var features = [ "danceability", "energy", "valence", "liveness", "speechiness"]; 
