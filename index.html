@@ -192,6 +192,9 @@ body {
 
 <script>
 
+function removeSong(song) {
+  song.parentElement.remove();
+}
 
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/trackData.json").then(trackData => {
@@ -216,7 +219,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   
   
   // playlistData = playlistData.filter(playlist => !(playlist['name'] in ['mint', 'Lorem', 'Heart of Texas'])); 
-  var newPlaylist = [];
 
   var sortselect = document.getElementById('sort');
   sortselect.onchange = function(){
@@ -554,13 +556,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           let song = document.createElement('li');
           song.className = "list-group-item";
           song.id = d;
-          song.innerHTML = `${trackData[d].title}<span class="material-icons" style="text-align: right">delete</span>`;
+          song.innerHTML = `${trackData[d].title}<button type="button" class="btn btn-secondary" onclick="removeSong(this)"><span class="material-icons">delete</span></button>`;
           playlist.appendChild(song);
-          newPlaylist.push(d);
         })
 
 
   }
+
+
 
   function displaySongInfoPlaylist(songID){
     var songInfo = trackData[songID]; 
