@@ -20,6 +20,10 @@
 <!-- icons from Material Design -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+<!-- tooltip helper -->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+
 <title>Musical Ties</title>
 
 
@@ -224,7 +228,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var lighterRecord = "#413f4a";
   
   var bubbleSize = 45; 
-  var bubbleDistance = 15; 
+  var bubbleDistance = 18; 
 
   // order and values can be changed
   var features = [ "danceability", "energy", "valence", "liveness", "speechiness"]; 
@@ -287,8 +291,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
    
   var bubbleData = getBubbleData();
-  console.log(bubbleData)
-  console.log(trackData)
 
   // input: playlist is entire playlist dictionary
   function getAverage(playlist, feature){
@@ -337,10 +339,11 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     var node = svgHome.selectAll("g")
       .data(bubbleData)
       .join(
-            enter  => enter.append('g'),
-            update => update,
-            exit   => exit.remove()
-          )
+        enter  => enter.append('g'),
+        update => update,
+        exit   => exit.remove()
+      )
+
 
 
     var myx = d3.scaleLinear()
@@ -361,7 +364,32 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .style("fill", function(d) { if(d % 2 == 0){ return darkerRecord} return lighterRecord })
       .attr('r', function(d) {return myy(d)})
 
-    // draws a transparent circle that is meant for detection
+    // draws the colors on the record
+    node
+    .append('g')
+    .selectAll('path')
+    .data(function(d) {return getAverageFeatures(d.name)}) // map to index, and maybe you can calculate the feature list here and then go from there 
+    .enter().append("path")
+    .style("fill", function(d, i) { return colors[i] })
+      .attr("d", d3.arc() 
+        .innerRadius(function(d, i) { return myy(i); })
+        .outerRadius(function(d, i) { return myy(i + 1); })
+        .startAngle(function(d) { return 0 })
+        .endAngle(function(d) { return myx(d); })
+        .padAngle(0.005)
+        .padRadius(innerRadius)
+      )
+      // .attr("id", function(d, i) {return "arc" + (' ' + currentPlaylist).slice(1) + "-" + i})
+      .on("mouseover", function(event, d){
+        node.selectAll("text.playlistTitle" + d.name)
+          .style("opacity", "1"); 
+      })
+      .on("mouseout", function(event, d){
+        node.selectAll("text.playlistTitle" + d.name)
+          .style("opacity", "0"); 
+      }); 
+
+        // draws a transparent circle that is meant for detection
     node
       .append("g")
       .selectAll("g")
@@ -377,57 +405,35 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           drawBubbles();
           drawPlaylist();
       })
-      .on("mouseover", function(d, i){
-        console.log("circle"); 
-        // // TODO figure out a better way to highlight
-        // // d3.select(this).attr("stroke", function(d){ return d3.rgb("#363636").brighter(5) });
-        //   // .attr("fill", function(d){ return d3.rgb("#69b3a2").brighter(5) }); 
-        // // console.log(d);
-        // console.log("i am being detected"); 
-        // console.log(event.pageX); 
-        // tooltip.transition().duration(200).style("opacity", .9);      
-
-        // console.log(d3.selectAll("circle")[0][i].attr("cx")); 
-        // console.log(document.getElementById("home").offsetLeft); 
-        // console.log((parseInt(d3.select(this).attr("cx")) + document.getElementById("home").offsetLeft) ); 
-
-        // tooltip.html("WHAT THE FUCK BITCH")  
-        //     .style("left", (parseInt(d3.select(this).attr("cx")) + document.getElementById("home").offsetLeft) + "px")     
-        //     .style("top", (parseInt(d3.select(this).attr("cy")) + document.getElementById("home").offsetTop) + "px"); 
+      .on("mouseover", function(event, d){
+        node.selectAll("text.playlistTitle" + d.name)
+          .style("opacity", "1"); 
       })
-      // .on("mouseout", function(event, d){
-      //   var c = "t" + d.name; 
-      //   node.select('text.' + c).remove();
-      // }); 
-
-    // draws the colors on the record
-    node
-    .append('g')
-    .selectAll('path')
-    .data(function(d) {return getAverageFeatures(d.name)}) // map to index, and maybe you can calculate the feature list here and then go from there 
-    .enter().append("path")
-    .style("fill", function(d, i) { return colors[i] })
-      .attr("d", d3.arc() 
-          .innerRadius(function(d, i) { return myy(i); })
-          .outerRadius(function(d, i) { return myy(i + 1); })
-          .startAngle(function(d) { return 0 })
-          .endAngle(function(d) { return myx(d); })
-          .padAngle(0.005)
-          .padRadius(innerRadius)
-          )
-        .on('mouseover', function(d, i){
-          console.log("bar"); 
-        }); 
+      .on("mouseout", function(event, d){
+        node.selectAll("text.playlistTitle" + d.name)
+          .style("opacity", "0"); 
+      }); 
 
     // playlist title
-    node
+    var titles = node
       .append("g")
-      .selectAll("g")
+      .classed("title", true)
+      .selectAll("g.title")
       .data(function(d) {return [d]})
-      .enter().append("text")
-      .classed('playlistTitle', true)
-      .text(function(d) { console.log(d); return getPlaylistInfo(d.name).name})
-      .style("fill", "white"); 
+      .enter()
+      .append("text")
+      // .classed(function(d) {return 'playlistTitle' + d.name}, true)
+      .text(function(d) { return getPlaylistInfo(d.name).name})
+      .style("opacity", 0)
+      .style("fill", "white")
+      .on("mouseover", function(event, d){
+        console.log(this.getAttribute('class')); 
+      }); 
+
+    // add classname for each title text
+    titles.each(function(d) {
+      this.classList.add("playlistTitle" + d.name);
+    });
       
 
    // Features of the forces applied to the nodes:
@@ -443,11 +449,31 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .on("tick", function(d){
         node.selectAll('g')
           .attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")"});
-        node.selectAll('text')
-          .attr("transform", function(d) {return "translate(" + 0 + "," + (-50) + ")"});
+        // node.selectAll('text')
+        //   .attr("transform", function(d) {return "translate(" + 0 + "," + (-50) + ")"});
+        titles.each(function(d) {
+          var width = this.getBBox().width; 
+          this.setAttribute("transform", "translate(" + (-0.5 * width) + "," + (-50) + ")");
+        });
       });
   }
   drawBubbles(bubbleData);
+
+  // add tooltips for each playlist in playlist view 
+  for(bub of bubbleData){
+    // for each feature
+    console.log("fuck"); 
+    console.log(bub.name); 
+    var featureVals = getAverageFeatures(bub.name); 
+    for(var i = 0; i < features.length; i++){
+      // console.log(p.name); 
+      var elementId = "#arc" + bub.name + "-" + i; 
+      tippy(elementId, {
+        content: "" + features[i] + " : " + featureVals[i].toFixed(2) 
+      });
+    }
+  }
+
 
   //how do i make this cleaner?
   d3.select('#valence_min').on("input", function() {
