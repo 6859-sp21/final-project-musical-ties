@@ -103,7 +103,7 @@
 
 
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
-<div class="row" style="height:100vh; width:100vw; top: 0;left: 0; right: 0;">
+<div class="row" style="height:100vh; width:100vw; top: 0;left: 0; right: 0;" >
   <div class="col-1" id="menubar" style="width:auto">
     <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;">
       menu
@@ -115,9 +115,9 @@
   <div class="full-height-div">
     <div class="section-title">playlist exploration</div>
 
-    <div class="fill-remaining-space-div" >
-      <svg id='home' class="collapse show" width="100%" height="100%"></svg>
-      <svg id='playlist' class="collpase" width="100%" height="100%"></svg>
+    <div  class="fill-remaining-space-div" style="overflow-y:scroll">
+      <svg id='home' class="collapse show" width="100%" height="100%" style="vertical-align: top;"></svg>
+      <!-- <svg id='playlist' class="collpase" width="100%" height="100%"></svg> -->
     </div>
   </div>
   </div>
@@ -141,6 +141,7 @@ body {
   color: var(--text-light);
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 300; 
+  overflow: hidden;
 }
 
 .full-height-div{
@@ -152,6 +153,7 @@ body {
 
 .fill-remaining-space-div{
   flex: 1 1 auto;
+  height: 200px; 
 }
 
 .section-view{
@@ -187,27 +189,27 @@ div.tooltip {
 }
 
 .tippy-box[data-theme~='speechiness'] {
-  background-color: #ffb0c2af;
+  background-color: #ffb0c2;
   color: white;
 }
 
 .tippy-box[data-theme~='liveness'] {
-  background-color: #FF6DB5af;
+  background-color: #FF6DB5;
   color: white;
 }
 
 .tippy-box[data-theme~='valence'] {
-  background-color: #FF29D8af;
+  background-color: #FF29D8;
   color: white;
 }
 
 .tippy-box[data-theme~='energy'] {
-  background-color: #C02CE6af;
+  background-color: #C02CE6;
   color: white;
 }
 
 .tippy-box[data-theme~='danceability'] {
-  background-color: #7c30ffaf;
+  background-color: #7c30ff;
   color: white;
 }
 </style>
@@ -317,6 +319,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var bubbleData = getBubbleData();
   console.log(bubbleData); 
 
+  var numRows = Math.ceil((bubbleData.length + 1) / numGridCols); 
+  var fullHeight = (numRows * gridSpacingVertical) + (gridTopOffset) - spacing*2; 
+  d3.select("svg#home").attr("height", "" + fullHeight + "px" ); 
+
   // input: playlist is entire playlist dictionary
   function getAverage(playlist, feature){
       return getAverageFromID(playlist.name, feature); 
@@ -370,7 +376,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         update => update,
         exit   => exit.remove()
       )
-      .attr('id', function(d) {console.log(d.name); return 'p' + d.name})
+      .attr('id', function(d) { return 'p' + d.name})
 
 
 
@@ -407,7 +413,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         .padAngle(0.005)
         .padRadius(innerRadius)
       )
-      .attr('id', function(d, i){ console.log(features[i]); return features[i]})
+      .attr('id', function(d, i){ return features[i]})
 
     // bars.each(function(d) {
     //   console.log(d);
@@ -446,7 +452,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       // .style("opacity", 0)
       .style("fill", "white")
       .on("mouseover", function(event, d){
-        console.log(this.getAttribute('class')); 
+        // console.log(this.getAttribute('class')); 
       }); 
 
     // add classname for each title text
@@ -555,7 +561,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   function movePlaylists(){
     var jankRowCount = 0; 
-    var jankColCount = 0; 
+    var jankColCount = 1; 
     for(bub of bubbleData){
       d3.select('#p' + bub.name).attr("transform", "translate(" + (gridLeftOffset + jankColCount * gridSpacingHorizontal) + "," + (gridTopOffset + jankRowCount * gridSpacingVertical) + ")");
       jankColCount += 1; 
@@ -590,66 +596,66 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
 
   //how do i make this cleaner?
-  d3.select('#valence_min').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') >= this.value);
+  // d3.select('#valence_min').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') >= this.value);
 
-    drawBubbles();
-  });
+  //   drawBubbles();
+  // });
 
-  d3.select('#danceability_min').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') >= this.value);
-    drawBubbles();
-  });
+  // d3.select('#danceability_min').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') >= this.value);
+  //   drawBubbles();
+  // });
 
-  d3.select('#speechiness_min').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') >= this.value);
-    drawBubbles();
-  });
+  // d3.select('#speechiness_min').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') >= this.value);
+  //   drawBubbles();
+  // });
 
-  d3.select('#liveness_min').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') >= this.value);
-    drawBubbles();
-  });
+  // d3.select('#liveness_min').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') >= this.value);
+  //   drawBubbles();
+  // });
 
-  d3.select('#energy_min').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') >= this.value);
-    drawBubbles();
-  });
+  // d3.select('#energy_min').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') >= this.value);
+  //   drawBubbles();
+  // });
 
-  d3.select('#valence_max').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') <= this.value);
-    drawBubbles();
-  });
+  // d3.select('#valence_max').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') <= this.value);
+  //   drawBubbles();
+  // });
 
-  d3.select('#danceability_max').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') <= this.value);
-    drawBubbles();
-  });
+  // d3.select('#danceability_max').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') <= this.value);
+  //   drawBubbles();
+  // });
 
-  d3.select('#speechiness_max').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') <= this.value);
-    drawBubbles();
-  });
+  // d3.select('#speechiness_max').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') <= this.value);
+  //   drawBubbles();
+  // });
 
-  d3.select('#liveness_max').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') <= this.value);
-    drawBubbles();
-  });
+  // d3.select('#liveness_max').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') <= this.value);
+  //   drawBubbles();
+  // });
 
-  d3.select('#energy_max').on("input", function() {
-    svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-    bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') <= this.value);
-    drawBubbles();
-  });
+  // d3.select('#energy_max').on("input", function() {
+  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
+  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') <= this.value);
+  //   drawBubbles();
+  // });
   
   // TODO width and height will probs need to be different when not in full screen viewing
   var svg = d3.select("svg#playlist").attr("preserveAspectRatio", "xMinYMin meet"),
@@ -766,8 +772,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
 
   }
-
-
 
   function displaySongInfoPlaylist(songID){
     var songInfo = trackData[songID]; 
