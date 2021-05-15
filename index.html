@@ -238,6 +238,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var lighterRecord = "#413f4a";
   
   // grid variables
+  // it's all dependent on first variable 
   var numGridCols = 3; 
   var bubbleSize = (widthHome / (numGridCols + 1)) / 2; 
   var spacing = (widthHome / (numGridCols + 1)) / (numGridCols + 1) ; 
@@ -314,6 +315,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
    
   var bubbleData = getBubbleData();
+  console.log(bubbleData); 
 
   // input: playlist is entire playlist dictionary
   function getAverage(playlist, feature){
@@ -356,6 +358,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   var currentColor = "#ffffff";
   var currentOpacity = 0.3;
+
+  var titles; 
 
   // Initialize the circle: all located at the center of the svg area
   function drawBubbles() {
@@ -430,7 +434,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       })
 
     // playlist title
-    var titles = node
+    titles = node
       .append("g")
       .classed("title", true)
       .selectAll("g.title")
@@ -542,6 +546,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .style("opacity",  0)
       .attr('r', myy(0))
 
+      movePlaylists(); 
+  }
+  drawBubbles(bubbleData);
+
+  // bubbleData = bubbleData.reverse(); 
+  // movePlaylists(); 
+
+  function movePlaylists(){
     var jankRowCount = 0; 
     var jankColCount = 0; 
     for(bub of bubbleData){
@@ -557,7 +569,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       this.setAttribute("transform", "translate(" + (-0.5 * width) + "," + (-(bubbleSize + 10 ) ) + ")");
     });
   }
-  drawBubbles(bubbleData);
 
   // add tooltips for each playlist in playlist view 
   for(bub of bubbleData){
