@@ -737,7 +737,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         .on("click", function(event, d, i){
           let playlist = document.getElementById('new_playlist');
           let song = document.createElement('li');
-          song.className = "list-group-item";
+          song.className = "list-group-item list-group-item-dark";
           song.id = d;
           song.innerHTML = `${trackData[d].title}<button type="button" class="btn btn-secondary" onclick="removeSong(this)"><span class="material-icons">delete</span></button>`;
           playlist.appendChild(song);
