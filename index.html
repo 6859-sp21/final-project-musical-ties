@@ -205,6 +205,31 @@ div.tooltip {
     border-radius: 10px;           
     pointer-events: none;
 }
+
+.tippy-box[data-theme~='speechiness'] {
+  background-color: #ffb0c2af;
+  color: white;
+}
+
+.tippy-box[data-theme~='liveness'] {
+  background-color: #FF6DB5af;
+  color: white;
+}
+
+.tippy-box[data-theme~='valence'] {
+  background-color: #FF29D8af;
+  color: white;
+}
+
+.tippy-box[data-theme~='energy'] {
+  background-color: #C02CE6af;
+  color: white;
+}
+
+.tippy-box[data-theme~='danceability'] {
+  background-color: #7c30ffaf;
+  color: white;
+}
 </style>
 
 <script>
@@ -280,11 +305,15 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   function getBubbleData() {
     let data = [];
+    let counted = []; 
     for (p of playlistData) {
       if(!(['mint', 'Lorem', 'Heart Of Texas', "Today's Top Hits", 'POLLEN', 'Beast Mode Hip-Hop', 'RADAR Country', 'Rock This', "Chillin' on a Dirt Road", "Ultimate Indie", "my life is a movie", "Breakout Country", "Pop Rising", "Teen Beats",  "I Love My '00s R&B"].includes(p.name))){
-        let bubble = {};
-        bubble.name = p['id'];
-        data.push(bubble);
+        if(!counted.includes(p.name)){
+          let bubble = {};
+          bubble.name = p['id'];
+          data.push(bubble);
+          counted.push(p.name); 
+        }
       }
     }
     return data;
@@ -405,14 +434,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           drawBubbles();
           drawPlaylist();
       })
-      .on("mouseover", function(event, d){
-        node.selectAll("text.playlistTitle" + d.name)
-          .style("opacity", "1"); 
-      })
-      .on("mouseout", function(event, d){
-        node.selectAll("text.playlistTitle" + d.name)
-          .style("opacity", "0"); 
-      }); 
 
     // playlist title
     var titles = node
@@ -434,6 +455,77 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     titles.each(function(d) {
       this.classList.add("playlistTitle" + d.name);
     });
+
+    node
+      .append("g")
+      .selectAll("g")
+      .data(function(d) {return [d]})
+      .enter().append("circle")
+      .classed('disk', true)
+      .attr("id", function(d) {return "ring" + d.name + "-" + 5})
+      .style("opacity",  0)
+      .attr('r', myy(5))
+
+    node
+      .append("g")
+      .selectAll("g")
+      .data(function(d) {return [d]})
+      .enter().append("circle")
+      .classed('disk', true)
+      .attr("id", function(d) {return "ring" + d.name + "-" + 4})
+      .style("opacity",  0)
+      .attr('r', myy(4))
+
+    node
+      .append("g")
+      .selectAll("g")
+      .data(function(d) {return [d]})
+      .enter().append("circle")
+      .classed('disk', true)
+      .attr("id", function(d) {return "ring" + d.name + "-" + 3})
+      .style("opacity",  0)
+      .attr('r', myy(3))
+
+    node
+      .append("g")
+      .selectAll("g")
+      .data(function(d) {return [d]})
+      .enter().append("circle")
+      .classed('disk', true)
+      .attr("id", function(d) {return "ring" + d.name + "-" + 2})
+      .style("opacity",  0)
+      .attr('r', myy(2))
+
+    node
+      .append("g")
+      .selectAll("g")
+      .data(function(d) {return [d]})
+      .enter().append("circle")
+      .classed('disk', true)
+      .attr("id", function(d) {return "ring" + d.name + "-" + 1})
+      .style("opacity",  0)
+      .attr('r', myy(1))
+
+      node
+      .append("g")
+      .selectAll("g")
+      .data(function(d) {return [d]})
+      .enter().append("circle")
+      .classed('disk', true)
+      .attr("id", function(d) {return "ring" + d.name + "-" + 0})
+      .style("opacity",  0)
+      .attr('r', myy(0))
+
+    node.selectAll('circle.disk')
+      .on("mouseover", function(event, d){
+        console.log("fuck me"); 
+          node.selectAll("text.playlistTitle" + d.name)
+            .style("opacity", "1"); 
+        })
+        .on("mouseout", function(event, d){
+          node.selectAll("text.playlistTitle" + d.name)
+            .style("opacity", "0"); 
+        }); 
       
 
    // Features of the forces applied to the nodes:
@@ -462,14 +554,19 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // add tooltips for each playlist in playlist view 
   for(bub of bubbleData){
     // for each feature
-    console.log("fuck"); 
-    console.log(bub.name); 
     var featureVals = getAverageFeatures(bub.name); 
+
     for(var i = 0; i < features.length; i++){
-      // console.log(p.name); 
-      var elementId = "#arc" + bub.name + "-" + i; 
+    // console.log(p.name); 
+      var elementId = "#ring" + bub.name + "-" + (i + 1) ; 
       tippy(elementId, {
-        content: "" + features[i] + " : " + featureVals[i].toFixed(2) 
+        content: "" + features[i] + " : " + featureVals[i].toFixed(2),
+        followCursor: true,
+        placement: 'left',
+        theme: features[i],
+        
+        arrow: false,
+        // content: "fuck you"
       });
     }
   }
@@ -753,6 +850,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     var total = getFeatureStartPos(songId, featureIndex);  
     total += trackData[songId]["features"][features[featureIndex]];
     return total; 
+  }
+
+  function drawTooltips(node){
+
   }
 
 }); 
