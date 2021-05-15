@@ -240,7 +240,8 @@ function removeSong(song) {
 
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/trackData.json").then(trackData => {
-  
+  var ourWhite = "#ECEAF2"; 
+
   // append the svg object to the body of the page
   var svgHome = d3.select("svg#home")
   var widthHome = $("svg#home").width()
@@ -335,8 +336,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
    
   var bubbleData = getBubbleData();
-  console.log(bubbleData); 
 
+  // sets SVG height to height of playlists 
   var numRows = Math.ceil((bubbleData.length + 1) / numGridCols); 
   var fullHeight = (numRows * gridSpacingVertical) + (gridTopOffset) - spacing*2; 
   d3.select("svg#home").attr("height", "" + fullHeight + "px" ); 
@@ -346,7 +347,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       return getAverageFromID(playlist.name, feature); 
   }
 
-  // inpust playlistID is just the
+  // input: playlistID is just the ID
   function getAverageFromID(playlistID, feature){
     var sum = 0; 
     var total = 0; 
@@ -370,6 +371,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     return feats; 
   }
 
+  // not in use
   function colorBubbles(feature){
     var fIndex = features.indexOf(feature); 
     currentColor = colors[fIndex];
@@ -380,9 +382,12 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     }).style("fill", currentColor); 
   }
 
+  // i dont think we use this anymore
   var currentColor = "#ffffff";
   var currentOpacity = 0.3;
 
+  // needed this to be global variable so i can update the positions of the playlist titles
+  // might be a better way 
   var titles; 
 
   // Initialize the circle: all located at the center of the svg area
@@ -395,8 +400,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         exit   => exit.remove()
       )
       .attr('id', function(d) { return 'p' + d.name})
-
-
 
     var myx = d3.scaleLinear()
     .range([0, 2 * Math.PI])
@@ -433,29 +436,23 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       )
       .attr('id', function(d, i){ return features[i]})
 
-    // bars.each(function(d) {
-    //   console.log(d);
-
-    //   // this.classList.add("playlistTitle" + d.name);
-    // });
-
-
-        // draws a transparent circle that is meant for detection
-    node
-      .append("g")
-      .selectAll("g")
-      .data(function(d) {return [d]})
-      .enter().append("circle")
-      .classed('detect', true)
-      .style("opacity", "0")
-      .attr('r', bubbleSize)
-      .on("click", function(event, d){
-          // svgHome.selectAll('circle').data(bubbleData).exit().remove();  
-          examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
-          bubbleData = [];
-          drawBubbles();
-          drawPlaylist();
-      })
+    // TODO no longer in use, move click functionality
+    // // draws a transparent circle that is meant for detection
+    // node
+    //   .append("g")
+    //   .selectAll("g")
+    //   .data(function(d) {return [d]})
+    //   .enter().append("circle")
+    //   .classed('detect', true)
+    //   .style("opacity", "0")
+    //   .attr('r', bubbleSize)
+    //   .on("click", function(event, d){
+    //       // svgHome.selectAll('circle').data(bubbleData).exit().remove();  
+    //       examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
+    //       bubbleData = [];
+    //       drawBubbles();
+    //       drawPlaylist();
+    //   })
 
     // playlist title
     titles = node
@@ -468,7 +465,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       // .classed(function(d) {return 'playlistTitle' + d.name}, true)
       .text(function(d) { return getPlaylistInfo(d.name).name})
       // .style("opacity", 0)
-      .style("fill", "white")
+      .style("fill", ourWhite)
+      .style("font-size", "22px")
       .on("mouseover", function(event, d){
         // console.log(this.getAttribute('class')); 
       }); 
@@ -480,6 +478,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
 
     // this is a really jank way to make the tool tips on the rings work 
+    // invisible concentric bubbles that allow for tooltips
     node
       .append("g")
       .selectAll("g")
@@ -496,6 +495,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         d3.select('#p' + d.name).select("#" + features[4]).style('fill', colors[4])
       })
 
+    // invisible concentric bubbles that allow for tooltips
     node
       .append("g")
       .selectAll("g")
@@ -512,6 +512,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         d3.select('#p' + d.name).select("#" + features[3]).style('fill', colors[3])
       })
 
+    // invisible concentric bubbles that allow for tooltips
     node
       .append("g")
       .selectAll("g")
@@ -528,6 +529,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         d3.select('#p' + d.name).select("#" + features[2]).style('fill', colors[2])
       })
 
+    // invisible concentric bubbles that allow for tooltips
     node
       .append("g")
       .selectAll("g")
@@ -544,6 +546,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         d3.select('#p' + d.name).select("#" + features[1]).style('fill', colors[1])
       })
 
+    // invisible concentric bubbles that allow for tooltips
     node
       .append("g")
       .selectAll("g")
@@ -560,6 +563,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         d3.select('#p' + d.name).select("#" + features[0]).style('fill', colors[0])
       })
 
+    // invisible concentric bubbles that allow for tooltips
     node
       .append("g")
       .selectAll("g")
@@ -569,14 +573,17 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .attr("id", function(d) {return "ring" + d.name + "-" + 0})
       .style("opacity",  0)
       .attr('r', myy(0))
+      .on("click", function(event, d){
+        // TODO for now this can be where you click to show playlist view
+        d3.select("svg#home").remove();
+        drawPlaylist(); 
+      })
 
       movePlaylists(); 
   }
   drawBubbles(bubbleData);
 
-  // bubbleData = bubbleData.reverse(); 
-  // movePlaylists(); 
-
+  // Use to update positions of playlists based on new ordering in bubbleData
   function movePlaylists(){
     var jankRowCount = 0; 
     var jankColCount = 1; 
@@ -874,8 +881,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
 
   function getFeatureStartPos(songId, featureIndex){
-    // console.log('start')
-    // console.log(trackData[songId])
     var total = 0;  
     for(var i = 0; i < featureIndex; i++){
       total += trackData[songId]["features"][features[i]];
@@ -884,16 +889,12 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
 
   function getFeatureEndPos(songId, featureIndex){
-    // console.log('end')
-    // console.log(songId);
     var total = getFeatureStartPos(songId, featureIndex);  
     total += trackData[songId]["features"][features[featureIndex]];
     return total; 
   }
 
-  function drawTooltips(node){
-
-  }
+  // d3.select("svg#home").remove();
 
 }); 
   
