@@ -112,19 +112,26 @@
   </div>
   <div class="col section-view" id="playlist-view">
     <!-- PLAYLIST EXPLORATION -->
-  <div class="full-height-div">
-    <div class="section-title" id="left-title">playlist exploration</div>
+    <div class="full-height-div">
+      <div class="section-title" id="left-title">playlist exploration</div>
 
-    <div class="fill-remaining-space-div" style="overflow-y:scroll">
-      <svg id='home' class="collapse show" width="100%" height="100%" style="vertical-align: top;"></svg>
-      <svg id='playlist' class="collpase" width="100%" height="100%"></svg>
-      <button type="button" class="btn btn-secondary" id="add-song" style="visibility: hidden">add this song to my playlist</button>
-      <ul class="list-group" id="songs"></ul>
+      <div class="fill-remaining-space-div" style="overflow-y:scroll">
+        <svg id='home' class="collapse show" width="100%" height="100%" style="vertical-align: top;"></svg>
+        <!-- <iframe src="https://open.spotify.com/embed/track/5r5cp9IpziiIsR6b93vcnQ" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> -->
+        <svg id='playlist' class="collpase" width="100%" height="100%"></svg>
+        <button type="button" class="btn btn-secondary" id="add-song" style="visibility: hidden">add this song to my playlist</button>
+        <ul class="list-group" id="songs"></ul>
+      </div>
     </div>
   </div>
-  </div>
   <div class="col-3 section-view section-view-right" id="right-panel">
-    <ul class="list-group" id="custom-songs"></ul>
+    <div class="full-height-div">
+      <div class="section-title" id="right-title"></div>
+      <div class="fill-remaining-space-div" style="overflow-y:scroll">
+        <svg id='your-playlist' class="collpase" width="100%" height="100%"></svg>
+        <ul class="list-group" id="custom-songs"></ul>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -239,8 +246,15 @@ div.tooltip {
 
 <script>
 
+var yourPlaylist = {
+  'id' : "new1",
+  'name' : 'Your Playlist',
+  'track_ids' : []
+};
+
 function removeSong(song) {
   song.parentElement.remove();
+  yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
 }
 
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
@@ -312,11 +326,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // };
 
   var examplePlaylist;
-  var yourPlaylist = {
-    'id' : "new1",
-    'name' : 'Your Playlist',
-    'track_ids' : []
-  };
 
   /////////////////////////////////
   // HOME SCREEN - WILL MOVE LATER
@@ -593,7 +602,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         // d3.select("#playlist-view").attr('class','col-6 section-view');
         d3.select("#right-panel").attr('class','col section-view section-view-right');
         examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
-        drawPlaylist(); 
+        drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
+        if (yourPlaylist.track_ids.length > 0)
+          drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
       })
 
       movePlaylists(); 
@@ -843,6 +854,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     outerRadius = Math.min(width, height) / 2,
     g = svg.append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
+
+  var yourSvg = d3.select("svg#your-playlist").attr("preserveAspectRatio", "xMinYMin meet");
+    // yourwidth = $("svg#your-playlist").width(),
+    // height = $("svg#your-playlist").height(),
+    // innerRadius = Math.min(width, height) / 6,
+    // outerRadius = Math.min(width, height) / 2,
+    // yourG = svg.append("g")
+    //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
    
 
   var y = d3.scaleRadial()
@@ -877,19 +896,18 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   var selectedSong = ""; 
 
-  function drawPlaylist(){
-    svg = d3.select("svg#playlist").attr("preserveAspectRatio", "xMinYMin meet"),
-    width = $("svg#playlist").width(),
-    height = $("svg#playlist").height(),
+  function drawPlaylist(examplePlaylist, svg, svg_id, panel_id){
+    width = $(svg_id).width(),
+    height = $(svg_id).height(),
     innerRadius = Math.min(width, height) / 6,
-    outerRadius = Math.min(width, height) / 2,
-    g = svg.append("g")
+    outerRadius = Math.min(width, height) / 2;
+    let g = svg.append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
 
     svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
-    drawPlaylistLegend();
-    updatePlaylistDisplayInfo([examplePlaylist["name"]]);
-    d3.select('#left-title').text(examplePlaylist["name"]);
+    drawPlaylistLegend(examplePlaylist, svg, g);
+    updatePlaylistDisplayInfo([examplePlaylist["name"]], g);
+    d3.select(panel_id).text(examplePlaylist["name"]);
 
     var x = d3.scaleBand()
     .range([0, 2 * Math.PI])
@@ -935,7 +953,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           .padRadius(innerRadius)
           )
         .on("click", function(event, d, i){
-          displaySongInfoPlaylist(d, i); 
+          d3.select('#add-song').style('visibility', 'hidden');
+          displaySongInfoPlaylist(d, g); 
           svg.selectAll("path")
             .filter(d => d == selectedSong)
             .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
@@ -943,7 +962,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           svg.selectAll("path")
             .filter(d => d == selectedSong)
             .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
-          d3.select('#add-song').style('visibility', 'visible')
+          if (!yourPlaylist.track_ids.includes(selectedSong))
+            d3.select('#add-song').style('visibility', 'visible')
         })
         // .on("mouseout", function(event, d, i){
         //   // TODO i'm not sure this will work when we scale up
@@ -973,19 +993,22 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     song.id = selectedSong;
     song.innerHTML = `${trackData[selectedSong].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
     playlist.appendChild(song);
+    yourPlaylist.track_ids.push(selectedSong);
+    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
   }
 
-  function displaySongInfoPlaylist(songID){
+  function displaySongInfoPlaylist(songID, g){
     var songInfo = trackData[songID]; 
     var songFeatures = [songInfo['title']]; 
     for(var i = 0; i < features.length; i++){
       let info = "" + features[i] + " " + songInfo['features'][features[i]]; 
       songFeatures.push(info); 
     }
-    updatePlaylistDisplayInfo(songFeatures); 
+    updatePlaylistDisplayInfo(songFeatures, g); 
   }
 
-  function drawPlaylistLegend(){
+  function drawPlaylistLegend(examplePlaylist, svg, g){
+    // svg.selectAll('path').exit().remove(); 
     g.selectAll('rect.legend').data(features).join(
       enter => enter.append("rect"),
       update => update,
@@ -994,7 +1017,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .style('cursor', 'pointer')
     .style("fill", function(d) {return colors[features.indexOf(d)]})
     .attr("stroke-width", 2)
-    .attr("fill-opacity", .4)
+    // .attr("fill-opacity", .4)
     .attr("width", 18)
     .attr("height", 18)
     .classed('legend', true)
@@ -1010,18 +1033,19 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       svg.selectAll(objClass).style("fill", getDarkerByFeature(d))
     })
     .on("click", function(event, d){
+      // TODO: do all this for custom playlist too
       var objClass = "path." + d; 
       svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
-      examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist['track_ids'], d); 
+      examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist, examplePlaylist['track_ids'], d); 
       // svg.selectAll(objClass).style("fill", getBrighter(this.style.fill))
-      drawPlaylist(); 
+      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
       svg.selectAll(objClass).style("fill", getBrighterByFeature(d)); 
 
       colorBubbles(d); 
     })
   }
 
-  function updatePlaylistDisplayInfo(title){
+  function updatePlaylistDisplayInfo(title, g){
     if(title.length == 1){
       for(var i = 0; i < features.length; i++){
         title.push(features[i]); 
@@ -1029,6 +1053,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     }
 
     // middle of playlist text
+    g.selectAll("text.playlistInfo").exit().remove(); 
     g.selectAll("text.playlistInfo").data(title).join(
       enter => enter.append("text"),
       update => update,
@@ -1042,7 +1067,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .attr("transform", (d, i) => `translate(0,${(i * 20)})`); 
   }
 
-  function sortByFeature(songs, feature){
+  function sortByFeature(examplePlaylist, songs, feature){
     // TODO might be better to not sort the original array? how do you get back to original config... hmm 
     svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove();
     
