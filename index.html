@@ -676,6 +676,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // });
   
   // TODO width and height will probs need to be different when not in full screen viewing
+  // note that these are reinitialized in drawPlaylist to change width and height for new page
+  // not sure if this will cause bugs later?
   var svg = d3.select("svg#playlist").attr("preserveAspectRatio", "xMinYMin meet"),
     width = $("svg#playlist").width(),
     height = $("svg#playlist").height(),
@@ -683,6 +685,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     outerRadius = Math.min(width, height) / 2,
     g = svg.append("g")
       .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
+   
 
   var y = d3.scaleRadial()
     .range([innerRadius, outerRadius])
@@ -717,6 +720,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var selectedSong = ""; 
 
   function drawPlaylist(){
+    svg = d3.select("svg#playlist").attr("preserveAspectRatio", "xMinYMin meet"),
+    width = $("svg#playlist").width(),
+    height = $("svg#playlist").height(),
+    innerRadius = Math.min(width, height) / 6,
+    outerRadius = Math.min(width, height) / 2,
+    g = svg.append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
+
     svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
     drawPlaylistLegend();
     updatePlaylistDisplayInfo([examplePlaylist["name"]]);
