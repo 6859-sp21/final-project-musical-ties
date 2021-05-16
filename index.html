@@ -5,13 +5,17 @@
 <script src="https://d3js.org/d3.v6.js"></script>
 <script src="d3-scale-radial.js"></script>
 
+<link rel="stylesheet" href="style.css">
+
 <!-- visualization helpers -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://github.com/douglascrockford/JSON-js/blob/master/json2.js"></script>
+<!-- circular slider -->
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
 
 <!-- font from Google API -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -144,6 +148,7 @@
     <div class="full-height-div">
       <div class="section-title" id="right-title"></div>
       <div class="fill-remaining-space-div" style="overflow-y:scroll">
+        <div id="sliders"></div>
         <svg id='your-playlist' class="collpase" width="100%" height="100%"></svg>
         <ul class="list-group" id="custom-songs"></ul>
       </div>
@@ -152,113 +157,16 @@
 </div>
 
 
-
 <style>
-:root {
-  --background-dark: #17161B;
-  --background-light: #302E38;
-  /* --background-light: #302e3879; */
-  --text-light: #ECEAF2; 
-  --text-dark: #8F8B9A; 
-}
-
-body {
-  background-color: var(--background-light);
-  color: var(--text-light);
-  font-family: 'Josefin Sans', sans-serif;
-  font-weight: 300; 
-  overflow: hidden;
-}
-
-.full-height-div{
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  align-content: stretch;
-}
-
-.fill-remaining-space-div{
-  flex: 1 1 auto;
-  height: 200px; 
-}
-
-.section-view{
-  background-color: var(--background-dark);
-  margin: 10px; 
-  border-radius: 5px; 
-}
-/* super jank way of doing the spacing but oh well */
-.section-view-right{
-  margin-left: 0px; 
-}
-.section-view-bottom{
-  margin-top: 0px; 
-}
-
-.section-title{
-  font-size: 30px;
-  padding-top: 15px; 
-  padding-left: 5px; 
-}
-
-div.tooltip {   
-    position: absolute;           
-    text-align: center;           
-    width: 100px;                  
-    height: 18px;                 
-    padding: 2px;             
-    font: 12px sans-serif;        
-    background: lightsteelblue;   
-    border: 0px;      
-    border-radius: 10px;           
-    pointer-events: none;
-}
-
-.tippy-box[data-theme~='speechiness'] {
-  background-color: #ffb0c2;
-  color: white;
-}
-
-.tippy-box[data-theme~='liveness'] {
-  background-color: #FF6DB5;
-  color: white;
-}
-
-.tippy-box[data-theme~='valence'] {
-  background-color: #FF29D8;
-  color: white;
-}
-
-.tippy-box[data-theme~='energy'] {
-  background-color: #C02CE6;
-  color: white;
-}
-
-.tippy-box[data-theme~='danceability'] {
-  background-color: #7c30ff;
-  color: white;
-}
-
-
-
-/* Scrollbar formatting */
-/* Width */
-::-webkit-scrollbar {
-  width: 5px;
-}
-/* Track */
-::-webkit-scrollbar-track {
-  background: #575757;
-}
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
-}
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
+  body {
+    background-color: var(--background-light);
+    color: var(--text-light);
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300; 
+    overflow: hidden;
+  }
 </style>
+
 
 <script>
 
@@ -360,9 +268,29 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   var examplePlaylist;
 
-  /////////////////////////////////
-  // HOME SCREEN - WILL MOVE LATER
-  /////////////////////////////////
+  const slider_div = document.getElementById('sliders');
+  let slider_radius = 50;
+  let shift = (features.length-1) * 10;
+  for (let i=0; i < features.length; i++) {
+    slider_radius += 15;
+    const div = document.createElement('div');
+    div.id = 'slider-' + i.toString();
+    slider_div.appendChild(div);
+
+    $('#'+div.id).roundSlider({
+      sliderType: "range",
+      min: 0.0,
+      max: 1.0,
+      step: 0.1,
+      value: "0.0, 1.0",
+      startAngle: 90,
+      radius: slider_radius,
+      width: 12,
+      svgMode: true
+    });
+    shift-=10;
+  }
+  
 
   function getBubbleData() {
     let data = [];
@@ -1084,6 +1012,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     playlist.appendChild(song);
     yourPlaylist.track_ids.push(selectedSong);
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
+    d3.select('#add-song').style('visibility', 'hidden')
   }
 
   function displaySongInfoPlaylist(songID, g){
