@@ -617,6 +617,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('clicky-disk', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 0})
       .style("opacity",  0)
       .attr('r', myy(0))
@@ -847,6 +848,16 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       });
     }
   }
+  tippy(".clicky-disk", {
+        content: "click for more info",
+        followCursor: true,
+        placement: 'bottom',
+        // theme: features[i],
+        
+        arrow: false,
+        delay: [500, null],
+      });
+  
 
 
   //how do i make this cleaner?
