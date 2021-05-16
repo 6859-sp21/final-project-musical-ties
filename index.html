@@ -19,6 +19,7 @@
 
 <!-- icons from Material Design -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
 <!-- tooltip helper -->
 <script src="https://unpkg.com/@popperjs/core@2"></script>
@@ -100,14 +101,29 @@
   </div>
   
 </div> -->
+<div id="infoBlur" style=' background-color: rgba(46, 46, 46, 0.123); backdrop-filter: blur(5px); position : fixed; height:100vh; width: 100vw; visibility: hidden;'>
 
+</div>
+<div id='infoBar' style="position : fixed; height:100vh; width: 30vw; background-color: var(--background-light); visibility: hidden;">
+  <div>Hey more info here</div>
+  <div>that's so fucking cool </div>
+  <div> thanks for the info so helpful</div>
+  <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
+    close
+  </span>
+</div>
 
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
 <div class="row" style="visibility:visible; height:100vh; width:100vw; top: 0;left: 0; right: 0;" >
-  <div class="col-1" id="menubar" style="width:auto">
-    <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;">
-      menu
-    </span>
+  <div class="col-1" id="menubar" style="width:auto; height:100vh;display:flex; flex-direction: column;">
+    <div id="infoIcon" class="material-icons-outlined section-title" style="color:#8a6eba; transform: rotate(-90deg); margin-left: -10px; margin-top: 150px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
+      <!-- <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()"> -->
+        info
+      <!-- </span> -->
+    </div>
+    <div id="logo" style="color: var(--text-dark); font-size: 40px; margin:0px; padding: 0px; margin-top:200px; margin-left:-110px; margin-right:-140px; transform: rotate(-90deg); width:auto; height: auto;">
+      MUSICAL TIES
+    </div>
     <!-- <div>Do you know how to make this column as narrow as possible?</div> -->
   </div>
   <div class="col section-view" id="playlist-view">
@@ -255,6 +271,23 @@ var yourPlaylist = {
 function removeSong(song) {
   song.parentElement.remove();
   yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
+}
+
+var infoBarVisible = false; 
+function toggleInfoBar(){
+  infoBarVisible = !infoBarVisible; 
+  if(infoBarVisible){
+    document.getElementById("infoBar").style.visibility = "visible"; 
+    document.getElementById("infoBlur").style.visibility = "visible"; 
+    document.getElementById("logo").style.visibility = "hidden"; 
+    document.getElementById("infoIcon").style.visibility = "hidden"; 
+  }
+  else{
+    document.getElementById("infoBar").style.visibility = "hidden"; 
+    document.getElementById("infoBlur").style.visibility = "hidden"; 
+    document.getElementById("logo").style.visibility = "visible"; 
+    document.getElementById("infoIcon").style.visibility = "visible"; 
+  }
 }
 
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
@@ -593,6 +626,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('clicky-disk', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 0})
       .style("opacity",  0)
       .attr('r', myy(0))
@@ -623,21 +657,21 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       var colors = [ 'rgb(48, 46, 56)', 'rgb(23, 22, 27)' ];
 
       var grad = svgHome.append('defs')
-  .append('linearGradient')
-  .attr('id', 'grad')
-  .attr('x1', '0%')
-  .attr('x2', '0%')
-  .attr('y1', '0%')
-  .attr('y2', '100%');
+      .append('linearGradient')
+      .attr('id', 'grad')
+      .attr('x1', '0%')
+      .attr('x2', '0%')
+      .attr('y1', '0%')
+      .attr('y2', '100%');
 
-  grad.selectAll('stop')
-  .data(colors)
-  .enter()
-  .append('stop')
-  .style('stop-color', function(d){ return d; })
-  .attr('offset', function(d,i){
-    return 100 * (i / (colors.length - 1)) + '%';
-  })
+      grad.selectAll('stop')
+      .data(colors)
+      .enter()
+      .append('stop')
+      .style('stop-color', function(d){ return d; })
+      .attr('offset', function(d,i){
+        return 100 * (i / (colors.length - 1)) + '%';
+      })
 
     var yourRect = yourNode
       .append("g")
@@ -763,6 +797,51 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     });
   }
 
+  // this is another jank solution but the only way i can think to easily hide the playlists
+  // numToRemove is the number of playlists hidden, 
+  // and they should all be moved to the end in bubbleData and physically moved with movePlaylists() in order for this to work 
+  function hidePlaylists(numToRemove){
+    var data = [];
+    for(var i = 0; i < numToRemove; i++){
+      data.push(i);
+      var pName = bubbleData[bubbleData.length - 1 - i].name; 
+      d3.selectAll("text.playlistTitle" + pName).style('opacity', 0.3); 
+    }
+
+    svgHome
+      .append("g")
+      .classed('myHide', true)
+      .selectAll("g.myHide")
+      .data(data)
+      .enter()
+      .append('circle')
+      .attr('r', bubbleSize)
+      .style('fill', '#17161B99')
+      .attr("transform", function(d){ return "translate(" + getCircleX(d) + "," + getCircleY(d) + ")"})
+  }
+
+  function getCircleX(offset){
+    var arrayLoc = bubbleData.length + 1 - offset; 
+    var row = Math.ceil(arrayLoc / numGridCols); 
+    var col = numGridCols; 
+    while(((row - 1) * numGridCols) + col != arrayLoc){
+      col -= 1; 
+      if(col <= 0){
+        col = numGridCols - 1; 
+        row = row - 1; 
+      }
+    }
+    col = col - 1; 
+    return (gridLeftOffset + col * gridSpacingHorizontal);
+  }
+
+  function getCircleY(offset){
+    var arrayLoc = bubbleData.length + 1 - offset; 
+    var row = Math.ceil(arrayLoc / numGridCols); 
+    row = row - 1; 
+    return (gridTopOffset + row * gridSpacingVertical); 
+  }
+
   // add tooltips for each playlist in playlist view 
   for(bub of bubbleData){
     // for each feature
@@ -780,6 +859,16 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       });
     }
   }
+  tippy(".clicky-disk", {
+        content: "click for more info",
+        followCursor: true,
+        placement: 'bottom',
+        // theme: features[i],
+        
+        arrow: false,
+        delay: [500, null],
+      });
+  
 
 
   //how do i make this cleaner?
