@@ -161,9 +161,9 @@ class Slider {
         display.classList.add('slider__legend');
 
         // Legend heading
-        const heading = document.createElement('h2');
-        heading.innerText = 'Legend';
-        display.appendChild(heading);
+        // const heading = document.createElement('h2');
+        // heading.innerText = 'Legend';
+        // display.appendChild(heading);
 
         // Legend data for all sliders
         this.sliders.forEach((slider, index) => {
