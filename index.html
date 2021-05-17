@@ -274,9 +274,15 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       var sum = 0; 
       var total = 0; 
       for(song of yourPlaylist['track_ids']){
+        console.log("*******"); 
+        console.log(song); 
+        console.log(trackData[song]['features']); 
         sum += trackData[song]['features'][features[i]];
+        total += 1; 
       }
+      feats.push(sum/total); 
     }
+    console.log(feats); 
     return feats; 
   }
 
@@ -502,7 +508,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       )
       .attr('id', function(d) { return 'p' + d.id})
 
-      var colors = [ 'rgb(48, 46, 56)', 'rgb(23, 22, 27)' ];
+      var rectColors = [ 'rgb(48, 46, 56)', 'rgb(23, 22, 27)' ];
 
       var grad = svgHome.append('defs')
       .append('linearGradient')
@@ -513,12 +519,12 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .attr('y2', '100%');
 
       grad.selectAll('stop')
-      .data(colors)
+      .data(rectColors)
       .enter()
       .append('stop')
       .style('stop-color', function(d){ return d; })
       .attr('offset', function(d,i){
-        return 100 * (i / (colors.length - 1)) + '%';
+        return 100 * (i / (rectColors.length - 1)) + '%';
       })
 
     var yourRect = yourNode
@@ -552,7 +558,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .selectAll('path')
     .data(getYourAverageFeatures()) // map to index, and maybe you can calculate the feature list here and then go from there 
     .enter().append("path")
-    .style("fill", function(d, i) { return colors[i] })
+    .style("fill", function(d, i) { console.log(colors[i]);  return colors[i] })
       .attr("d", d3.arc() 
         .innerRadius(function(d, i) { return myy(i); })
         .outerRadius(function(d, i) { return myy(i + 1); })
