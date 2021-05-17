@@ -213,6 +213,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // COLORS AND VISUAL VARIABLES
   // colors of features
   var colors = ["#FFB0C2", "#FF6DB5", "#FF29D8", "#C02CE6", "#7C30FF"]; 
+    // var colors = ["#ffe942", "#ff7e38", "#FF29D8", "#C02CE6", "#7C30FF"]; 
+
   // colors = colors.reverse(); 
   var colorsBright = ["#FFD7E0", "#FFDEEF", "#FFCAF5", "#F2BCFF", "#DAC5FF", "#ffa83d"]; 
 
@@ -418,7 +420,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         .startAngle(function(d) { return 0 })
         .endAngle(function(d) { return myx(d); })
         .padAngle(0.005)
-        .padRadius(innerRadius)
+        // .padRadius(innerRadius)
       )
       .attr('id', function(d, i){ return features[i]})
 
@@ -640,7 +642,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         .startAngle(function(d) { return 0 })
         .endAngle(function(d) { return myx(d); })
         .padAngle(0.005)
-        .padRadius(innerRadius)
+        // .padRadius(innerRadius)
       )
       .attr('id', function(d, i){ return features[i]})
 
@@ -771,32 +773,35 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     return (gridTopOffset + row * gridSpacingVertical); 
   }
 
-  // add tooltips for each playlist in playlist view 
-  for(bub of bubbleData){
-    // for each feature
-    var featureVals = getAverageFeatures(bub.name); 
+  function addBubbleToolTips(){
+    // add tooltips for each playlist in playlist view 
+    for(bub of bubbleData){
+      // for each feature
+      var featureVals = getAverageFeatures(bub.name); 
 
-    for(var i = 0; i < features.length; i++){
-      var elementId = "#ring" + bub.name + "-" + (i + 1) ; 
-      tippy(elementId, {
-        content: "" + features[i] + " : " + featureVals[i].toFixed(2),
-        followCursor: true,
-        placement: 'left',
-        theme: features[i],
-        
-        arrow: false,
-      });
+      for(var i = 0; i < features.length; i++){
+        var elementId = "#ring" + bub.name + "-" + (i + 1) ; 
+        tippy(elementId, {
+          content: "" + features[i] + " : " + featureVals[i].toFixed(2),
+          followCursor: true,
+          placement: 'left',
+          theme: features[i],
+          
+          arrow: false,
+        });
+      }
     }
-  }
-  tippy(".clicky-disk", {
-        content: "click for more info",
-        followCursor: true,
-        placement: 'bottom',
-        // theme: features[i],
-        
-        arrow: false,
-        delay: [500, null],
-      });
+    tippy(".clicky-disk", {
+          content: "click for more info",
+          followCursor: true,
+          placement: 'bottom',
+          // theme: features[i],
+          
+          arrow: false,
+          delay: [500, null],
+        });
+    }
+    addBubbleToolTips(); 
   
 
 
@@ -865,13 +870,13 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // TODO width and height will probs need to be different when not in full screen viewing
   // note that these are reinitialized in drawPlaylist to change width and height for new page
   // not sure if this will cause bugs later?
-  var svg = d3.select("svg#playlist").attr("preserveAspectRatio", "xMinYMin meet"),
-    width = $("svg#playlist").width(),
-    height = $("svg#playlist").height(),
-    innerRadius = Math.min(width, height) / 6,
-    outerRadius = Math.min(width, height) / 2,
-    g = svg.append("g")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
+  var svg = d3.select("svg#playlist").attr("preserveAspectRatio", "xMinYMin meet"); 
+    // width = $("svg#playlist").width(),
+    // height = $("svg#playlist").height(),
+    // innerRadius = Math.min(width, height) / 15,
+    // outerRadius = Math.min(width, height) / 2.5,
+    // g = svg.append("g")
+    //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
 
   var yourSvg = d3.select("svg#your-playlist").attr("preserveAspectRatio", "xMinYMin meet");
     // yourwidth = $("svg#your-playlist").width(),
@@ -880,11 +885,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // outerRadius = Math.min(width, height) / 2,
     // yourG = svg.append("g")
     //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
-   
-
-  var y = d3.scaleRadial()
-    .range([innerRadius, outerRadius])
-    .domain([0, 5]);
+  
 
   function getBrighterByFeature(feature){
     var ind = features.indexOf(feature); 
@@ -916,15 +917,20 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   function drawPlaylist(currentPlaylist, svg, svg_id, panel_id){
     width = $(svg_id).width(),
-    height = $(svg_id).height(),
-    innerRadius = Math.min(width, height) / 6,
-    outerRadius = Math.min(width, height) / 2;
+    height = $(svg_id).height(); 
+    let factor = 0.8; 
+    let innerRadius = Math.min(width, height) / 20; 
+    let outerRadius = Math.min(width, height) / 2;
     let g = svg.append("g")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
+      .attr("transform", "translate(" + width / 2 + "," + outerRadius * factor + ")"); 
+
+    var y = d3.scaleRadial()
+    .range([innerRadius, outerRadius])
+    .domain([0, 5]);
 
     svg.selectAll('path').data(currentPlaylist['track_ids']).exit().remove(); 
-    drawPlaylistLegend(currentPlaylist, svg, g);
-    updatePlaylistDisplayInfo([currentPlaylist["name"]], g);
+    drawPlaylistLegend(currentPlaylist, svg, g, outerRadius, factor);
+    updatePlaylistDisplayInfo([currentPlaylist["name"]], g, outerRadius, factor);
     d3.select(panel_id).text(currentPlaylist["name"]);
 
     var x = d3.scaleBand()
@@ -1037,7 +1043,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     updatePlaylistDisplayInfo(songFeatures, g); 
   }
 
-  function drawPlaylistLegend(examplePlaylist, svg, g){
+  function drawPlaylistLegend(examplePlaylist, svg, g, outerRadius, factor){
     // svg.selectAll('path').exit().remove(); 
     g.selectAll('rect.legend').data(features).join(
       enter => enter.append("rect"),
@@ -1053,7 +1059,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .classed('legend', true)
     .attr("opacity", "1")
     .text(d => d)
-    .attr("transform", (d, i) => `translate(-20,${(i * 20 + 5)})`)
+    .attr("transform", (d, i) => `translate(${(-outerRadius)},${(i * 20 + 5 + outerRadius * factor)})`)
     .on("mouseenter", function(event, d){
       var objClass = "path." + d; 
       svg.selectAll(objClass).style("fill", getBrighterByFeature(d))
@@ -1075,7 +1081,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     })
   }
 
-  function updatePlaylistDisplayInfo(title, g){
+  function updatePlaylistDisplayInfo(title, g, outerRadius, factor){
     if(title.length == 1){
       for(var i = 0; i < features.length; i++){
         title.push(features[i]); 
@@ -1094,7 +1100,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // .attr("fill-opacity", .4)
     .classed('playlistInfo', true)
     .text(d => d)
-    .attr("transform", (d, i) => `translate(0,${(i * 20)})`); 
+    .attr("transform", (d, i) => `translate(${-outerRadius + 20},${(i * 20) + (outerRadius * factor)})`); 
   }
 
   function sortByFeature(examplePlaylist, songs, feature){
