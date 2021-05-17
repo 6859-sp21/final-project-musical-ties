@@ -29,80 +29,6 @@
 
 <title>Musical Ties</title>
 
-
-<!-- will move home to separate page at some point -->
-<!-- <div style="display: flex; flex-direction: column; width: 100vw; margin: 0; padding: 0; max-width:100%; max-height:100%;">
-  <b>Filter Playlist Attributes</b>
-  <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">valence</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="valence_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="valence_max">1.0</p>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">danceability</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="danceability_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="danceability_max">1.0</p>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">speechiness</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="speechiness_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="speechiness_max">1.0</p>
-      </div>
-    </div>
-  </div>
-
-  <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">liveness</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="liveness_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="liveness_max">1.0</p>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">energy</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="energy_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="energy_max">1.0</p>
-      </div>
-    </div>
-  </div>-->
-  <!-- <div>
-    <b>Sort By Attribute</b>
-    <select class="form-select" id="sort">
-      <option selected>none</option>
-      <option>valence</option>
-      <option>danceability</option>
-      <option>speechiness</option>
-      <option>liveness</option>
-      <option>energy</option>
-    </select>
-  </div>
-    
-</div> 
-
-<div style="display: flex; width: 100vw; height: 70vh; margin: 0; padding: 0; max-width:100%; max-height:100%;">
-  <div style="display: flex; width: 100%; height: 100%;">
-    <svg id='home' width="100%" height="100%"></svg>
-    <svg id='playlist' width="100%" height="100%"></svg>
-  </div>
-</div>
-<div style="display: flex; flex-direction: row; justify-content: center;">
-  <h4>My New Playlist</h4>
-</div>
-<div style="display: flex; justify-content: center; width: 100vw; height: 100vh; margin: 0; padding: 0; max-width:100%; max-height:100%;">
-  <div>
-    (click a song to add/remove)
-    
-  </div>
-  
-</div> -->
 <div id="infoBlur" style=' background-color: rgba(46, 46, 46, 0.123); backdrop-filter: blur(5px); position : fixed; height:100vh; width: 100vw; visibility: hidden;'>
 
 </div>
@@ -118,7 +44,7 @@
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
 <div class="row" style="visibility:visible; height:100vh; width:100vw; top: 0;left: 0; right: 0;" >
   <div class="col-1" id="menubar" style="width:auto; height:100vh;display:flex; flex-direction: column;">
-    <span id="back" class="material-icons-outlined" onclick="goHome()" style="font-size: 40px; visibility: hidden;">arrow_back</span>
+    <span id="back" class="material-icons-outlined" onclick="goHome()" style="font-size: 40px;">arrow_back</span>
     <div id="infoIcon" class="material-icons-outlined section-title" style="color:#8a6eba; transform: rotate(-90deg); margin-left: -10px; margin-top: 150px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
       <!-- <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()"> -->
         info
@@ -171,11 +97,8 @@
 
 <script>
 
-var yourPlaylist = {
-  'id' : "new1",
-  'name' : 'Your Playlist',
-  'track_ids' : []
-};
+var examplePlaylist = JSON.parse(sessionStorage.playlist);
+var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 
 function removeSong(song) {
   song.parentElement.remove();
@@ -201,16 +124,19 @@ function toggleInfoBar(){
 
 // TODO: fix this
 function goHome() {
+  sessionStorage.playlist = JSON.stringify(examplePlaylist);
+  sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
+  window.location = 'index.html';
   // svgHome = d3.select("body").append("svg").attr("width", 50).attr("height", 50);
-  d3.select("svg#playlist").remove();
-  d3.select("svg#your-playlist").remove();
-  d3.select("#right-panel").attr('class','col-3 section-view section-view-right');
-  document.getElementById("back").style.visibility = "hidden"; 
-  // TODO: this might be problematic bc not properly deleted
-  document.getElementById('add-song').style.visibility = 'hidden';
-  document.getElementById('songs').style.visibility = 'hidden';
-  document.getElementById('custom-songs').style.visibility = 'hidden';
-  d3.select('#left-title').text('playlist exploration');
+  // d3.select("svg#playlist").remove();
+  // d3.select("svg#your-playlist").remove();
+  // d3.select("#right-panel").attr('class','col-3 section-view section-view-right');
+  // document.getElementById("back").style.visibility = "hidden"; 
+  // // TODO: this might be problematic bc not properly deleted
+  // document.getElementById('add-song').style.visibility = 'hidden';
+  // document.getElementById('songs').style.visibility = 'hidden';
+  // document.getElementById('custom-songs').style.visibility = 'hidden';
+  // d3.select('#left-title').text('playlist exploration');
   // drawYourPlaylistBubble(); 
   // bubbleData = getBubbleData();
   // drawBubbles();
@@ -288,7 +214,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     
   // };
 
-  var examplePlaylist;
 
   const feature_sliders = {
     DOMselector: '#sliders',
@@ -328,12 +253,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     return data;
   }
    
-  var bubbleData = getBubbleData();
-
-  // sets SVG height to height of playlists 
-  var numRows = Math.ceil((bubbleData.length + 1) / numGridCols); 
-  var fullHeight = (numRows * gridSpacingVertical) + (gridTopOffset) - spacing*2; 
-  d3.select("svg#home").attr("height", "" + fullHeight + "px" ); 
 
   // input: playlist is entire playlist dictionary
   function getAverage(playlist, feature){
@@ -377,520 +296,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     return feats; 
   }
 
-  // not in use
-  function colorBubbles(feature){
-    var fIndex = features.indexOf(feature); 
-    currentColor = colors[fIndex];
-
-    svgHome.selectAll("circle")
-    .style("fill-opacity", function(d) {
-      return getAverage(d, feature); 
-    }).style("fill", currentColor); 
-  }
-
-  // needed this to be global variable so i can update the positions of the playlist titles
-  // might be a better way 
-  var titles; 
-
-  // scales for bubbles
-  var myx = d3.scaleLinear()
-    .range([0, 2 * Math.PI])
-    .domain([0, 1]);
-
-  var myy = d3.scaleLinear()
-    .range([centerBubbleSize, bubbleSize])
-    .domain([0, 5]);
-
-  // Initialize the circle: all located at the center of the svg area
-  function drawBubbles() {
-    var node = svgHome.selectAll("g.otherPlaylists")
-      .data(bubbleData)
-      .join(
-        enter  => enter.append('g'),
-        update => update,
-        exit   => exit.remove()
-      )
-      .attr('id', function(d) { return 'p' + d.name})
-      .classed('otherPlaylists', true);
-
-    // draws the black record
-    node
-      .append("g")
-      .selectAll("g")
-      .data([5, 4, 3, 2, 1, 0])
-      .enter().append("circle")
-      .classed('disk', true)
-      .style("fill", function(d) { if(d % 2 == 0){ return darkerRecord} return lighterRecord })
-      .attr('r', function(d) {return myy(d)})
-
-    // draws the colors on the record
-    var bars = node
-    .append('g')
-    .selectAll('path')
-    .data(function(d) {return getAverageFeatures(d.name)}) // map to index, and maybe you can calculate the feature list here and then go from there 
-    .enter().append("path")
-    .style("fill", function(d, i) { return colors[i] })
-      .attr("d", d3.arc() 
-        .innerRadius(function(d, i) { return myy(i); })
-        .outerRadius(function(d, i) { return myy(i + 1); })
-        .startAngle(function(d) { return 0 })
-        .endAngle(function(d) { return myx(d); })
-        .padAngle(0.005)
-        // .padRadius(innerRadius)
-      )
-      .attr('id', function(d, i){ return features[i]})
-
-    // TODO no longer in use, move click functionality
-    // // draws a transparent circle that is meant for detection
-    // node
-    //   .append("g")
-    //   .selectAll("g")
-    //   .data(function(d) {return [d]})
-    //   .enter().append("circle")
-    //   .classed('detect', true)
-    //   .style("opacity", "0")
-    //   .attr('r', bubbleSize)
-    //   .on("click", function(event, d){
-    //       // svgHome.selectAll('circle').data(bubbleData).exit().remove();  
-    //       examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
-    //       bubbleData = [];
-    //       drawBubbles();
-    //       drawPlaylist();
-    //   })
-
-    // playlist title
-    titles = node
-      .append("g")
-      .classed("title", true)
-      .selectAll("g.title")
-      .data(function(d) {return [d]})
-      .enter()
-      .append("text")
-      // .classed(function(d) {return 'playlistTitle' + d.name}, true)
-      .text(function(d) { return getPlaylistInfo(d.name).name})
-      // .style("opacity", 0)
-      .style("fill", ourWhite)
-      .style("font-size", "22px")
-      .on("mouseover", function(event, d){
-        // console.log(this.getAttribute('class')); 
-      }); 
-
-    // add classname for each title text
-    titles.each(function(d) {
-      this.classList.add("playlistTitle" + d.name);
-    });
-
-
-    // this is a really jank way to make the tool tips on the rings work 
-    // invisible concentric bubbles that allow for tooltips
-    node
-      .append("g")
-      .selectAll("g")
-      .data(function(d) {return [d]})
-      .enter().append("circle")
-      .classed('disk', true)
-      .attr("id", function(d) {return "ring" + d.name + "-" + 5})
-      .style("opacity",  0)
-      .attr('r', myy(5))
-      .on("mouseenter", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[4]).style('fill', colorsBright[4])
-      })
-      .on("mouseleave", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[4]).style('fill', colors[4])
-      })
-
-    // invisible concentric bubbles that allow for tooltips
-    node
-      .append("g")
-      .selectAll("g")
-      .data(function(d) {return [d]})
-      .enter().append("circle")
-      .classed('disk', true)
-      .attr("id", function(d) {return "ring" + d.name + "-" + 4})
-      .style("opacity",  0)
-      .attr('r', myy(4))
-      .on("mouseenter", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[3]).style('fill', colorsBright[3])
-      })
-      .on("mouseleave", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[3]).style('fill', colors[3])
-      })
-
-    // invisible concentric bubbles that allow for tooltips
-    node
-      .append("g")
-      .selectAll("g")
-      .data(function(d) {return [d]})
-      .enter().append("circle")
-      .classed('disk', true)
-      .attr("id", function(d) {return "ring" + d.name + "-" + 3})
-      .style("opacity",  0)
-      .attr('r', myy(3))
-      .on("mouseenter", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[2]).style('fill', colorsBright[2])
-      })
-      .on("mouseleave", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[2]).style('fill', colors[2])
-      })
-
-    // invisible concentric bubbles that allow for tooltips
-    node
-      .append("g")
-      .selectAll("g")
-      .data(function(d) {return [d]})
-      .enter().append("circle")
-      .classed('disk', true)
-      .attr("id", function(d) {return "ring" + d.name + "-" + 2})
-      .style("opacity",  0)
-      .attr('r', myy(2))
-      .on("mouseenter", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[1]).style('fill', colorsBright[1])
-      })
-      .on("mouseleave", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[1]).style('fill', colors[1])
-      })
-
-    // invisible concentric bubbles that allow for tooltips
-    node
-      .append("g")
-      .selectAll("g")
-      .data(function(d) {return [d]})
-      .enter().append("circle")
-      .classed('disk', true)
-      .attr("id", function(d) {return "ring" + d.name + "-" + 1})
-      .style("opacity",  0)
-      .attr('r', myy(1))
-      .on("mouseenter", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[0]).style('fill', colorsBright[0])
-      })
-      .on("mouseleave", function(event, d){
-        d3.select('#p' + d.name).select("#" + features[0]).style('fill', colors[0])
-      })
-
-    // invisible concentric bubbles that allow for tooltips
-    node
-      .append("g")
-      .selectAll("g")
-      .data(function(d) {return [d]})
-      .enter().append("circle")
-      .classed('disk', true)
-      .classed('clicky-disk', true)
-      .attr("id", function(d) {return "ring" + d.name + "-" + 0})
-      .style("opacity",  0)
-      .attr('r', myy(0))
-      .on("click", function(event, d){
-        // TODO for now this can be where you click to show playlist view
-        d3.select("svg#home").remove();
-        d3.select("#right-panel").attr('class','col section-view section-view-right');
-        document.getElementById("back").style.visibility = "visible"; 
-        examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
-        drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
-        if (yourPlaylist.track_ids.length > 0)
-          drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
-      })
-
-      movePlaylists(); 
-  }
-
-  function drawYourPlaylistBubble(){
-    var yourNode = svgHome.selectAll("g")
-      .data([yourPlaylist])
-      .join(
-        enter  => enter.append('g'),
-        update => update,
-        exit   => exit.remove()
-      )
-      .attr('id', function(d) { return 'p' + d.id})
-
-      var colors = [ 'rgb(48, 46, 56)', 'rgb(23, 22, 27)' ];
-
-      var grad = svgHome.append('defs')
-      .append('linearGradient')
-      .attr('id', 'grad')
-      .attr('x1', '0%')
-      .attr('x2', '0%')
-      .attr('y1', '0%')
-      .attr('y2', '100%');
-
-      grad.selectAll('stop')
-      .data(colors)
-      .enter()
-      .append('stop')
-      .style('stop-color', function(d){ return d; })
-      .attr('offset', function(d,i){
-        return 100 * (i / (colors.length - 1)) + '%';
-      })
-
-    var yourRect = yourNode
-      .append("g")
-      .selectAll("g")
-      .data(function(d) {return [d]})
-      .enter()
-      .append("rect")
-      .classed('filled', true)
-      .attr("rx", 6)
-      .attr("ry", 6)
-      .attr("width", bubbleSize*2 + (spacing / 2))
-      .attr("height", bubbleSize*2 + spacing)
-      .attr("fill", 'url(#grad)')
-      .attr("stroke", "#69647d")
-      .attr("stroke-width", "2px")
-
-    // draws the black record
-    yourNode
-      .append("g")
-      .selectAll("g")
-      .data([5, 4, 3, 2, 1, 0])
-      .enter().append("circle")
-      .classed('disk', true)
-      .style("fill", function(d) { if(d % 2 == 0){ return darkerRecord} return lighterRecord })
-      .attr('r', function(d) {return myy(d)})
-
-    // draws the colors on the record
-    yourNode
-    .append('g')
-    .selectAll('path')
-    .data(getYourAverageFeatures()) // map to index, and maybe you can calculate the feature list here and then go from there 
-    .enter().append("path")
-    .style("fill", function(d, i) { return colors[i] })
-      .attr("d", d3.arc() 
-        .innerRadius(function(d, i) { return myy(i); })
-        .outerRadius(function(d, i) { return myy(i + 1); })
-        .startAngle(function(d) { return 0 })
-        .endAngle(function(d) { return myx(d); })
-        .padAngle(0.005)
-        // .padRadius(innerRadius)
-      )
-      .attr('id', function(d, i){ return features[i]})
-
-    // playlist title
-    yourTitle = yourNode
-      .append("g")
-      .classed("title", true)
-      .selectAll("g.title")
-      .data(function(d) {return [d]})
-      .enter()
-      .append("text")
-      // .classed(function(d) {return 'playlistTitle' + d.name}, true)
-      .text(function(d) { return d.name})
-      // .style("opacity", 0)
-      .style("fill", ourWhite)
-      .style("font-size", "22px")
-      .on("mouseover", function(event, d){
-        // console.log(this.getAttribute('class')); 
-      }); 
-
-    // add classname for each title text
-    yourTitle.each(function(d) {
-      this.classList.add("playlistTitle" + d.id);
-    });
-
-    // var pid = 
-    // this is a really jank way to make the tool tips on the rings work 
-    // invisible concentric bubbles that allow for tooltips
-    yourNode
-      .append("g")
-      .selectAll("g")
-      .data([5, 4, 3, 2, 1, 0])
-      .enter().append("circle")
-      .classed('disk', true)
-      .attr("id", function(d) {return "ring" + yourPlaylist.id + "-" + d})
-      .style("opacity",  0)
-      .attr('r', function(d) {return myy(4)})
-      .on("mouseenter", function(event, d){
-        if(d > 0){
-          d3.select('#p' + yourPlaylist.id).select("#" + features[d - 1]).style('fill', colorsBright[d - 1])
-        }
-      })
-      .on("mouseleave", function(event, d){
-        if(d > 0){
-          d3.select('#p' + yourPlaylist.id).select("#" + features[d - 1]).style('fill', colors[d - 1])
-        }
-        
-      })
-
-    yourNode.attr("transform", "translate(" + (gridLeftOffset) + "," + (gridTopOffset) + ")");
-    yourTitle.each(function(d) {
-      var width = this.getBBox().width; 
-      this.setAttribute("transform", "translate(" + (-0.5 * width) + "," + (-(bubbleSize + 10 ) ) + ")");
-    });
-    yourRect.each(function(d) {
-      var width = this.getBBox().width; 
-      var height = this.getBBox().height; 
-      this.setAttribute("transform", "translate(" + (-0.5 * width) + "," + ((-0.5 * height) - 10) + ")");
-    });
-    // yourTitle.attr("transform", "translate(" + (-0.5 * width) + "," + (-(bubbleSize + 10 ) ) + ")");
-      // movePlaylists(); 
-  }
-
-  document.getElementById("back").style.visibility = "visible"; 
-  examplePlaylist = playlistData[0];
-  drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
-  if (yourPlaylist.track_ids.length > 0)
-    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
-
-  // Use to update positions of playlists based on new ordering in bubbleData
-  function movePlaylists(){
-    var jankRowCount = 0; 
-    var jankColCount = 1; 
-    for(bub of bubbleData){
-      d3.select('#p' + bub.name).attr("transform", "translate(" + (gridLeftOffset + jankColCount * gridSpacingHorizontal) + "," + (gridTopOffset + jankRowCount * gridSpacingVertical) + ")");
-      jankColCount += 1; 
-      if(jankColCount > numGridCols - 1){
-        jankColCount = 0; 
-        jankRowCount += 1; 
-      }
-    }
-    titles.each(function(d) {
-      var width = this.getBBox().width; 
-      this.setAttribute("transform", "translate(" + (-0.5 * width) + "," + (-(bubbleSize + 10 ) ) + ")");
-    });
-  }
-
-  // this is another jank solution but the only way i can think to easily hide the playlists
-  // numToRemove is the number of playlists hidden, 
-  // and they should all be moved to the end in bubbleData and physically moved with movePlaylists() in order for this to work 
-  function hidePlaylists(numToRemove){
-    var data = [];
-    for(var i = 0; i < numToRemove; i++){
-      data.push(i);
-      var pName = bubbleData[bubbleData.length - 1 - i].name; 
-      d3.selectAll("text.playlistTitle" + pName).style('opacity', 0.3); 
-    }
-
-    svgHome
-      .append("g")
-      .classed('myHide', true)
-      .selectAll("g.myHide")
-      .data(data)
-      .enter()
-      .append('circle')
-      .attr('r', bubbleSize)
-      .style('fill', '#17161B99')
-      .attr("transform", function(d){ return "translate(" + getCircleX(d) + "," + getCircleY(d) + ")"})
-  }
-
-  function getCircleX(offset){
-    var arrayLoc = bubbleData.length + 1 - offset; 
-    var row = Math.ceil(arrayLoc / numGridCols); 
-    var col = numGridCols; 
-    while(((row - 1) * numGridCols) + col != arrayLoc){
-      col -= 1; 
-      if(col <= 0){
-        col = numGridCols - 1; 
-        row = row - 1; 
-      }
-    }
-    col = col - 1; 
-    return (gridLeftOffset + col * gridSpacingHorizontal);
-  }
-
-  function getCircleY(offset){
-    var arrayLoc = bubbleData.length + 1 - offset; 
-    var row = Math.ceil(arrayLoc / numGridCols); 
-    row = row - 1; 
-    return (gridTopOffset + row * gridSpacingVertical); 
-  }
-
-  function addBubbleToolTips(){
-    // add tooltips for each playlist in playlist view 
-    for(bub of bubbleData){
-      // for each feature
-      var featureVals = getAverageFeatures(bub.name); 
-
-      for(var i = 0; i < features.length; i++){
-        var elementId = "#ring" + bub.name + "-" + (i + 1) ; 
-        tippy(elementId, {
-          content: "" + features[i] + " : " + featureVals[i].toFixed(2),
-          followCursor: true,
-          placement: 'left',
-          theme: features[i],
-          
-          arrow: false,
-        });
-      }
-    }
-    tippy(".clicky-disk", {
-          content: "click for more info",
-          followCursor: true,
-          placement: 'bottom',
-          // theme: features[i],
-          
-          arrow: false,
-          delay: [500, null],
-        });
-    }
-    addBubbleToolTips(); 
-  
-
-
-  //how do i make this cleaner?
-  // d3.select('#valence_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') >= this.value);
-
-  //   drawBubbles();
-  // });
-
-  // d3.select('#danceability_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') >= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#speechiness_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') >= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#liveness_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') >= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#energy_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') >= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#valence_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') <= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#danceability_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') <= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#speechiness_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') <= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#liveness_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') <= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#energy_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') <= this.value);
-  //   drawBubbles();
-  // });
-  
-  // TODO width and height will probs need to be different when not in full screen viewing
-  // note that these are reinitialized in drawPlaylist to change width and height for new page
-  // not sure if this will cause bugs later?
   var svg = d3.select("svg#playlist").attr("preserveAspectRatio", "xMinYMin meet"); 
-  console.log(svg);
     // width = $("svg#playlist").width(),
     // height = $("svg#playlist").height(),
     // innerRadius = Math.min(width, height) / 15,
@@ -905,6 +311,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // outerRadius = Math.min(width, height) / 2,
     // yourG = svg.append("g")
     //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
+
+  drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
+  if (yourPlaylist.track_ids.length > 0)
+    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
   
 
   function getBrighterByFeature(feature){
@@ -1043,6 +453,16 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   }
 
+  // init song list for your playlist
+  for (track of yourPlaylist.track_ids){
+    let playlist = document.getElementById('custom-songs');
+    let song = document.createElement('li');
+    song.className = "list-group-item list-group-item-dark";
+    song.id = track;
+    song.innerHTML = `${trackData[track].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
+    playlist.appendChild(song);
+  }
+
   const addButton = document.getElementById('add-song');
   addButton.onclick = function() {
     let playlist = document.getElementById('custom-songs');
@@ -1155,7 +575,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     return total; 
   }
 
-  // d3.select("svg#home").remove();
 
 }); 
   

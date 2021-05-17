@@ -29,80 +29,6 @@
 
 <title>Musical Ties</title>
 
-
-<!-- will move home to separate page at some point -->
-<!-- <div style="display: flex; flex-direction: column; width: 100vw; margin: 0; padding: 0; max-width:100%; max-height:100%;">
-  <b>Filter Playlist Attributes</b>
-  <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">valence</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="valence_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="valence_max">1.0</p>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">danceability</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="danceability_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="danceability_max">1.0</p>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">speechiness</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="speechiness_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="speechiness_max">1.0</p>
-      </div>
-    </div>
-  </div>
-
-  <div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">liveness</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="liveness_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="liveness_max">1.0</p>
-      </div>
-    </div>
-    <div style="display: flex; flex-direction: row;">
-      <div>
-        <label for="valence_min" class="form-label">energy</label>
-        <p>min: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="energy_min">1.0</p>
-        <p>max: 0.0<input type="range" min="0" max="1" step=".1" class="slider" id="energy_max">1.0</p>
-      </div>
-    </div>
-  </div>-->
-  <!-- <div>
-    <b>Sort By Attribute</b>
-    <select class="form-select" id="sort">
-      <option selected>none</option>
-      <option>valence</option>
-      <option>danceability</option>
-      <option>speechiness</option>
-      <option>liveness</option>
-      <option>energy</option>
-    </select>
-  </div>
-    
-</div> 
-
-<div style="display: flex; width: 100vw; height: 70vh; margin: 0; padding: 0; max-width:100%; max-height:100%;">
-  <div style="display: flex; width: 100%; height: 100%;">
-    <svg id='home' width="100%" height="100%"></svg>
-    <svg id='playlist' width="100%" height="100%"></svg>
-  </div>
-</div>
-<div style="display: flex; flex-direction: row; justify-content: center;">
-  <h4>My New Playlist</h4>
-</div>
-<div style="display: flex; justify-content: center; width: 100vw; height: 100vh; margin: 0; padding: 0; max-width:100%; max-height:100%;">
-  <div>
-    (click a song to add/remove)
-    
-  </div>
-  
-</div> -->
 <div id="infoBlur" style=' background-color: rgba(46, 46, 46, 0.123); backdrop-filter: blur(5px); position : fixed; height:100vh; width: 100vw; visibility: hidden;'>
 
 </div>
@@ -118,7 +44,6 @@
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
 <div class="row" style="visibility:visible; height:100vh; width:100vw; top: 0;left: 0; right: 0;" >
   <div class="col-1" id="menubar" style="width:auto; height:100vh;display:flex; flex-direction: column;">
-    <span id="back" class="material-icons-outlined" onclick="goHome()" style="font-size: 40px; visibility: hidden;">arrow_back</span>
     <div id="infoIcon" class="material-icons-outlined section-title" style="color:#8a6eba; transform: rotate(-90deg); margin-left: -10px; margin-top: 150px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
       <!-- <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()"> -->
         info
@@ -136,8 +61,6 @@
 
       <div class="fill-remaining-space-div" style="overflow-y:scroll">
         <svg id='home' class="collapse show" width="100%" height="100%" style="vertical-align: top;"></svg>
-        <svg id='playlist' class="collpase" width="100%" height="100%"></svg>
-        <div id="left-player">
         </div>
         <button type="button" class="btn btn-secondary" id="add-song" style="visibility: hidden">add this song to my playlist</button>
         <ul class="list-group" id="songs"></ul>
@@ -149,9 +72,6 @@
       <div class="section-title" id="right-title"></div>
       <div class="fill-remaining-space-div" style="overflow-y:scroll">
         <div id="sliders"></div>
-        <svg id='your-playlist' class="collpase" width="100%" height="100%"></svg>
-        <div id="right-player"></div>
-        <ul class="list-group" id="custom-songs"></ul>
       </div>
     </div>
   </div>
@@ -172,16 +92,17 @@
 
 <script>
 
-var yourPlaylist = {
-  'id' : "new1",
-  'name' : 'Your Playlist',
-  'track_ids' : []
-};
-
-function removeSong(song) {
-  song.parentElement.remove();
-  yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
+if (sessionStorage.init !== 'true'){
+  var yourPlaylist = {
+    'id' : "new1",
+    'name' : 'Your Playlist',
+    'track_ids' : []
+  };
+  sessionStorage.init = true;
+} else {
+  var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 }
+console.log(yourPlaylist);
 
 var infoBarVisible = false; 
 function toggleInfoBar(){
@@ -200,24 +121,6 @@ function toggleInfoBar(){
   }
 }
 
-// TODO: fix this
-function goHome() {
-  // svgHome = d3.select("body").append("svg").attr("width", 50).attr("height", 50);
-  d3.select("svg#playlist").remove();
-  d3.select("svg#your-playlist").remove();
-  d3.select("#right-panel").attr('class','col-3 section-view section-view-right');
-  document.getElementById("back").style.visibility = "hidden"; 
-  // TODO: this might be problematic bc not properly deleted
-  document.getElementById('add-song').style.visibility = 'hidden';
-  document.getElementById('songs').style.visibility = 'hidden';
-  document.getElementById('custom-songs').style.visibility = 'hidden';
-  d3.select('#left-title').text('playlist exploration');
-  drawYourPlaylistBubble(); 
-  // bubbleData = getBubbleData();
-  drawBubbles();
-  // if (yourPlaylist.track_ids.length > 0)
-  //   drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
-}
 
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/trackData.json").then(trackData => {
@@ -581,13 +484,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .attr('r', myy(0))
       .on("click", function(event, d){
         // TODO for now this can be where you click to show playlist view
-        d3.select("svg#home").remove();
-        d3.select("#right-panel").attr('class','col section-view section-view-right');
-        document.getElementById("back").style.visibility = "visible"; 
         examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
-        drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
-        if (yourPlaylist.track_ids.length > 0)
-          drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
+        sessionStorage.playlist = JSON.stringify(examplePlaylist);
+        sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
+        window.location = 'comparison.html';
       })
 
       movePlaylists(); 
@@ -820,90 +720,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         });
     }
     addBubbleToolTips(); 
-  
-
-
-  //how do i make this cleaner?
-  // d3.select('#valence_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') >= this.value);
-
-  //   drawBubbles();
-  // });
-
-  // d3.select('#danceability_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') >= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#speechiness_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') >= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#liveness_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') >= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#energy_min').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') >= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#valence_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'valence') <= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#danceability_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'danceability') <= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#speechiness_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'speechiness') <= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#liveness_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'liveness') <= this.value);
-  //   drawBubbles();
-  // });
-
-  // d3.select('#energy_max').on("input", function() {
-  //   svgHome.selectAll('circle').data(bubbleData).exit().remove(); 
-  //   bubbleData = getBubbleData().filter(b => getAverage(b, 'energy') <= this.value);
-  //   drawBubbles();
-  // });
-  
-  // TODO width and height will probs need to be different when not in full screen viewing
-  // note that these are reinitialized in drawPlaylist to change width and height for new page
-  // not sure if this will cause bugs later?
-  var svg = d3.select("svg#playlist").attr("preserveAspectRatio", "xMinYMin meet"); 
-    // width = $("svg#playlist").width(),
-    // height = $("svg#playlist").height(),
-    // innerRadius = Math.min(width, height) / 15,
-    // outerRadius = Math.min(width, height) / 2.5,
-    // g = svg.append("g")
-    //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
-
-  var yourSvg = d3.select("svg#your-playlist").attr("preserveAspectRatio", "xMinYMin meet");
-    // yourwidth = $("svg#your-playlist").width(),
-    // height = $("svg#your-playlist").height(),
-    // innerRadius = Math.min(width, height) / 6,
-    // outerRadius = Math.min(width, height) / 2,
-    // yourG = svg.append("g")
-    //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
-  
+ 
 
   function getBrighterByFeature(feature){
     var ind = features.indexOf(feature); 
@@ -936,133 +753,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   var selectedSong = ""; 
 
-  function drawPlaylist(currentPlaylist, svg, svg_id, panel_id){
-    width = $(svg_id).width(),
-    height = $(svg_id).height(); 
-    let factor = 0.8; 
-    let innerRadius = Math.min(width, height) / 20; 
-    let outerRadius = Math.min(width, height) / 2;
-    let g = svg.append("g")
-      .attr("transform", "translate(" + width / 2 + "," + outerRadius * factor + ")"); 
-
-    var y = d3.scaleRadial()
-    .range([innerRadius, outerRadius])
-    .domain([0, 5]);
-
-    svg.selectAll('path').data(currentPlaylist['track_ids']).exit().remove(); 
-    drawPlaylistLegend(currentPlaylist, svg, g, outerRadius, factor);
-    updatePlaylistDisplayInfo([currentPlaylist["name"]], g, outerRadius, factor);
-    d3.select(panel_id).text(currentPlaylist["name"]);
-
-    var x = d3.scaleBand()
-    .range([0, 2 * Math.PI])
-    .align(0)
-    .domain(currentPlaylist["track_ids"]);
-
-    features.forEach((feature, i) => {
-      g.append('g')
-        .selectAll('path')
-        .data(currentPlaylist['track_ids'])
-        .join(
-          enter => enter.append('path'),
-          update => update,
-          exit   => exit.remove()
-        )
-        .classed(feature, true)
-        .style("fill", colors[i])
-          .attr("d", d3.arc() 
-              .innerRadius(function(d) { return y(getFeatureStartPos(d, i)); })
-              .outerRadius(function(d) { return y(getFeatureEndPos(d, i)); })
-              .startAngle(function(d) { return x(d); })
-              .endAngle(function(d) { return x(d) + x.bandwidth(); })
-              .padAngle(0.005)
-              .padRadius(innerRadius)
-              )
-      }); 
-
-      g.append('g')
-        .selectAll('path')
-        .data(currentPlaylist['track_ids'])
-        .join(
-          enter => enter.append('path'),
-          update => update,
-          exit   => exit.remove()
-        )
-        .attr("opacity","0")
-        .attr("d", d3.arc() 
-          .innerRadius(function(d) { return y(0); })
-          .outerRadius(function(d) { return y(5); }) // this val could be improved but whatever for now
-          .startAngle(function(d) { return x(d); })
-          .endAngle(function(d) { return x(d) + x.bandwidth(); })
-          .padAngle(0.01)
-          .padRadius(innerRadius)
-          )
-        .on("click", function(event, d, i){
-          d3.select('#add-song').style('visibility', 'hidden');
-          displaySongInfoPlaylist(d, g); 
-          svg.selectAll("path")
-            .filter(d => d == selectedSong)
-            .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
-          selectedSong = d;
-          svg.selectAll("path")
-            .filter(d => d == selectedSong)
-            .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
-          if (currentPlaylist === examplePlaylist){
-            if (!yourPlaylist.track_ids.includes(selectedSong))
-              d3.select('#add-song').style('visibility', 'visible')
-
-            let player = document.getElementById('left-player');
-            player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
-          } else {
-            let player = document.getElementById('right-player');
-            player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
-          }
-
-          
-          
-        })
-        // .on("mouseout", function(event, d, i){
-        //   // TODO i'm not sure this will work when we scale up
-        //   updatePlaylistDisplayInfo([currentPlaylist["name"]]);
-        //   var selectedSong = d;
-        //   svg.selectAll("path")
-        //     .filter(d => d == selectedSong)
-        //     .style("fill", function(d){ return getDarkerByColor(this.style.fill)})
-        // })
-
-    let playlist = document.getElementById('songs');
-    for (track of currentPlaylist['track_ids']) {
-      let song = document.createElement('li');
-      song.className = "list-group-item list-group-item-dark";
-      song.id = track;
-      song.innerHTML = trackData[track].title;
-      playlist.appendChild(song);
-    }
-
-  }
-
-  const addButton = document.getElementById('add-song');
-  addButton.onclick = function() {
-    let playlist = document.getElementById('custom-songs');
-    let song = document.createElement('li');
-    song.className = "list-group-item list-group-item-dark";
-    song.id = selectedSong;
-    song.innerHTML = `${trackData[selectedSong].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
-    playlist.appendChild(song);
-    yourPlaylist.track_ids.push(selectedSong);
-    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
-    d3.select('#add-song').style('visibility', 'hidden')
-  }
-
-  function displaySongInfoPlaylist(songID, g){
-    var songInfo = trackData[songID]; 
-    var songFeatures = [songInfo['title']]; 
-    for(var i = 0; i < features.length; i++){
-      let info = "" + features[i] + " " + songInfo['features'][features[i]]; 
-      songFeatures.push(info); 
-    }
-    updatePlaylistDisplayInfo(songFeatures, g); 
-  }
 
   function drawPlaylistLegend(examplePlaylist, svg, g, outerRadius, factor){
     // svg.selectAll('path').exit().remove(); 
@@ -1153,7 +843,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     return total; 
   }
 
-  // d3.select("svg#home").remove();
 
 }); 
   
