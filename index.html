@@ -13,9 +13,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <!-- circular slider -->
-<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
+<link rel="stylesheet" type="text/css" href="app.css">
 
 <!-- font from Google API -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -120,6 +118,7 @@
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
 <div class="row" style="visibility:visible; height:100vh; width:100vw; top: 0;left: 0; right: 0;" >
   <div class="col-1" id="menubar" style="width:auto; height:100vh;display:flex; flex-direction: column;">
+    <span id="back" class="material-icons-outlined" onclick="goHome()" style="font-size: 40px; visibility: hidden;">arrow_back</span>
     <div id="infoIcon" class="material-icons-outlined section-title" style="color:#8a6eba; transform: rotate(-90deg); margin-left: -10px; margin-top: 150px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
       <!-- <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()"> -->
         info
@@ -149,7 +148,7 @@
     <div class="full-height-div">
       <div class="section-title" id="right-title"></div>
       <div class="fill-remaining-space-div" style="overflow-y:scroll">
-        <!-- <div id="sliders"></div> -->
+        <div id="sliders"></div>
         <svg id='your-playlist' class="collpase" width="100%" height="100%"></svg>
         <div id="right-player"></div>
         <ul class="list-group" id="custom-songs"></ul>
@@ -169,6 +168,7 @@
   }
 </style>
 
+<script type="text/javascript" src="app.js"></script>
 
 <script>
 
@@ -198,6 +198,25 @@ function toggleInfoBar(){
     document.getElementById("logo").style.visibility = "visible"; 
     document.getElementById("infoIcon").style.visibility = "visible"; 
   }
+}
+
+// TODO: fix this
+function goHome() {
+  // svgHome = d3.select("body").append("svg").attr("width", 50).attr("height", 50);
+  d3.select("svg#playlist").remove();
+  d3.select("svg#your-playlist").remove();
+  d3.select("#right-panel").attr('class','col-3 section-view section-view-right');
+  document.getElementById("back").style.visibility = "hidden"; 
+  // TODO: this might be problematic bc not properly deleted
+  document.getElementById('add-song').style.visibility = 'hidden';
+  document.getElementById('songs').style.visibility = 'hidden';
+  document.getElementById('custom-songs').style.visibility = 'hidden';
+  d3.select('#left-title').text('playlist exploration');
+  drawYourPlaylistBubble(); 
+  // bubbleData = getBubbleData();
+  drawBubbles();
+  // if (yourPlaylist.track_ids.length > 0)
+  //   drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
 }
 
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
@@ -272,29 +291,27 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   var examplePlaylist;
 
-  // const slider_div = document.getElementById('sliders');
-  // let slider_radius = 50;
-  // let shift = (features.length-1) * 10;
-  // for (let i=0; i < features.length; i++) {
-  //   slider_radius += 15;
-  //   const div = document.createElement('div');
-  //   div.id = 'slider-' + i.toString();
-  //   slider_div.appendChild(div);
+  const feature_sliders = {
+    DOMselector: '#sliders',
+    sliders: []
+  };
 
-  //   $('#'+div.id).roundSlider({
-  //     sliderType: "range",
-  //     min: 0.0,
-  //     max: 1.0,
-  //     step: 0.1,
-  //     value: "0.0, 1.0",
-  //     startAngle: 90,
-  //     radius: slider_radius,
-  //     width: 12,
-  //     // svgMode: true
-  //   });
-  //   shift-=10;
-  // }
-  // d3.select("svg#slider-0").attr("color", "black" ); 
+  let current_radius = 40;
+  for (let i=0; i<features.length; i++){
+    const current_slider = {
+      radius: current_radius+20*i,
+      min: 0,
+      max: 1,
+      step: .1,
+      initialValue: 1,
+      color: colors[i],
+      displayName: features[i]
+    };
+    feature_sliders.sliders.push(current_slider);
+  }
+  // instantiate the slider
+  const slider = new Slider(feature_sliders);
+  slider.draw();
 
   function getBubbleData() {
     let data = [];
@@ -566,6 +583,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         // TODO for now this can be where you click to show playlist view
         d3.select("svg#home").remove();
         d3.select("#right-panel").attr('class','col section-view section-view-right');
+        document.getElementById("back").style.visibility = "visible"; 
         examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
         drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
         if (yourPlaylist.track_ids.length > 0)
@@ -708,7 +726,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   drawYourPlaylistBubble(); 
 
-  drawBubbles(bubbleData);
+  drawBubbles();
 
   // Use to update positions of playlists based on new ordering in bubbleData
   function movePlaylists(){
