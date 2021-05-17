@@ -192,6 +192,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   var examplePlaylist;
 
+  // instantiate the slider
   const feature_sliders = {
     DOMselector: '#sliders',
     sliders: []
@@ -203,14 +204,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       radius: current_radius+20*i,
       min: 0,
       max: 1,
-      step: .1,
+      step: .01,
       initialValue: 1,
       color: colors[i],
       displayName: features[i]
     };
     feature_sliders.sliders.push(current_slider);
   }
-  // instantiate the slider
+
   const slider = new Slider(feature_sliders);
   slider.draw();
 
