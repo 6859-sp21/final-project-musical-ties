@@ -32,13 +32,25 @@
 <div id="infoBlur" style=' background-color: rgba(46, 46, 46, 0.123); backdrop-filter: blur(5px); position : fixed; height:100vh; width: 100vw; visibility: hidden;'>
 
 </div>
-<div id='infoBar' style="position : fixed; height:100vh; width: 30vw; background-color: var(--background-light); visibility: hidden;">
+<div id='infoBar' style="left: 0; position : fixed; height:100vh; width: 30vw; background-color: var(--background-light); visibility: hidden;">
   <div>Hey more info here</div>
   <div>that's so fucking cool </div>
   <div> thanks for the info so helpful</div>
   <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
     close
   </span>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+    <label class="form-check-label" for="exampleRadios1">
+      Default radio
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+    <label class="form-check-label" for="exampleRadios2">
+      Second default radio
+    </label>
+  </div>
 </div>
 
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
@@ -69,7 +81,9 @@
     <div class="full-height-div">
       <div class="section-title" id="right-title"></div>
       <div class="fill-remaining-space-div" style="overflow-y:scroll">
-        <div id="sliders"></div>
+        <div id="sliders">
+          <div id="please-work" style="visibility: hidden;"> fuck you </div>
+        </div>
       </div>
     </div>
   </div>

@@ -47,6 +47,8 @@ class Slider {
         // Draw sliders
         this.sliders.forEach((slider, index) => this.drawSingleSliderOnInit(svg, slider, index));
 
+        this.createRadioSelection(); 
+
         // Event listeners
         svgContainer.addEventListener('mousedown', this.mouseTouchStart.bind(this), false);
         svgContainer.addEventListener('touchstart', this.mouseTouchStart.bind(this), false);
@@ -148,6 +150,57 @@ class Slider {
         handle.style.strokeWidth = this.handleStrokeThickness;
         handle.style.fill = this.handleFillColor;
         group.appendChild(handle);
+    }
+
+    createRadioSelection(){
+        const display = document.createElement('div');
+        display.classList.add('form-selector');
+
+        var form = document.createElement('div'); 
+        form.classList.add("form-check"); 
+
+        var input = document.createElement('input'); 
+            input.classList.add("form-check-input"); 
+            input.setAttribute('type', 'radio'); 
+            input.setAttribute('name', 'selectionRadio'); 
+            input.setAttribute('id', 'sortSelection-default'); 
+            input.setAttribute('value', 'option-default'); 
+            input.checked = true; 
+
+        var label = document.createElement('label');  
+            label.classList.add("form-check-label"); 
+            label.className = "form-check-label"; 
+            label.for = 'sortSelection-default'; 
+            label.innerHTML = 'no sorting'; 
+
+        form.appendChild(input); 
+        form.appendChild(label); 
+        display.appendChild(form); 
+
+        this.sliders.forEach((slider, index) => {
+            form = document.createElement('div'); 
+            form.classList.add("form-check"); 
+
+            input = document.createElement('input'); 
+            input.classList.add("form-check-input"); 
+            input.setAttribute('type', 'radio'); 
+            input.setAttribute('name', 'selectionRadio'); 
+            input.setAttribute('id', 'sortSelection-' + slider.displayName); 
+            input.setAttribute('value', 'option-' + slider.displayName); 
+            input.checked = false; 
+
+            var label = document.createElement('label');  
+            label.classList.add("form-check-label"); 
+            label.className = "form-check-label"; 
+            label.for = 'sortSelection' + slider.displayName; 
+            label.innerHTML = slider.displayName; 
+
+            form.appendChild(input); 
+            form.appendChild(label); 
+            display.appendChild(form); 
+
+        }); 
+        this.container.appendChild(display);
     }
 
     /**
