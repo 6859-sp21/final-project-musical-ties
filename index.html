@@ -665,11 +665,15 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data([5, 4, 3, 2, 1, 0])
       .enter().append("circle")
       .classed('disk', true)
-      .attr("id", function(d) {return "ring" + yourPlaylist.id + "-" + d})
+      .attr("id", function(d) { console.log("ring" + yourPlaylist.id + "-" + d); return "ring" + yourPlaylist.id + "-" + d})
       .style("opacity",  0)
-      .attr('r', function(d) {return myy(4)})
+      .attr('r', function(d) {return myy(d)})
       .on("mouseenter", function(event, d){
+        console.log("HEYYYYYY"); 
+        console.log(d); 
         if(d > 0){
+          console.log('#p' + yourPlaylist.id); 
+          console.log("#" + features[d - 1]); 
           d3.select('#p' + yourPlaylist.id).select("#" + features[d - 1]).style('fill', colorsBright[d - 1])
         }
       })
@@ -769,6 +773,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
       for(var i = 0; i < features.length; i++){
         var elementId = "#ring" + bub.name + "-" + (i + 1) ; 
+        console.log(elementId); 
         tippy(elementId, {
           content: "" + features[i] + " : " + featureVals[i].toFixed(2),
           followCursor: true,
@@ -779,6 +784,24 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         });
       }
     }
+
+    featureVals = getYourAverageFeatures(); 
+    console.log("here i ammmm "); 
+    console.log(featureVals); 
+
+    for(var j = 0; j < features.length; j++){
+      elementId = "#ring" + yourPlaylist.id + "-" + (j + 1); 
+      console.log(elementId);
+      tippy(elementId, {
+        content: "" + features[j] + " : " + featureVals[j].toFixed(2),
+        followCursor: true,
+        placement: 'left',
+        theme: features[j],
+        
+        arrow: false,
+      });
+    }
+
     tippy(".clicky-disk", {
           content: "click for more info",
           followCursor: true,
@@ -789,7 +812,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           delay: [500, null],
         });
     }
-    addBubbleToolTips(); 
+    // addBubbleToolTips(); 
  
 
   function getBrighterByFeature(feature){
@@ -914,7 +937,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // function radioSelection(){
   //   slider.
   // }
-
+  addBubbleToolTips(); 
 
 }); 
   
