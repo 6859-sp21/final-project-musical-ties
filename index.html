@@ -32,13 +32,25 @@
 <div id="infoBlur" style=' background-color: rgba(46, 46, 46, 0.123); backdrop-filter: blur(5px); position : fixed; height:100vh; width: 100vw; visibility: hidden;'>
 
 </div>
-<div id='infoBar' style="position : fixed; height:100vh; width: 30vw; background-color: var(--background-light); visibility: hidden;">
+<div id='infoBar' style="left: 0; position : fixed; height:100vh; width: 30vw; background-color: var(--background-light); visibility: hidden;">
   <div>Hey more info here</div>
   <div>that's so fucking cool </div>
   <div> thanks for the info so helpful</div>
   <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
     close
   </span>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+    <label class="form-check-label" for="exampleRadios1">
+      Default radio
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+    <label class="form-check-label" for="exampleRadios2">
+      Second default radio
+    </label>
+  </div>
 </div>
 
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
@@ -69,7 +81,9 @@
     <div class="full-height-div">
       <div class="section-title" id="right-title"></div>
       <div class="fill-remaining-space-div" style="overflow-y:scroll">
-        <div id="sliders"></div>
+        <div id="sliders">
+          <div id="please-work" style="visibility: hidden;"> fuck you </div>
+        </div>
       </div>
     </div>
   </div>
@@ -90,6 +104,7 @@
 
 <script>
 
+
 if (sessionStorage.init !== 'true'){
   var yourPlaylist = {
     'id' : "new1",
@@ -100,6 +115,7 @@ if (sessionStorage.init !== 'true'){
 } else {
   var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 }
+sessionStorage.view = "home"
 console.log(yourPlaylist);
 
 var infoBarVisible = false; 
@@ -169,6 +185,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       }
     }
   }
+// 
+  // radioSelection();
   
   // playlistData = playlistData.filter(playlist => !(playlist['name'] in ['mint', 'Lorem', 'Heart of Texas'])); 
 
@@ -195,7 +213,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // instantiate the slider
   const feature_sliders = {
     DOMselector: '#sliders',
-    sliders: []
+    sliders: [], 
   };
 
   let current_radius = 40;
@@ -212,8 +230,58 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     feature_sliders.sliders.push(current_slider);
   }
 
-  const slider = new Slider(feature_sliders);
+  function sortSelection(){
+    console.log("get fucked");
+    if(sessionStorage.view == "comparison"){
+      return;
+    }
+    for(feat of features){
+          d3.selectAll('#' + feat)
+            .style('opacity', "1")
+            .style('stroke-width', '0')
+      }
+    var selectedSortFeature = 'none'; 
+    for(var feat of features){
+      if(document.getElementById('sortSelection' + feat).checked){
+        selectedSortFeature = feat; 
+        break; 
+      }
+    }
+    if(selectedSortFeature != 'none'){
+      bubbleData.sort(function(a, b) {
+        return getAverageFromID(b.name, selectedSortFeature) - getAverageFromID(a.name, selectedSortFeature); 
+      }); 
+      movePlaylists(); 
+
+      for(feat of features){
+        if(feat != selectedSortFeature){
+          d3.selectAll('#' + feat)
+            .style('opacity', "0.3")
+        }
+      }
+
+      d3.selectAll('#' + selectedSortFeature)
+        .style('stroke', 'white')
+        .style('stroke-width', '2px')
+
+
+        // .style('fill-opacity', "0")
+        // .style('stroke', "black")
+        // .style('stroke-width',(bubbleSize - centerBubbleSize) / features.length)
+        // .style('opacity', "0.3"); 
+    }
+    else{
+      console.log("bitch"); 
+    }
+  }
+
+  function sortPlaylistsByFeature(feature){
+
+  }
+
+  const slider = new Slider(feature_sliders, sortSelection);
   slider.draw();
+
 
   function getBubbleData() {
     let data = [];
@@ -274,15 +342,11 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       var sum = 0; 
       var total = 0; 
       for(song of yourPlaylist['track_ids']){
-        console.log("*******"); 
-        console.log(song); 
-        console.log(trackData[song]['features']); 
         sum += trackData[song]['features'][features[i]];
         total += 1; 
       }
       feats.push(sum/total); 
     }
-    console.log(feats); 
     return feats; 
   }
 
@@ -398,6 +462,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-danceability', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 5})
       .style("opacity",  0)
       .attr('r', myy(5))
@@ -415,6 +480,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-energy', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 4})
       .style("opacity",  0)
       .attr('r', myy(4))
@@ -432,6 +498,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-valence', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 3})
       .style("opacity",  0)
       .attr('r', myy(3))
@@ -449,6 +516,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-liveness', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 2})
       .style("opacity",  0)
       .attr('r', myy(2))
@@ -466,6 +534,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-speechiness', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 1})
       .style("opacity",  0)
       .attr('r', myy(1))
@@ -492,6 +561,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
         sessionStorage.playlist = JSON.stringify(examplePlaylist);
         sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
+        sessionStorage.view = "comparison"; 
         window.location = 'comparison.html';
       })
 
@@ -845,6 +915,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     total += trackData[songId]["features"][features[featureIndex]];
     return total; 
   }
+
+  // function radioSelection(){
+  //   slider.
+  // }
 
 
 }); 

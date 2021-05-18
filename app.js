@@ -6,7 +6,7 @@ class Slider {
      * @param {string} DOM selector
      * @param {array} sliders
      */
-    constructor({ DOMselector, sliders }) {
+    constructor({ DOMselector, sliders }, doThis) {
         this.DOMselector = DOMselector;
         this.container = document.querySelector(this.DOMselector);  // Slider container
         this.sliderWidth = 300;                                     // Slider width
@@ -24,7 +24,11 @@ class Slider {
         this.handleStrokeThickness = 3;                             // Slider handle stroke thickness    
         this.mouseDown = false;                                     // Is mouse down
         this.activeSlider = null;                                   // Stores active (selected) slider
-        this.values
+        this.values; 
+        console.log("mer mer"); 
+        console.log(doThis); 
+        this.doThis = doThis; 
+        console.log(doThis); 
     }
 
     /**
@@ -47,6 +51,8 @@ class Slider {
 
         // Draw sliders
         this.sliders.forEach((slider, index) => this.drawSingleSliderOnInit(svg, slider, index));
+
+        this.createRadioSelection(); 
 
         // Event listeners
         svgContainer.addEventListener('mousedown', this.mouseTouchStart.bind(this), false);
@@ -153,6 +159,63 @@ class Slider {
         handle.style.strokeWidth = this.handleStrokeThickness;
         handle.style.fill = this.handleFillColor;
         group.appendChild(handle);
+    }
+
+    createRadioSelection(){
+        const display = document.createElement('div');
+        display.classList.add('form-selector');
+
+        var form = document.createElement('div'); 
+        form.classList.add("form-check"); 
+
+        var input = document.createElement('input'); 
+            input.classList.add("form-check-input"); 
+            input.setAttribute('type', 'radio'); 
+            input.setAttribute('name', 'selectionRadio'); 
+            input.setAttribute('id', 'sortSelection-default'); 
+            input.setAttribute('value', 'option-default'); 
+            input.checked = true; 
+            input.onclick = this.doThis; 
+
+        var label = document.createElement('label');  
+            label.classList.add("form-check-label"); 
+            label.className = "form-check-label"; 
+            label.for = 'sortSelection-default'; 
+            label.innerHTML = 'no sorting'; 
+
+        form.appendChild(input); 
+        form.appendChild(label); 
+        display.appendChild(form); 
+
+        this.sliders.forEach((slider, index) => {
+            form = document.createElement('div'); 
+            form.classList.add("form-check"); 
+
+            input = document.createElement('input'); 
+            input.classList.add("form-check-input"); 
+            input.setAttribute('type', 'radio'); 
+            input.setAttribute('name', 'selectionRadio'); 
+            input.setAttribute('id', 'sortSelection' + slider.displayName); 
+            input.setAttribute('value', 'option-' + slider.displayName); 
+            input.checked = false; 
+            input.style.color = slider.color; 
+            input.onclick = this.doThis; 
+
+            console.log(slider.displayName); 
+            // this.doThis(); 
+
+            var label = document.createElement('label');  
+            label.classList.add("form-check-label"); 
+            label.className = "form-check-label"; 
+            label.for = 'sortSelection' + slider.displayName; 
+            label.innerHTML = slider.displayName; 
+
+            form.appendChild(input); 
+            form.appendChild(label); 
+            display.appendChild(form); 
+
+        }); 
+        this.container.appendChild(display);
     }
 
     /**
