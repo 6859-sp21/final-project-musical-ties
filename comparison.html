@@ -136,6 +136,7 @@ function toggleInfoBar(){
 function goHome() {
   sessionStorage.playlist = JSON.stringify(examplePlaylist);
   sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
+  sessionStorage.view = "home";
   window.location = 'index.html';
   // svgHome = d3.select("body").append("svg").attr("width", 50).attr("height", 50);
   // d3.select("svg#playlist").remove();

@@ -115,6 +115,7 @@ if (sessionStorage.init !== 'true'){
 } else {
   var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 }
+sessionStorage.view = "home"
 console.log(yourPlaylist);
 
 var infoBarVisible = false; 
@@ -231,6 +232,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   function sortSelection(){
     console.log("get fucked");
+    if(sessionStorage.view == "comparison"){
+      return;
+    }
+    for(feat of features){
+          d3.selectAll('#' + feat)
+            .style('opacity', "1")
+            .style('stroke-width', '0')
+      }
     var selectedSortFeature = 'none'; 
     for(var feat of features){
       if(document.getElementById('sortSelection' + feat).checked){
@@ -240,12 +249,26 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     }
     if(selectedSortFeature != 'none'){
       bubbleData.sort(function(a, b) {
-        // console.log(getAverageFromID(a.name, selectedSortFeature)); 
-        // console.log(getAverageFromID(b.name, selectedSortFeature)); 
-        // console.log((getAverageFromID(a.name, selectedSortFeature) - getAverageFromID(b.name, selectedSortFeature)) < 0); 
         return getAverageFromID(b.name, selectedSortFeature) - getAverageFromID(a.name, selectedSortFeature); 
       }); 
       movePlaylists(); 
+
+      for(feat of features){
+        if(feat != selectedSortFeature){
+          d3.selectAll('#' + feat)
+            .style('opacity', "0.3")
+        }
+      }
+
+      d3.selectAll('#' + selectedSortFeature)
+        .style('stroke', 'white')
+        .style('stroke-width', '2px')
+
+
+        // .style('fill-opacity', "0")
+        // .style('stroke', "black")
+        // .style('stroke-width',(bubbleSize - centerBubbleSize) / features.length)
+        // .style('opacity', "0.3"); 
     }
     else{
       console.log("bitch"); 
@@ -439,6 +462,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-danceability', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 5})
       .style("opacity",  0)
       .attr('r', myy(5))
@@ -456,6 +480,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-energy', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 4})
       .style("opacity",  0)
       .attr('r', myy(4))
@@ -473,6 +498,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-valence', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 3})
       .style("opacity",  0)
       .attr('r', myy(3))
@@ -490,6 +516,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-liveness', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 2})
       .style("opacity",  0)
       .attr('r', myy(2))
@@ -507,6 +534,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(function(d) {return [d]})
       .enter().append("circle")
       .classed('disk', true)
+      .classed('disk-speechiness', true)
       .attr("id", function(d) {return "ring" + d.name + "-" + 1})
       .style("opacity",  0)
       .attr('r', myy(1))
@@ -533,6 +561,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
         sessionStorage.playlist = JSON.stringify(examplePlaylist);
         sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
+        sessionStorage.view = "comparison"; 
         window.location = 'comparison.html';
       })
 
