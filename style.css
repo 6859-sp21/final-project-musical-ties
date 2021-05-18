@@ -150,3 +150,52 @@ div.tooltip {
   z-index: -1;
   opacity: 1;
 } */
+
+#slider-0 .rs-range-color {
+    background-color: #FFB0C2;
+}
+
+#slider-1 .rs-range-color  {
+    background-color: #FF6DB5;
+}
+
+#slider-2 .rs-range-color  {
+    background-color: #FF29D8;
+}
+
+#slider-3 .rs-range-color  {
+    background-color: #C02CE6;
+}
+
+#slider-4 .rs-range-color  {
+    background-color: #7C30FF;
+}
+
+/*#slider-0 .rs-handle {
+    background-color: #FFB0C2;
+}
+
+#slider-1 .rs-handle  {
+    background-color: #FF6DB5;
+}
+
+#slider-2 .rs-handle  {
+    background-color: #FF29D8;
+}
+
+#slider-3 .rs-handle  {
+    background-color: #C02CE6;
+}
+
+#slider-4 .rs-handle  {
+    background-color: #7C30FF;
+}*/
+
+/*.rs-control .rs-range-color {
+    background-color: #070809;
+}*/
+
+.rs-control .rs-bg-color {
+    background-color: #413f4a;
+    opacity: 1.0;
+}

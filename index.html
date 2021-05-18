@@ -13,7 +13,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <!-- circular slider -->
+<!-- new -->
 <link rel="stylesheet" type="text/css" href="app.css">
+
+<!-- old -->
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"></script>
+
 
 <!-- font from Google API -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -196,32 +203,32 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var examplePlaylist;
 
   // instantiate the slider
-  const feature_sliders = {
-    DOMselector: '#sliders',
-    sliders: [], 
-  };
+  // const feature_sliders = {
+  //   DOMselector: '#sliders',
+  //   sliders: [], 
+  // };
 
-  let current_radius = 40;
-  for (let i=0; i<features.length; i++){
-    const current_slider = {
-      radius: current_radius+20*i,
-      min: 0,
-      max: 1,
-      step: .01,
-      initialValue: 1,
-      color: colors[i],
-      displayName: features[i]
-    };
-    feature_sliders.sliders.push(current_slider);
-  }
+  // let current_radius = 40;
+  // for (let i=0; i<features.length; i++){
+  //   const current_slider = {
+  //     radius: current_radius+20*i,
+  //     min: 0,
+  //     max: 1,
+  //     step: .01,
+  //     initialValue: 1,
+  //     color: colors[i],
+  //     displayName: features[i]
+  //   };
+  //   feature_sliders.sliders.push(current_slider);
+  // }
 
   function sortSelection(){
     // console.log("get fucked");
     for(feat of features){
-          d3.selectAll('#' + feat)
-            .style('opacity', "1")
-            .style('stroke-width', '0')
-      }
+      d3.selectAll('#' + feat)
+        .style('opacity', "1")
+        .style('stroke-width', '0')
+    }
     var selectedSortFeature = 'none'; 
     for(var feat of features){
       if(document.getElementById('sortSelection' + feat).checked){
@@ -252,18 +259,78 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         // .style('stroke-width',(bubbleSize - centerBubbleSize) / features.length)
         // .style('opacity', "0.3"); 
     }
-    else{
+    // else{
       // console.log("bitch"); 
+    // }
+  }
+
+  // function sortPlaylistsByFeature(feature){
+
+  // }
+
+  // const slider = new Slider(feature_sliders, sortSelection);
+  // slider.draw();
+
+  const slider_div = document.getElementById('sliders');
+  let slider_radius = 50;
+  let shift = (features.length-1) * 10;
+  for (let i=0; i < features.length; i++) {
+    slider_radius += 15;
+    const div = document.createElement('div');
+    div.id = 'slider-' + i.toString();
+    slider_div.appendChild(div);
+
+    $('#'+div.id).roundSlider({
+      sliderType: "range",
+      min: 0.0,
+      max: 1.0,
+      step: 0.1,
+      value: "0.0, 1.0",
+      startAngle: 90,
+      radius: slider_radius,
+      width: 12,
+      change: function (e) {
+        filter(e);
+      }
+      // svgMode: true
+    });
+    shift-=10;
+  }
+  // d3.select("svg#slider-0").attr("color", "black" ); 
+
+  function filter(e) {
+    console.log(bubbleData);
+    // console.log(e);
+    // let i = e.id.slice(-1);
+    
+    var included = [];
+    var notIncluded = [];
+    for (p of bubbleData) {
+      // console.log(p);
+      var include = true;
+      for (let i = 0; i < features.length; i++){
+        const sliderID = `#slider-${i}`;
+        let constraints = $(sliderID).roundSlider("getValue").split(',');
+        // console.log(constraints);
+        if ((getAverage(p, features[i]) < parseFloat(constraints[0])) || (getAverage(p, features[i]) > parseFloat(constraints[1]))) {
+          include = false;
+          break;
+        } 
+      }
+      console.log(p);
+      if (include)
+        included.push(p);
+      else
+        notIncluded.push(p);
     }
+
+    bubbleData = included.concat(notIncluded); //TODO: doesnt work if you filter then sort
+    console.log(bubbleData);
+
+    movePlaylists();
+    hidePlaylists(notIncluded.length);
+    
   }
-
-  function sortPlaylistsByFeature(feature){
-
-  }
-
-  const slider = new Slider(feature_sliders, sortSelection);
-  slider.draw();
-
 
   function getBubbleData() {
     let data = [];
@@ -697,7 +764,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     var jankRowCount = 0; 
     var jankColCount = 1; 
     for(bub of bubbleData){
-      d3.select('#p' + bub.name).attr("transform", "translate(" + (gridLeftOffset + jankColCount * gridSpacingHorizontal) + "," + (gridTopOffset + jankRowCount * gridSpacingVertical) + ")");
+      d3.select('#p' + bub.id).attr("transform", "translate(" + (gridLeftOffset + jankColCount * gridSpacingHorizontal) + "," + (gridTopOffset + jankRowCount * gridSpacingVertical) + ")");
       jankColCount += 1; 
       if(jankColCount > numGridCols - 1){
         jankColCount = 0; 
