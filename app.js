@@ -25,10 +25,10 @@ class Slider {
         this.mouseDown = false;                                     // Is mouse down
         this.activeSlider = null;                                   // Stores active (selected) slider
         this.values; 
-        console.log("mer mer"); 
-        console.log(doThis); 
+        // console.log("mer mer"); 
+        // console.log(doThis); 
         this.doThis = doThis; 
-        console.log(doThis); 
+        // console.log(doThis); 
     }
 
     /**
@@ -274,6 +274,7 @@ class Slider {
         const activePath = this.activeSlider.querySelector('.sliderSinglePathActive');
         const radius = +this.activeSlider.getAttribute('rad');
         const currentAngle = this.calculateMouseAngle(rmc) * 0.999;
+
         let otherHandle;
         if (this.activeHandle == this.activeSlider.querySelector('.sliderHandle0')){
             otherHandle = this.activeSlider.querySelector('.sliderHandle1');
@@ -281,24 +282,26 @@ class Slider {
             otherHandle = this.activeSlider.querySelector('.sliderHandle0');
         }
 
+        // console.log(this.activeHandle);
         const h = {
             x:otherHandle.getAttribute('cx'),
             y:otherHandle.getAttribute('cy')};
         const otherAngle = this.calculateMouseAngle(h) * 0.999;
 
         // Redraw active path
-        if (otherAngle > currentAngle)
-            activePath.setAttribute('d', this.describeArc(this.cx, this.cy, radius, this.radiansToDegrees(currentAngle), this.radiansToDegrees(otherAngle)));
-        else
-            activePath.setAttribute('d', this.describeArc(this.cx, this.cy, radius, this.radiansToDegrees(otherAngle), this.radiansToDegrees(currentAngle)));
+        // if (otherAngle > currentAngle)
+        //     activePath.setAttribute('d', this.describeArc(this.cx, this.cy, radius, this.radiansToDegrees(currentAngle), this.radiansToDegrees(otherAngle)));
+        // else
+        //     activePath.setAttribute('d', this.describeArc(this.cx, this.cy, radius, this.radiansToDegrees(otherAngle), this.radiansToDegrees(currentAngle)));
         // Redraw handle
         const handle = this.activeHandle;
+        console.log(handle);
         const handleCenter = this.calculateHandleCenter(handle, currentAngle, radius);
         handle.setAttribute('cx', handleCenter.x);
         handle.setAttribute('cy', handleCenter.y);
 
         // Update legend
-        this.updateLegendUI(currentAngle);
+        // this.updateLegendUI(currentAngle);
     }
 
     /**
@@ -533,8 +536,10 @@ class Slider {
         const dist1 = Math.hypot(rmc.x - handle1.getAttribute('cx'), rmc.y - handle1.getAttribute('cy'));
         if (Math.min(dist0, dist1) === dist0){
             this.activeHandle = handle0;
+            // console.log('handle0');
         } else {
             this.activeHandle = handle1;
+            // console.log('handle1');
         }
 
     }

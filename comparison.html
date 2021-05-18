@@ -73,13 +73,13 @@
 
   <div class="col-3 section-view" style="overflow-y:scroll">
     <div id="sliders"></div>
-    <div id='compare-songs' width="100%" height="100%"></div>
+    <!-- <div id='compare-songs' width="100%" height="100%"></div> -->
     <!-- formatting gets weird if I removed these divs even though theyre not used -->
-    <svg id="compare-speechiness" width="100%" height="100%"></svg>
+   <!--  <svg id="compare-speechiness" width="100%" height="100%"></svg>
     <svg id="compare-liveness" width="100%" height="100%"></svg>
     <svg id="compare-valence" width="100%" height="100%"></svg>
     <svg id="compare-energy" width="100%" height="100%"></svg>
-    <svg id="compare-danceability" width="100%" height="100%"></svg>
+    <svg id="compare-danceability" width="100%" height="100%"></svg> -->
   </div>
 
   <div class="col section-view section-view-right" id="right-panel">
@@ -480,6 +480,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
             let player = document.getElementById('left-player');
             player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+
+            document.getElementById(d).scrollIntoView({ 
+              behavior: 'smooth' 
+            });
           } 
 
           else {
@@ -498,13 +502,12 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
             let player = document.getElementById('right-player');
             player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+
+            document.getElementById(`${d}-custom`).scrollIntoView({ 
+              behavior: 'smooth' 
+            });
           
           }
-
-          // TODO: fix this for right side
-          // document.getElementById(d).scrollIntoView({ 
-          //   behavior: 'smooth' 
-          // });
 
           if (selectedSong.length > 0 && selectedRightSong.length > 0)
             compareSongs(selectedSong, selectedRightSong);
@@ -599,7 +602,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     let playlist = document.getElementById('custom-songs');
     let song = document.createElement('li');
     song.className = "list-group-item list-group-item-dark";
-    song.id = track;
+    song.id = `${track}-custom`;
     song.innerHTML = `${trackData[track].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
     playlist.appendChild(song);
   }
@@ -610,7 +613,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     let playlist = document.getElementById('custom-songs');
     let song = document.createElement('li');
     song.className = "list-group-item list-group-item-dark";
-    song.id = selectedSong;
+    song.id = `${selectedSong}-custom`;
     song.innerHTML = `${trackData[selectedSong].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
     playlist.appendChild(song);
     yourPlaylist.track_ids.push(selectedSong);
