@@ -104,6 +104,7 @@
 
 <script>
 
+
 if (sessionStorage.init !== 'true'){
   var yourPlaylist = {
     'id' : "new1",
@@ -183,6 +184,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       }
     }
   }
+// 
+  // radioSelection();
   
   // playlistData = playlistData.filter(playlist => !(playlist['name'] in ['mint', 'Lorem', 'Heart of Texas'])); 
 
@@ -209,7 +212,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // instantiate the slider
   const feature_sliders = {
     DOMselector: '#sliders',
-    sliders: []
+    sliders: [], 
   };
 
   let current_radius = 40;
@@ -226,8 +229,36 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     feature_sliders.sliders.push(current_slider);
   }
 
-  const slider = new Slider(feature_sliders);
+  function sortSelection(){
+    console.log("get fucked");
+    var selectedSortFeature = 'none'; 
+    for(var feat of features){
+      if(document.getElementById('sortSelection' + feat).checked){
+        selectedSortFeature = feat; 
+        break; 
+      }
+    }
+    if(selectedSortFeature != 'none'){
+      bubbleData.sort(function(a, b) {
+        // console.log(getAverageFromID(a.name, selectedSortFeature)); 
+        // console.log(getAverageFromID(b.name, selectedSortFeature)); 
+        // console.log((getAverageFromID(a.name, selectedSortFeature) - getAverageFromID(b.name, selectedSortFeature)) < 0); 
+        return getAverageFromID(b.name, selectedSortFeature) - getAverageFromID(a.name, selectedSortFeature); 
+      }); 
+      movePlaylists(); 
+    }
+    else{
+      console.log("bitch"); 
+    }
+  }
+
+  function sortPlaylistsByFeature(feature){
+
+  }
+
+  const slider = new Slider(feature_sliders, sortSelection);
   slider.draw();
+
 
   function getBubbleData() {
     let data = [];
@@ -288,15 +319,11 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       var sum = 0; 
       var total = 0; 
       for(song of yourPlaylist['track_ids']){
-        console.log("*******"); 
-        console.log(song); 
-        console.log(trackData[song]['features']); 
         sum += trackData[song]['features'][features[i]];
         total += 1; 
       }
       feats.push(sum/total); 
     }
-    console.log(feats); 
     return feats; 
   }
 
@@ -859,6 +886,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     total += trackData[songId]["features"][features[featureIndex]];
     return total; 
   }
+
+  // function radioSelection(){
+  //   slider.
+  // }
 
 
 }); 
