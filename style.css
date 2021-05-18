@@ -7,6 +7,10 @@
   --text-dark: #8F8B9A; 
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* input[type="radio"]{
   -webkit-appearance: radio;
 } */
