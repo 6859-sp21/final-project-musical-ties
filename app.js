@@ -6,26 +6,26 @@ class Slider {
      * @param {string} DOM selector
      * @param {array} sliders
      */
-    // constructor({ DOMselector, sliders }, doThis) {
-    constructor(doThis) {
-        // this.DOMselector = DOMselector;
-        // this.container = document.querySelector(this.DOMselector);  // Slider container
-        // this.sliderWidth = 300;                                     // Slider width
-        // this.sliderHeight = 300;                                    // Slider length
-        // this.cx = this.sliderWidth / 2;                             // Slider center X coordinate
-        // this.cy = this.sliderHeight / 2;                            // Slider center Y coordinate
-        // this.tau = 2 * Math.PI;                                     // Tau constant
-        // this.sliders = sliders;                                     // Sliders array with opts for each slider
-        // this.arcFractionSpacing = 0.85;                             // Spacing between arc fractions
-        // this.arcFractionLength = 10;                                // Arc fraction length
-        // this.arcFractionThickness = 15;                             // Arc fraction thickness
-        // this.arcBgFractionColor = '#D8D8D8';                        // Arc fraction color for background slider
-        // this.handleFillColor = '#fff';                              // Slider handle fill color
-        // this.handleStrokeColor = '#888888';                         // Slider handle stroke color
-        // this.handleStrokeThickness = 3;                             // Slider handle stroke thickness    
-        // this.mouseDown = false;                                     // Is mouse down
-        // this.activeSlider = null;                                   // Stores active (selected) slider
-        // this.values; 
+    constructor({ DOMselector, sliders }, doThis) {
+    // constructor(DOMselector, doThis) {
+        this.DOMselector = DOMselector;
+        this.container = document.querySelector(this.DOMselector);  // Slider container
+        this.sliderWidth = 300;                                     // Slider width
+        this.sliderHeight = 300;                                    // Slider length
+        this.cx = this.sliderWidth / 2;                             // Slider center X coordinate
+        this.cy = this.sliderHeight / 2;                            // Slider center Y coordinate
+        this.tau = 2 * Math.PI;                                     // Tau constant
+        this.sliders = sliders;                                     // Sliders array with opts for each slider
+        this.arcFractionSpacing = 0.85;                             // Spacing between arc fractions
+        this.arcFractionLength = 10;                                // Arc fraction length
+        this.arcFractionThickness = 15;                             // Arc fraction thickness
+        this.arcBgFractionColor = '#D8D8D8';                        // Arc fraction color for background slider
+        this.handleFillColor = '#fff';                              // Slider handle fill color
+        this.handleStrokeColor = '#888888';                         // Slider handle stroke color
+        this.handleStrokeThickness = 3;                             // Slider handle stroke thickness    
+        this.mouseDown = false;                                     // Is mouse down
+        this.activeSlider = null;                                   // Stores active (selected) slider
+        this.values; 
         // console.log("mer mer"); 
         // console.log(doThis); 
         this.doThis = doThis; 
@@ -39,31 +39,31 @@ class Slider {
     draw() {
 
         // Create legend UI
-        // this.createLegendUI();
-        this.makeTitle("filter playlists"); 
+        this.createLegendUI();
+        // this.makeTitle("filter playlists"); 
 
-        // Create and append SVG holder
-        const svgContainer = document.createElement('div');
-        svgContainer.classList.add('slider__data');
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('height', this.sliderWidth);
-        svg.setAttribute('width', this.sliderHeight);
-        svgContainer.appendChild(svg);
-        this.container.appendChild(svgContainer);
+        // // Create and append SVG holder
+        // const svgContainer = document.createElement('div');
+        // svgContainer.classList.add('slider__data');
+        // const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        // svg.setAttribute('height', this.sliderWidth);
+        // svg.setAttribute('width', this.sliderHeight);
+        // svgContainer.appendChild(svg);
+        // this.container.appendChild(svgContainer);
 
-        // Draw sliders
-        this.sliders.forEach((slider, index) => this.drawSingleSliderOnInit(svg, slider, index));
+        // // Draw sliders
+        // this.sliders.forEach((slider, index) => this.drawSingleSliderOnInit(svg, slider, index));
 
         this.makeTitle("sort playlists"); 
         this.createRadioSelection(); 
 
         // Event listeners
-        svgContainer.addEventListener('mousedown', this.mouseTouchStart.bind(this), false);
-        svgContainer.addEventListener('touchstart', this.mouseTouchStart.bind(this), false);
-        svgContainer.addEventListener('mousemove', this.mouseTouchMove.bind(this), false);
-        svgContainer.addEventListener('touchmove', this.mouseTouchMove.bind(this), false);
-        window.addEventListener('mouseup', this.mouseTouchEnd.bind(this), false);
-        window.addEventListener('touchend', this.mouseTouchEnd.bind(this), false);
+        // svgContainer.addEventListener('mousedown', this.mouseTouchStart.bind(this), false);
+        // svgContainer.addEventListener('touchstart', this.mouseTouchStart.bind(this), false);
+        // svgContainer.addEventListener('mousemove', this.mouseTouchMove.bind(this), false);
+        // svgContainer.addEventListener('touchmove', this.mouseTouchMove.bind(this), false);
+        // window.addEventListener('mouseup', this.mouseTouchEnd.bind(this), false);
+        // window.addEventListener('touchend', this.mouseTouchEnd.bind(this), false);
     }
 
     /**
@@ -281,7 +281,7 @@ class Slider {
         });
 
         // Append to DOM
-        this.container.appendChild(display);
+        // this.container.appendChild(display);
     }
 
     /**

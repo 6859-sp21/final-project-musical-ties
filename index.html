@@ -203,24 +203,24 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var examplePlaylist;
 
   // instantiate the slider
-  // const feature_sliders = {
-  //   DOMselector: '#sliders',
-  //   sliders: [], 
-  // };
+  const feature_sliders = {
+    DOMselector: '#sliders',
+    sliders: [], 
+  };
 
-  // let current_radius = 40;
-  // for (let i=0; i<features.length; i++){
-  //   const current_slider = {
-  //     radius: current_radius+20*i,
-  //     min: 0,
-  //     max: 1,
-  //     step: .01,
-  //     initialValue: 1,
-  //     color: colors[i],
-  //     displayName: features[i]
-  //   };
-  //   feature_sliders.sliders.push(current_slider);
-  // }
+  let current_radius = 40;
+  for (let i=0; i<features.length; i++){
+    const current_slider = {
+      radius: current_radius+20*i,
+      min: 0,
+      max: 1,
+      step: .01,
+      initialValue: 1,
+      color: colors[i],
+      displayName: features[i]
+    };
+    feature_sliders.sliders.push(current_slider);
+  }
 
   function sortSelection(){
     // console.log("get fucked");
@@ -264,12 +264,16 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // }
   }
 
-  // function sortPlaylistsByFeature(feature){
+  function sortPlaylistsByFeature(feature){
 
-  // }
+  }
 
-  // const slider = new Slider(feature_sliders, sortSelection);
-  // slider.draw();
+  // const placeholder = {
+  //   DOMselector: '#sliders',
+  //   sliders: [], 
+  // };
+  const slider = new Slider(feature_sliders, sortSelection);
+  slider.draw();
 
   const slider_div = document.getElementById('sliders');
   let slider_radius = 50;
