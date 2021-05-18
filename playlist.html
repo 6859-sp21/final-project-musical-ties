@@ -122,6 +122,12 @@ function toggleInfoBar(){
   }
 }
 
+function goHome() {
+  sessionStorage.playlist = JSON.stringify(examplePlaylist);
+  sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
+  window.location = 'index.html';
+}
+
 function goComparison() {
   sessionStorage.playlist = JSON.stringify(examplePlaylist);
   sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
@@ -448,8 +454,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
             let player = document.getElementById('left-player');
             player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
 
-            console.log('umm');
-            console.log(document.getElementById(d));
             document.getElementById(d).scrollIntoView({ 
               behavior: 'smooth' 
             });

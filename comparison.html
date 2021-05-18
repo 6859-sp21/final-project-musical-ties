@@ -114,11 +114,6 @@
 var examplePlaylist = JSON.parse(sessionStorage.playlist);
 var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 
-function removeSong(song) {
-  song.parentElement.remove();
-  yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
-}
-
 var infoBarVisible = false; 
 function toggleInfoBar(){
   infoBarVisible = !infoBarVisible; 
@@ -142,8 +137,17 @@ function goHome() {
   window.location = 'index.html';
 }
 
+var removeSong;
+
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/trackData.json").then(trackData => {
+
+  removeSong = function(song) {
+    song.parentElement.remove();
+    yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
+    console.log(yourPlaylist);
+    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
+  }
   var ourWhite = "#ECEAF2"; 
 
   // append the svg object to the body of the page
@@ -498,6 +502,11 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
             player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
           
           }
+
+          // TODO: fix this for right side
+          document.getElementById(d).scrollIntoView({ 
+            behavior: 'smooth' 
+          });
 
           if (selectedSong.length > 0 && selectedRightSong.length > 0)
             compareSongs(selectedSong, selectedRightSong);
