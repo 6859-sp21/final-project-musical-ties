@@ -38,7 +38,8 @@ class Slider {
     draw() {
 
         // Create legend UI
-        this.createLegendUI();
+        // this.createLegendUI();
+        this.makeTitle("filter playlists"); 
 
         // Create and append SVG holder
         const svgContainer = document.createElement('div');
@@ -52,6 +53,7 @@ class Slider {
         // Draw sliders
         this.sliders.forEach((slider, index) => this.drawSingleSliderOnInit(svg, slider, index));
 
+        this.makeTitle("sort playlists"); 
         this.createRadioSelection(); 
 
         // Event listeners
@@ -215,6 +217,13 @@ class Slider {
             display.appendChild(form); 
 
         }); 
+        this.container.appendChild(display);
+    }
+
+    makeTitle(title){
+        const display = document.createElement('div'); 
+        display.classList.add('section-title');
+        display.innerText = title; 
         this.container.appendChild(display);
     }
 
