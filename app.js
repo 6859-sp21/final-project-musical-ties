@@ -24,6 +24,7 @@ class Slider {
         this.handleStrokeThickness = 3;                             // Slider handle stroke thickness    
         this.mouseDown = false;                                     // Is mouse down
         this.activeSlider = null;                                   // Stores active (selected) slider
+        this.values
     }
 
     /**
@@ -72,8 +73,11 @@ class Slider {
         slider.min = slider.min ?? 0;
         slider.max = slider.max ?? 1000;
         slider.step = slider.step ?? 50;
+        slider.initalValue0 = 0;
         slider.initialValue = slider.initialValue ?? 0;
         slider.color = slider.color ?? '#FF5733';
+        slider.value0 = 0;
+        slider.value = slider.initialValue;
 
         // Calculate slider circumference
         const circumference = slider.radius * this.tau;
@@ -99,7 +103,8 @@ class Slider {
         this.drawArcPath(slider.color, slider.radius, initialAngle, arcFractionSpacing, 'active', sliderGroup);
 
         // Draw handle
-        this.drawHandle(slider, initialAngle, sliderGroup);
+        this.drawHandle(slider, 0, sliderGroup, 0);
+        this.drawHandle(slider, initialAngle, sliderGroup, 1);
     }
 
     /**
@@ -135,14 +140,14 @@ class Slider {
      * @param {number} initialAngle 
      * @param {group} group 
      */
-    drawHandle(slider, initialAngle, group) {
+    drawHandle(slider, initialAngle, group, index) {
 
         // Calculate handle center
         const handleCenter = this.calculateHandleCenter(initialAngle * this.tau / 360, slider.radius);
 
         // Draw handle
         const handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        handle.setAttribute('class', 'sliderHandle');
+        handle.setAttribute('class', 'sliderHandle'+index.toString());
         handle.setAttribute('cx', handleCenter.x);
         handle.setAttribute('cy', handleCenter.y);
         handle.setAttribute('r', this.arcFractionThickness / 2);
@@ -250,13 +255,26 @@ class Slider {
         const activePath = this.activeSlider.querySelector('.sliderSinglePathActive');
         const radius = +this.activeSlider.getAttribute('rad');
         const currentAngle = this.calculateMouseAngle(rmc) * 0.999;
+        let otherHandle;
+        if (this.activeHandle == this.activeSlider.querySelector('.sliderHandle0')){
+            otherHandle = this.activeSlider.querySelector('.sliderHandle1');
+        } else {
+            otherHandle = this.activeSlider.querySelector('.sliderHandle0');
+        }
+
+        const h = {
+            x:otherHandle.getAttribute('cx'),
+            y:otherHandle.getAttribute('cy')};
+        const otherAngle = this.calculateMouseAngle(h) * 0.999;
 
         // Redraw active path
-        activePath.setAttribute('d', this.describeArc(this.cx, this.cy, radius, 0, this.radiansToDegrees(currentAngle)));
-
+        if (otherAngle > currentAngle)
+            activePath.setAttribute('d', this.describeArc(this.cx, this.cy, radius, this.radiansToDegrees(currentAngle), this.radiansToDegrees(otherAngle)));
+        else
+            activePath.setAttribute('d', this.describeArc(this.cx, this.cy, radius, this.radiansToDegrees(otherAngle), this.radiansToDegrees(currentAngle)));
         // Redraw handle
-        const handle = this.activeSlider.querySelector('.sliderHandle');
-        const handleCenter = this.calculateHandleCenter(currentAngle, radius);
+        const handle = this.activeHandle;
+        const handleCenter = this.calculateHandleCenter(handle, currentAngle, radius);
         handle.setAttribute('cx', handleCenter.x);
         handle.setAttribute('cy', handleCenter.y);
 
@@ -276,8 +294,9 @@ class Slider {
         const currentSliderRange = currentSlider.max - currentSlider.min;
         let currentValue = currentAngle / this.tau * currentSliderRange;
         const numOfSteps =  Math.round(currentValue / currentSlider.step);
-        currentValue = currentSlider.min + numOfSteps * currentSlider.step;
+        currentValue = (currentSlider.min + numOfSteps * currentSlider.step).toFixed(2);
         targetLegend.innerText = currentValue;
+        currentSlider.value = currentValue;
     }
 
     /**
@@ -487,6 +506,18 @@ class Slider {
         // Find closest slider
         const closestSliderIndex = distances.indexOf(Math.min(...distances));
         this.activeSlider = sliderGroups[closestSliderIndex];
+
+        // find closest handle
+        const handle0 = this.activeSlider.querySelector('.sliderHandle0');
+        const dist0 = Math.hypot(rmc.x - handle0.getAttribute('cx'), rmc.y - handle0.getAttribute('cy'));
+        const handle1 = this.activeSlider.querySelector('.sliderHandle1');
+        const dist1 = Math.hypot(rmc.x - handle1.getAttribute('cx'), rmc.y - handle1.getAttribute('cy'));
+        if (Math.min(dist0, dist1) === dist0){
+            this.activeHandle = handle0;
+        } else {
+            this.activeHandle = handle1;
+        }
+
     }
 }
 
