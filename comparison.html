@@ -32,7 +32,7 @@
 <div id="infoBlur" style=' background-color: rgba(46, 46, 46, 0.123); backdrop-filter: blur(5px); position : fixed; height:100vh; width: 100vw; visibility: hidden;'>
 
 </div>
-<div id='infoBar' style="position : fixed; height:100vh; width: 30vw; background-color: var(--background-light); visibility: hidden;">
+<div id='infoBar' style="left:0; position : fixed; height:100vh; width: 30vw; background-color: var(--background-light); visibility: hidden;">
   <div>Hey more info here</div>
   <div>that's so fucking cool </div>
   <div> thanks for the info so helpful</div>
@@ -44,8 +44,10 @@
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
 <div class="row" style="visibility:visible; height:100vh; width:100vw; top: 0;left: 0; right: 0;" >
   <div class="col-1" id="menubar" style="width:auto; height:100vh;display:flex; flex-direction: column;">
-    <span id="back" class="material-icons-outlined" onclick="goHome()" style="font-size: 40px;">arrow_back</span>
-    <div id="infoIcon" class="material-icons-outlined section-title" style="color:#8a6eba; transform: rotate(-90deg); margin-left: -10px; margin-top: 150px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
+    <div style=" margin-left: -10px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;">
+      <span id="back" class="material-icons-outlined section-title" onclick="goHome()" style="font-size: 40px; margin:0px;">arrow_back</span>
+    </div>
+      <div id="infoIcon" class="material-icons-outlined section-title" style="color:#8a6eba; transform: rotate(-90deg); margin-left: -10px; margin-top: 150px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
       <!-- <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()"> -->
         info
       <!-- </span> -->
@@ -69,15 +71,17 @@
     </div>
   </div>
 
-  <div class="col-3 section-view" style="overflow-y:scroll">
-    <div id="sliders"></div>
-    <div id='compare-songs' width="100%" height="100%"></div>
-    <!-- formatting gets weird if I removed these divs even though theyre not used -->
-    <svg id="compare-speechiness" width="100%" height="100%"></svg>
-    <svg id="compare-liveness" width="100%" height="100%"></svg>
-    <svg id="compare-valence" width="100%" height="100%"></svg>
-    <svg id="compare-energy" width="100%" height="100%"></svg>
-    <svg id="compare-danceability" width="100%" height="100%"></svg>
+  <div class="col-3 section-view" style="overflow-y:auto">
+    <div class="full-height-div">
+      <div id="sliders"></div>
+      <div id='compare-songs' width="100%" height="100%"></div>
+      <!-- formatting gets weird if I removed these divs even though theyre not used -->
+      <!-- <svg id="compare-speechiness" width="100%" height="100%"></svg>
+      <svg id="compare-liveness" width="100%" height="100%"></svg>
+      <svg id="compare-valence" width="100%" height="100%"></svg>
+      <svg id="compare-energy" width="100%" height="100%"></svg>
+      <svg id="compare-danceability" width="100%" height="100%"></svg> -->
+    </div>
   </div>
 
   <div class="col section-view section-view-right" id="right-panel">
@@ -170,7 +174,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // var colors = ["#ffe942", "#ff7e38", "#FF29D8", "#C02CE6", "#7C30FF"]; 
 
   // colors = colors.reverse(); 
-  var colorsBright = ["#FFD7E0", "#FFDEEF", "#FFCAF5", "#F2BCFF", "#DAC5FF", "#ffa83d"]; 
+  // var colorsBright = ["#FFD7E0", "#FFDEEF", "#FFCAF5", "#F2BCFF", "#DAC5FF", "#ffa83d"]; 
+
+  var colorsDark = ['#745d69', '#6c3d5c', '#753771', '#532a68', '#4f397c']
 
   // record colors 
   var darkerRecord = "#2d2b36";
@@ -260,7 +266,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     }
 
     if(selectedSortFeature != 'none'){
-      var objClass = "path." + selectedSortFeature; 
+      // var objClass = "path." + selectedSortFeature; 
       svg.selectAll('path').data(examplePlaylist['track_ids']).exit().remove(); 
       yourSvg.selectAll('path').data(yourPlaylist['track_ids']).exit().remove(); 
       
@@ -270,15 +276,25 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
       drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
 
-      svg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
-      yourSvg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
+      // svg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
+      // yourSvg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
 
-      // for(var feat of features){
-      //   if(feat != selectedSortFeature){
-      //     objClass = "path." + feat; 
-      //     svg.selectAll(objClass).style("opacity", "0.3");
-      //   }
-      // }
+      var t = d3.transition()
+        .duration(1500)
+        .ease(d3.easeExpIn);
+
+      for(var feat of features){
+        objClass = "path." + feat;
+
+        if(feat == selectedSortFeature){
+          svg.selectAll(objClass).style("fill", getBrighterByFeature(feat)); 
+          yourSvg.selectAll(objClass).style("fill", getBrighterByFeature(feat)); 
+        }
+        else{
+          svg.selectAll(objClass).style("fill", getDarkerByFeature(feat)).transition(t).style("fill", getBrighterByFeature(feat));
+          yourSvg.selectAll(objClass).style("fill", getDarkerByFeature(feat)).transition(t).style("fill", getBrighterByFeature(feat));;
+        }
+      }
     }
     else{
       drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
@@ -367,18 +383,18 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   function getBrighterByFeature(feature){
     var ind = features.indexOf(feature); 
-    return colorsBright[ind];
+    return colors[ind];
   }
 
   function getDarkerByFeature(feature){
     var ind = features.indexOf(feature); 
-    return colors[ind];
+    return colorsDark[ind];
   }
 
   function getBrighterByColor(color){
-    for(var i = 0; i < colors.length; i++){
-      if(d3.rgb(colors[i]) == color){
-        return colorsBright[i]; 
+    for(var i = 0; i < colorsDark.length; i++){
+      if(d3.rgb(colorsDark[i]) == color){
+        return colors[i]; 
       }
     }
 
@@ -386,9 +402,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
 
   function getDarkerByColor(color){
-    for(var i = 0; i < colorsBright.length; i++){
-      if(d3.rgb(colorsBright[i]) == color){
-        return colors[i]; 
+    for(var i = 0; i < colors.length; i++){
+      if(d3.rgb(colors[i]) == color){
+        return colorsDark[i]; 
       }
     }
     return color;
@@ -462,8 +478,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           d3.select('#add-song').style('visibility', 'hidden');
           displaySongInfoPlaylist(d, g, outerRadius, factor); 
           if (svg_id === 'svg#playlist'){
+            
             svg.selectAll("path")
-              .filter(d => d == selectedSong)
+              // .filter(d => d == selectedSong)
               .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
             selectedSong = d;
             svg.selectAll("path")
@@ -481,7 +498,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
           else {
             svg.selectAll("path")
-              .filter(d => d == selectedRightSong)
+              // .filter(d => d == selectedRightSong)
               .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
             selectedRightSong = d;
             svg.selectAll("path")
@@ -639,11 +656,19 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .attr("transform", (d, i) => `translate(${(-outerRadius)},${(i * 20 + 5 + outerRadius * factor)})`)
     .on("mouseenter", function(event, d){
       var objClass = "path." + d; 
-      svg.selectAll(objClass).style("fill", getBrighterByFeature(d))
+      svg.selectAll(objClass).transition().style("fill", getBrighterByFeature(d))
+      for(var feat of features){
+        if(feat != d){
+          svg.selectAll("path." + feat).transition().style("fill", getDarkerByFeature(feat))
+        }
+      }
     })
     .on("mouseout", function(event, d){
-      var objClass = "path." + d; 
-      svg.selectAll(objClass).style("fill", getDarkerByFeature(d))
+      // var objClass = "path." + d; 
+      // svg.selectAll(objClass).style("fill", getBrighterByFeature(d))
+      for(var feat of features){
+        svg.selectAll("path." + feat).transition().style("fill", getBrighterByFeature(feat))
+      }
     })
     .on("click", function(event, d){
       // TODO: do all this for custom playlist too
