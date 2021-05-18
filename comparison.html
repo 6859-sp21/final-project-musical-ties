@@ -62,8 +62,7 @@
 
       <div class="fill-remaining-space-div" style="overflow-y:scroll">
         <svg id='playlist' class="collpase" width="100%" height="100%"></svg>
-        <div id="left-player">
-        </div>
+        <div id="left-player"></div>
         <button type="button" class="btn btn-secondary" id="add-song" style="visibility: hidden">add this song to my playlist</button>
         <ul class="list-group" id="songs"></ul>
       </div>
@@ -358,6 +357,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
 
   var selectedSong = ""; 
+  var selectedRightSong = "";
 
   function drawPlaylist(currentPlaylist, svg, svg_id, panel_id){
     width = $(svg_id).width(),
@@ -423,25 +423,45 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         .on("click", function(event, d, i){
           d3.select('#add-song').style('visibility', 'hidden');
           displaySongInfoPlaylist(d, g, outerRadius, factor); 
-          svg.selectAll("path")
-            .filter(d => d == selectedSong)
-            .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
-          selectedSong = d;
-          svg.selectAll("path")
-            .filter(d => d == selectedSong)
-            .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
-          if (currentPlaylist === examplePlaylist){
-            if (!yourPlaylist.track_ids.includes(selectedSong))
-              d3.select('#add-song').style('visibility', 'visible')
+          if (svg_id === 'svg#playlist'){
+            svg.selectAll("path")
+              .filter(d => d == selectedSong)
+              .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
+            selectedSong = d;
+            svg.selectAll("path")
+              .filter(d => d == selectedSong)
+              .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
+
+            if (currentPlaylist === examplePlaylist){
+              if (!yourPlaylist.track_ids.includes(selectedSong))
+                d3.select('#add-song').style('visibility', 'visible')
+            } 
 
             let player = document.getElementById('left-player');
             player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
-          } else {
+          } 
+
+          else {
+            svg.selectAll("path")
+              .filter(d => d == selectedRightSong)
+              .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
+            selectedRightSong = d;
+            svg.selectAll("path")
+              .filter(d => d == selectedRightSong)
+              .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
+
+            if (currentPlaylist === examplePlaylist){
+              if (!yourPlaylist.track_ids.includes(selectedRightSong))
+                d3.select('#add-song').style('visibility', 'visible')
+            } 
+
             let player = document.getElementById('right-player');
             player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+          
           }
 
-          
+          if (selectedSong.length > 0 && selectedRightSong.length > 0)
+            compareSongs(selectedSong, selectedRightSong);
           
         })
         // .on("mouseout", function(event, d, i){
@@ -465,6 +485,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
 
   function compareSongs(song1, song2) {
+    // remove previous plots
+    if (document.getElementById('compare-songs').innerHTML.length > 0)
+      document.getElementById('compare-songs').innerHTML = '';
 
     for (let i = 0; i < features.length; i++){
       // set the dimensions and margins of the graph
@@ -535,6 +558,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     playlist.appendChild(song);
   }
 
+  // TODO: will need to update this for right playlist if it is generalized to any playlist
   const addButton = document.getElementById('add-song');
   addButton.onclick = function() {
     let playlist = document.getElementById('custom-songs');
