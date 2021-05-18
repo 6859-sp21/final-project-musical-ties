@@ -11,6 +11,8 @@ html {
   scroll-behavior: smooth;
 }
 
+*:focus { outline: none; }
+
 /* input[type="radio"]{
   -webkit-appearance: radio;
 } */

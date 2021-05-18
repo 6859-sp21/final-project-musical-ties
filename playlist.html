@@ -44,8 +44,10 @@
 <!-- I have this as position sticky rn to get it full width which i don't like but idk what else to do -->
 <div class="row" style="visibility:visible; height:100vh; width:100vw; top: 0;left: 0; right: 0;" >
   <div class="col-1" id="menubar" style="width:auto; height:100vh;display:flex; flex-direction: column;">
-    <span id="back" class="material-icons-outlined" onclick="goHome()" style="font-size: 40px;">arrow_back</span>
-    <div id="infoIcon" class="material-icons-outlined section-title" style="color:#8a6eba; transform: rotate(-90deg); margin-left: -10px; margin-top: 150px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
+    <div style=" margin-left: -10px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;">
+      <span id="back" class="material-icons-outlined section-title" onclick="goHome()" style="font-size: 40px; margin:0px;">arrow_back</span>
+    </div>
+      <div id="infoIcon" class="material-icons-outlined section-title" style="color:#8a6eba; transform: rotate(-90deg); margin-left: -10px; margin-top: 150px; margin-bottom:-80px;  font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()">
       <!-- <span class="material-icons section-title" style="font-size: 40px; margin-right:-17px;" onclick="toggleInfoBar()"> -->
         info
       <!-- </span> -->
@@ -53,7 +55,6 @@
     <div id="logo" style="color: var(--text-dark); font-size: 40px; margin:0px; padding: 0px; margin-top:200px; margin-left:-110px; margin-right:-140px; transform: rotate(-90deg); width:auto; height: auto;">
       MUSICAL TIES
     </div>
-    <!-- <div>Do you know how to make this column as narrow as possible?</div> -->
   </div>
   <div class="col section-view" id="playlist-view">
     <div class="full-height-div">
@@ -76,11 +77,11 @@
   </div>
 
   <div class="col-3 section-view" style="overflow-y:scroll">
-    <div class='row'>
+    <div class='row' style="margin-top: 15px; margin-bottom: -15px;">
       <div class='col' style="font-size: 20px;">
         compare with your playlist
       </div>
-      <div class='col-2'>
+      <div class='col-2' style="margin-top:-5px;">
         <span class="material-icons-outlined" onclick="goComparison()" style="font-size: 40px;">arrow_forward</span>
       </div>
     </div>
