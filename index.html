@@ -299,15 +299,17 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // d3.select("svg#slider-0").attr("color", "black" ); 
 
   function filter(e) {
+    // bubbleData = getBubbleData();
+    console.log('whyyy');
     console.log(bubbleData);
     // console.log(e);
     // let i = e.id.slice(-1);
     
     var included = [];
     var notIncluded = [];
-    for (p of bubbleData) {
-      // console.log(p);
-      var include = true;
+    for (let p of bubbleData) {
+      console.log(p);
+      var include = true; 
       for (let i = 0; i < features.length; i++){
         const sliderID = `#slider-${i}`;
         let constraints = $(sliderID).roundSlider("getValue").split(',');
@@ -318,13 +320,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         } 
       }
       console.log(p);
-      if (include)
-        included.push(p);
-      else
-        notIncluded.push(p);
+      // if (include)
+      //   included.push(p);
+      // else
+      //   notIncluded.push(p);
     }
 
     bubbleData = included.concat(notIncluded); //TODO: doesnt work if you filter then sort
+    console.log('whyyy42352345');
     console.log(bubbleData);
 
     movePlaylists();
@@ -364,7 +367,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   function getAverageFromID(playlistID, feature){
     var sum = 0; 
     var total = 0; 
-    for(p of playlistData ){
+    for(let p of playlistData ){
       if(p.id == playlistID){
         for(song of p['track_ids']){
           sum += trackData[song]['features'][feature]; 
@@ -761,10 +764,11 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   // Use to update positions of playlists based on new ordering in bubbleData
   function movePlaylists(){
+    console.log(bubbleData);
     var jankRowCount = 0; 
     var jankColCount = 1; 
     for(bub of bubbleData){
-      d3.select('#p' + bub.id).attr("transform", "translate(" + (gridLeftOffset + jankColCount * gridSpacingHorizontal) + "," + (gridTopOffset + jankRowCount * gridSpacingVertical) + ")");
+      d3.select('#p' + bub.name).attr("transform", "translate(" + (gridLeftOffset + jankColCount * gridSpacingHorizontal) + "," + (gridTopOffset + jankRowCount * gridSpacingVertical) + ")");
       jankColCount += 1; 
       if(jankColCount > numGridCols - 1){
         jankColCount = 0; 
