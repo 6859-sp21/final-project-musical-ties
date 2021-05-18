@@ -184,14 +184,25 @@ class Slider {
             label.className = "form-check-label"; 
             label.for = 'sortSelection-default'; 
             label.innerHTML = 'no sorting'; 
+            label.style.fontSize = '20px'; 
+            label.style.marginTop = '-2px'; 
+            label.style.textShadow = "2px 2px #000000";
 
         form.appendChild(input); 
         form.appendChild(label); 
+
         display.appendChild(form); 
+        display.classList.add('slider__legend'); 
 
         this.sliders.forEach((slider, index) => {
             form = document.createElement('div'); 
             form.classList.add("form-check"); 
+
+            // console.log("whyyyyyyyyyyyy"); 
+
+            // const firstSpan = document.createElement('button');
+            // firstSpan.style.backgroundColor = slider.color ?? '#FF5733';
+            // firstSpan.classList.add('colorSquare');
 
             input = document.createElement('input'); 
             input.classList.add("form-check-input"); 
@@ -200,8 +211,8 @@ class Slider {
             input.setAttribute('id', 'sortSelection' + slider.displayName); 
             input.setAttribute('value', 'option-' + slider.displayName); 
             input.checked = false; 
-            input.style.color = slider.color; 
             input.onclick = this.doThis; 
+            
 
             console.log(slider.displayName); 
             // this.doThis(); 
@@ -211,12 +222,20 @@ class Slider {
             label.className = "form-check-label"; 
             label.for = 'sortSelection' + slider.displayName; 
             label.innerHTML = slider.displayName; 
+            console.log(slider.color); 
+            label.style.color = slider.color ?? '#FF5733';
+            label.style.fontSize = '20px'; 
+            label.style.textShadow = "2px 2px #000000";
+
 
             form.appendChild(input); 
             form.appendChild(label); 
+            // form.appendChild(firstSpan); 
             display.appendChild(form); 
 
         }); 
+        display.style.marginLeft = "30px";
+        display.style.marginTop = "-5px";
         this.container.appendChild(display);
     }
 
