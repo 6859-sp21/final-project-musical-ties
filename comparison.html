@@ -263,6 +263,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
 
     d3.selectAll('path').remove(); 
+    d3.selectAll('text').remove();
     
     drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
@@ -292,6 +293,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       console.log(examplePlaylist['track_ids']); 
 
       d3.selectAll('path').remove(); 
+      d3.selectAll('text').remove();
       
       drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
       drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
@@ -508,6 +510,39 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
               .padRadius(innerRadius)
               )
       }); 
+
+      g.append('g')
+        .selectAll('path')
+        .data([1, 2, 3])
+        .join(
+          enter => enter.append('path'),
+          update => update,
+          exit   => exit.remove()
+        )
+        .attr("d", d3.arc() 
+          .innerRadius(function(d) { return y(d); })
+          .outerRadius(function(d) { return y(d+0.02) }) // this val could be improved but whatever for now
+          .startAngle(0)
+          .endAngle(2*Math.PI)
+          .padAngle(0.01)
+          .padRadius(innerRadius)
+          )
+          .style('fill', "white")
+          .style("opacity", "0.7")
+
+      g.append('g')
+        .selectAll('text')
+        .data([1, 2, 3])
+        .join(
+          enter => enter.append('text'),
+          update => update,
+          exit   => exit.remove()
+        )
+          .text(function(d) { return d})
+          .style('font-size', "14px")
+          .style('fill', "white")
+          .style("opacity", "1")
+          .attr("x", function(d) { return y(d + 0.02);})
 
       g.append('g')
         .selectAll('path')
