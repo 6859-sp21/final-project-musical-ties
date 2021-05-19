@@ -49,6 +49,18 @@ html {
   padding-left: 5px; 
 }
 
+.help-info{
+  margin-top: 20px; 
+}
+
+.material-icons-outlined{
+  cursor: pointer; 
+}
+
+.material-icons{
+  cursor: pointer; 
+}
+
 div.tooltip {   
     position: absolute;           
     text-align: center;           
