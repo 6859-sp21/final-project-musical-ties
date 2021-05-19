@@ -1,3 +1,7 @@
+Project Page: List title, team members, summary image, abstract, link to the paper, video, running instructions for the software, and other optional materials. Preferrably host the page with Github Pages.
+
+Readme File: In the repository’s readme.md, include a breakdown of how the work was split among the group members and a commentary on the project process.
+
 # Musical Ties
 This visualization aims to help users visualize playlists and curate their own. 
 
