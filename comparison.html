@@ -477,10 +477,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
             svg.selectAll("path")
               // .filter(d => d == selectedSong)
               .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
+              // .style('stroke-width', '0px'); 
             selectedSong = d;
             svg.selectAll("path")
               .filter(d => d == selectedSong)
               .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
+              // .style('stroke-width', '2px')
+              // .style('stroke', 'white')
+
 
             if (currentPlaylist === examplePlaylist){
               if (!yourPlaylist.track_ids.includes(selectedSong))
