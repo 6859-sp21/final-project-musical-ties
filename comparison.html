@@ -157,7 +157,7 @@ function toggleInfoBar(){
 }
 
 function goHome() {
-  sessionStorage.playlist = JSON.stringify(examplePlaylist);
+  // sessionStorage.playlist = JSON.stringify(examplePlaylist);
   sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
   window.location = 'playlist.html';
 }
@@ -179,6 +179,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       selectedRightSong = '';
     }
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
+    allYourSongs = JSON.parse(JSON.stringify(yourPlaylist));
   }
   var ourWhite = "#ECEAF2"; 
 
@@ -325,6 +326,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var allSongs = JSON.parse(JSON.stringify(examplePlaylist));
   var allYourSongs = JSON.parse(JSON.stringify(yourPlaylist));
   function filterSongs(e, yours) {
+    console.log(allYourSongs);
     let valueDiv = document.getElementById(`${features[e.id.slice(-1)]}-filter`);
     let values = e.value.split(',');
     valueDiv.innerHTML = `${values[0]} - ${values[1]}`;
@@ -365,6 +367,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     } else{
       // d3.selectAll('path').remove(); 
       // d3.selectAll('text').remove(); 
+      console.log(allYourSongs);
       drawPlaylist(allYourSongs, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature); 
       
       var included = JSON.parse(JSON.stringify(allYourSongs));
@@ -392,7 +395,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       // d3.selectAll('text').remove(); 
       drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
     }
-    
+    console.log(allYourSongs);
+    console.log('done filter');
   }
 
   function featureSelection(){
@@ -935,6 +939,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
     d3.select('#publish').style('visibility', 'visible');
     d3.select('#add-song').style('visibility', 'hidden');
+    allYourSongs = JSON.parse(JSON.stringify(yourPlaylist));
     // console.log(yourPlaylist);
   }
   // console.log(examplePlaylist);
