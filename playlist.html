@@ -256,6 +256,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     }
 
     d3.selectAll('path').remove(); 
+    d3.selectAll('text').remove(); 
     
     drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
     // drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
@@ -282,6 +283,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       yourPlaylist['track_ids'] = sortByFeature(yourPlaylist, yourPlaylist['track_ids'], selectedSortFeature); 
       
       d3.selectAll('path').remove(); 
+      d3.selectAll('text').remove(); 
       drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
 
       svg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
