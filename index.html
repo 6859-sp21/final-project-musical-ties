@@ -827,6 +827,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       .data(data)
       .enter()
       .append('circle')
+      .classed('myHide', true)
       .attr('r', bubbleSize)
       .style('fill', '#17161B99')
       .attr("transform", function(d){ return "translate(" + getCircleX(d) + "," + getCircleY(d) + ")"})
@@ -837,6 +838,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       const bubName = b.name; 
       d3.selectAll("text.playlistTitle" + bubName).style('opacity', 1); 
     }
+
+    d3.selectAll('circle.myHide').remove();
   }
 
   function getCircleX(offset){
