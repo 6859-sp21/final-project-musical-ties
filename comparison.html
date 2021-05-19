@@ -105,12 +105,13 @@
         <svg id='your-playlist' class="collpase" width="100%" height="100%"></svg>
         <div id="right-player"></div>
         <div id="right-song-plot"></div>
-        <div class="input-group mb-3">
+        <ul class="list-group" id="custom-songs" style="max-height: 250px; overflow-y:scroll"></ul>
+        <div class="section-title">manage your playlist</div>
+        <div class="input-group mb-3" style="margin-top: 25px">
           <input type="text" class="form-control" placeholder="enter playlist name" id="name" aria-label="hi" aria-describedby="name-button">
           <button class="btn btn-outline-secondary" type="button" id="name-button">change playlist name</button>
         </div>
-        <button type="button" class="btn btn-secondary" id="publish" style="visibility: hidden">publish playlist!</button>
-        <ul class="list-group" id="custom-songs" style="max-height: 250px; overflow-y:scroll"></ul>
+        <button type="button" class="btn btn-secondary" id="publish" style="visibility: hidden; margin-bottom: 10px;">publish playlist!</button>
       </div>
     </div>
   </div>
