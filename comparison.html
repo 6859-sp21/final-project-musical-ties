@@ -72,7 +72,7 @@
         <svg id='playlist' class="collpase" width="100%" height="100%"></svg>
         <div id="left-player"></div>
         <div id="left-song-plot"></div>
-        <button type="button" class="btn btn-secondary" id="add-song" style="visibility: hidden">add this song to my playlist</button>
+        <button type="button" class="btn btn-secondary" id="add-song" style="visibility: hidden">add this song to your playlist</button>
         <ul class="list-group" id="songs" style="max-height: 250px; overflow-y:scroll"></ul>
       </div>
     </div>
@@ -181,6 +181,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
     allYourSongs = JSON.parse(JSON.stringify(yourPlaylist));
   }
+  
   var ourWhite = "#ECEAF2"; 
 
   // append the svg object to the body of the page

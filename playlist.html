@@ -75,7 +75,7 @@
           </div>
           <div class='col'>
             <div id="left-player"></div>
-            <button type="button" class="btn btn-secondary" id="add-song" style="visibility: hidden;">add this song to my playlist</button>
+            <button type="button" class="btn btn-secondary" id="add-song" style="visibility: hidden;">add this song to your playlist</button>
           </div>
         </div>
         <ul class="list-group" id="songs" style="max-height: 250px; overflow-y:scroll"></ul>
@@ -126,8 +126,10 @@ var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 console.log(examplePlaylist); 
 console.log(yourPlaylist); 
 
+var yours = false;
 if(examplePlaylist.id == yourPlaylist.id){
   d3.select("#compare-button").style('visibility', 'hidden'); 
+  yours = true;
 }
 else{
   d3.select("#compare-button").style('visibility', 'visible');
@@ -135,10 +137,10 @@ else{
 
 var visibleFeature = "all"; 
 
-function removeSong(song) {
-  song.parentElement.remove();
-  yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
-}
+// function removeSong(song) {
+//   song.parentElement.remove();
+//   yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
+// }
 
 var infoBarVisible = false; 
 function toggleInfoBar(){
@@ -169,8 +171,23 @@ function goComparison() {
   window.location = 'comparison.html';
 }
 
+var removeSong;
+
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/trackData.json").then(trackData => {
+  removeSong = function(song) {
+    song.parentElement.remove();
+    yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
+    examplePlaylist.track_ids = examplePlaylist.track_ids.filter(s => s !== song.parentElement.id);
+
+    if (song.parentElement.id === selectedSong){
+      document.getElementById('song-plot').innerHTML = '';
+      selectedSong = '';
+    }
+    drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature);
+    allSongs = JSON.parse(JSON.stringify(yourPlaylist));
+  }
+
   var ourWhite = "#ECEAF2"; 
 
   // append the svg object to the body of the page
@@ -486,7 +503,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // g = svg.append("g")
     //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
 
-  var yourSvg = d3.select("svg#your-playlist").attr("preserveAspectRatio", "xMinYMin meet");
+  // var yourSvg = d3.select("svg#your-playlist").attr("preserveAspectRatio", "xMinYMin meet");
     // yourwidth = $("svg#your-playlist").width(),
     // height = $("svg#your-playlist").height(),
     // innerRadius = Math.min(width, height) / 6,
@@ -527,7 +544,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
 
   var selectedSong = ""; 
-  var selectedRightSong = "";
+  // var selectedRightSong = "";
 
   function drawPlaylist(currentPlaylist, svg, svg_id, panel_id, selectedSortFeature){
     if(selectedSortFeature == 'all')
@@ -684,7 +701,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
                 .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
 
 
-              if (currentPlaylist === examplePlaylist){
+              if ((currentPlaylist === examplePlaylist) && (!yours)){
                 if (!yourPlaylist.track_ids.includes(selectedSong))
                   d3.select('#add-song').style('visibility', 'visible')
               } 
@@ -703,31 +720,31 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
             }
           } 
 
-          else {
-            svg.selectAll("path")
-              // .filter(d => d == selectedRightSong)
-              .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
-            selectedRightSong = d;
-            svg.selectAll("path")
-              .filter(d => d == selectedRightSong)
-              .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
-            // svg.selectAll("path")
-            //   .filter(d => d == selectedRightSong)
-            //   .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
-            // selectedRightSong = d;
-            // svg.selectAll("path")
-            //   .filter(d => d == selectedRightSong)
-            //   .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
+          // else {
+          //   svg.selectAll("path")
+          //     // .filter(d => d == selectedRightSong)
+          //     .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
+          //   selectedRightSong = d;
+          //   svg.selectAll("path")
+          //     .filter(d => d == selectedRightSong)
+          //     .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
+          //   // svg.selectAll("path")
+          //   //   .filter(d => d == selectedRightSong)
+          //   //   .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
+          //   // selectedRightSong = d;
+          //   // svg.selectAll("path")
+          //   //   .filter(d => d == selectedRightSong)
+          //   //   .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
 
-            if (currentPlaylist === examplePlaylist){
-              if (!yourPlaylist.track_ids.includes(selectedRightSong))
-                d3.select('#add-song').style('visibility', 'visible')
-            } 
+          //   // if (currentPlaylist === examplePlaylist){
+          //   //   if (!yourPlaylist.track_ids.includes(selectedRightSong))
+          //   //     d3.select('#add-song').style('visibility', 'visible')
+          //   // } 
 
-            let player = document.getElementById('right-player');
-            player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+          //   let player = document.getElementById('right-player');
+          //   player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
           
-          }
+          // }
           
         })
         // .on("mouseout", function(event, d, i){
@@ -741,13 +758,25 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
     let playlist = document.getElementById('songs');
     playlist.innerHTML = '';
-    for (track of currentPlaylist['track_ids']) {
-      let song = document.createElement('li');
-      song.className = "list-group-item list-group-item-dark";
-      song.id = track;
-      song.innerHTML = trackData[track].title;
-      playlist.appendChild(song);
+    if (yours){
+      for (track of currentPlaylist['track_ids']) {
+        let song = document.createElement('li');
+        song.className = "list-group-item list-group-item-dark";
+        // song.id = `${track}-custom`;
+        song.id = track;
+        song.innerHTML = `${trackData[track].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
+        playlist.appendChild(song);
+      }
+    } else {
+      for (track of currentPlaylist['track_ids']) {
+        let song = document.createElement('li');
+        song.className = "list-group-item list-group-item-dark";
+        song.id = track;
+        song.innerHTML = trackData[track].title;
+        playlist.appendChild(song);
+      }
     }
+    
 
   }
 
@@ -772,6 +801,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // song.innerHTML = `${trackData[selectedSong].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
     // playlist.appendChild(song);
     yourPlaylist.track_ids.push(selectedSong);
+    if (yours)
+      allSongs = JSON.parse(JSON.stringify(yourPlaylist));
     // drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
     d3.select('#add-song').style('visibility', 'hidden')
   }
