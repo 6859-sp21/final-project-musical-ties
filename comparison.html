@@ -329,6 +329,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
     // showPlaylists();
     if (!yours){
+      d3.selectAll('path').remove(); 
+      d3.selectAll('text').remove(); 
       drawPlaylist(allSongs, svg, 'svg#playlist', '#left-title', visibleFeature); 
       
       var included = JSON.parse(JSON.stringify(allSongs));
@@ -352,8 +354,12 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       }
 
       examplePlaylist = included;
+      d3.selectAll('path').remove(); 
+      d3.selectAll('text').remove(); 
       drawPlaylist(included, svg, 'svg#playlist', '#left-title', visibleFeature); 
     } else{
+      d3.selectAll('path').remove(); 
+      d3.selectAll('text').remove(); 
       drawPlaylist(allYourSongs, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature); 
       
       var included = JSON.parse(JSON.stringify(allYourSongs));
@@ -377,6 +383,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       }
 
       yourPlaylist = included;
+      d3.selectAll('path').remove(); 
+      d3.selectAll('text').remove(); 
       drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
     }
     
