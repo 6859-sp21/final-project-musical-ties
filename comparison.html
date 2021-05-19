@@ -1029,6 +1029,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       svg.append("g")
         .call(d3.axisLeft(y));
 
+      svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .attr("fill", ourWhite)  
+        .text(trackData[songID].title);
+
       // data.forEach(function(d) {
         // Bars
         svg.selectAll("mybar")
