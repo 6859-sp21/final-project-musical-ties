@@ -241,25 +241,49 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           return getAverageFromID(b.name, selectedSortFeature) - getAverageFromID(a.name, selectedSortFeature); 
         }); 
         movePlaylists(filteredBubbles); 
+
+        // TODO: fix this :((
+        // for (let b of filteredBubbles){
+        //   for(feat of features){
+        //     if(feat != selectedSortFeature){
+        //       d3.select('#' + feat)
+        //         .style('opacity', "0.3")
+        //     }
+        //   }
+
+        //   d3.select('#' + selectedSortFeature)
+        //     .style('stroke', 'white')
+        //     .style('stroke-width', '2px')
+        // }
+
       } else {
         bubbleData.sort(function(a, b) {
           return getAverageFromID(b.name, selectedSortFeature) - getAverageFromID(a.name, selectedSortFeature); 
         }); 
         movePlaylists(bubbleData); 
-      }
-      
 
-      for(feat of features){
-        if(feat != selectedSortFeature){
-          d3.selectAll('#' + feat)
-            .style('opacity', "0.3")
+        // for(feat of features){
+        //   if(feat != selectedSortFeature){
+        //     d3.selectAll('#' + feat)
+        //       .style('opacity', "0.3")
+        //   }
+        // }
+
+        // d3.selectAll('#' + selectedSortFeature)
+        //   .style('stroke', 'white')
+        //   .style('stroke-width', '2px')
+      }
+
+        for(feat of features){
+          if(feat != selectedSortFeature){
+            d3.selectAll('#' + feat)
+              .style('opacity', "0.3")
+          }
         }
-      }
 
-      d3.selectAll('#' + selectedSortFeature)
-        .style('stroke', 'white')
-        .style('stroke-width', '2px')
-
+        d3.selectAll('#' + selectedSortFeature)
+          .style('stroke', 'white')
+          .style('stroke-width', '2px')
 
         // .style('fill-opacity', "0")
         // .style('stroke', "black")
