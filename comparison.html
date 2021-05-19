@@ -107,11 +107,13 @@
         <div id="right-song-plot"></div>
         <ul class="list-group" id="custom-songs" style="max-height: 250px; overflow-y:scroll"></ul>
         <div class="section-title">manage your playlist</div>
-        <div class="input-group mb-3" style="margin-top: 25px">
-          <input type="text" class="form-control" placeholder="enter playlist name" id="name" aria-label="hi" aria-describedby="name-button">
-          <button class="btn btn-outline-secondary" type="button" id="name-button">change playlist name</button>
+        <p style="margin-top: 10px; margin-bottom: 5px">change playlist name</p>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="enter name" id="name" aria-label="hi" aria-describedby="name-button">
+          <button class="btn btn-outline-secondary" type="button" id="name-button">change</button>
         </div>
-        <button type="button" class="btn btn-secondary" id="publish" style="visibility: hidden; margin-bottom: 10px;">publish playlist!</button>
+        <p style="margin-top: 10px; margin-bottom: 5px">publish your playlist</p>
+        <button type="button" class="btn btn-secondary" id="publish" style="visibility: hidden; margin-bottom: 10px;">publish!</button>
       </div>
     </div>
   </div>
@@ -167,9 +169,15 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   removeSong = function(song) {
     song.parentElement.remove();
-    console.log(song.parentElement.id);
     yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => `${s}-custom` !== song.parentElement.id);
-    console.log(yourPlaylist);
+    console.log(song);
+    console.log(selectedRightSong);
+    if (song.parentElement.id === `${selectedRightSong}-custom`){
+      document.getElementById('right-song-plot').innerHTML = '';
+      // svg.selectAll("path")
+      //   .style("fill", function(d){ return getBrighterByColor(this.style.fill)}) 
+      selectedRightSong = '';
+    }
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
   }
   var ourWhite = "#ECEAF2"; 
@@ -525,8 +533,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
 
   drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
+  drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
   if (yourPlaylist.track_ids.length > 0){
-    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
     d3.select('#publish').style('visibility', 'visible');
   }
   
@@ -696,9 +704,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
               .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
             if (selectedSong.length > 0){
               let oldElement = document.getElementById(selectedSong);
-              oldElement.style.color = 'initial';
-              oldElement.style.border = 'initial';
-              oldElement.style['font-weight'] = 'initial';
+              oldElement.innerHTML = trackData[selectedSong].title;;
+              // oldElement.style.color = 'initial';
+              // oldElement.style.border = 'initial';
+              // oldElement.style['font-weight'] = 'initial';
             }
 
             if (d === selectedSong){
@@ -707,8 +716,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
                 .style("fill", function(d){ return getBrighterByColor(this.style.fill)}) 
               selectedSong = '';
               d3.select('#add-song').style('visibility', 'hidden');
-              let player = document.getElementById('left-player');
-              player.innerHTML = '';
+              // let player = document.getElementById('left-player');
+              // player.innerHTML = '';
             } else {
               selectedSong = d;
               svg.selectAll("path")
@@ -721,16 +730,17 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
                   d3.select('#add-song').style('visibility', 'visible')
               } 
 
-              let player = document.getElementById('left-player');
-              player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+              // let player = document.getElementById('left-player');
+              // player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="450" height="82" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
 
               let listElement = document.getElementById(d);
               listElement.scrollIntoView({ 
                 behavior: 'smooth' 
               });
-              listElement.style.color = colors[3];
-              listElement.style.border = `1px solid ${colors[3]}`;
-              listElement.style['font-weight'] = '900';
+              listElement.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="450" height="82" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+              // listElement.style.color = colors[3];
+              // listElement.style.border = `1px solid ${colors[3]}`;
+              // listElement.style['font-weight'] = '900';
             }
           } 
 
@@ -742,9 +752,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
               .style("fill", function(d){ return getDarkerByColor(this.style.fill)}) 
             if (selectedRightSong.length > 0){
               let oldElement = document.getElementById(`${selectedRightSong}-custom`);
-              oldElement.style.color = 'initial';
-              oldElement.style.border = 'initial';
-              oldElement.style['font-weight'] = 'initial';
+              oldElement.innerHTML = `${trackData[selectedRightSong].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
+              // oldElement.style.color = 'initial';
+              // oldElement.style.border = 'initial';
+              // oldElement.style['font-weight'] = 'initial';
             }
 
             if (d === selectedRightSong){
@@ -752,8 +763,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
               svg.selectAll("path")
                 .style("fill", function(d){ return getBrighterByColor(this.style.fill)}) 
               selectedRightSong = '';
-              let player = document.getElementById('right-player');
-              player.innerHTML = '';
+              // let player = document.getElementById('right-player');
+              // player.innerHTML = '';
             } else {
               selectedRightSong = d;
               svg.selectAll("path")
@@ -765,17 +776,18 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
                   d3.select('#add-song').style('visibility', 'visible')
               } 
 
-              let player = document.getElementById('right-player');
-              player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+              // let player = document.getElementById('right-player');
+              // player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="450" height="82" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
 
 
-              let listElement = document.getElementById(`${d}-custom`)
+              let listElement = document.getElementById(`${d}-custom`);
               listElement.scrollIntoView({ 
                 behavior: 'smooth' 
               });
-              listElement.style.color = colors[3];
-              listElement.style.border = `1px solid ${colors[3]}`;
-              listElement.style['font-weight'] = '900';
+              listElement.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="395" height="82" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe><span class="material-icons" onclick="removeSong(this)">delete</span>`;
+              // listElement.style.color = colors[3];
+              // listElement.style.border = `1px solid ${colors[3]}`;
+              // listElement.style['font-weight'] = '900';
             }
           
           }
