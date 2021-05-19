@@ -395,12 +395,15 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     d3.selectAll('path').remove(); 
     d3.selectAll('text').remove();
     
+    document.getElementById('left-song-plot').innerHTML = '';
+    document.getElementById('right-song-plot').innerHTML = '';
+    d3.select('#add-song').style('visibility', 'hidden');
+
     drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
   }
 
   function sortSelection(){
-    console.log("fuck off"); 
 
     // figure out selection
     var selectedSortFeature = 'none'; 
@@ -425,6 +428,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       d3.selectAll('path').remove(); 
       d3.selectAll('text').remove();
       
+      document.getElementById('left-song-plot').innerHTML = '';
+      document.getElementById('right-song-plot').innerHTML = '';
+      d3.select('#add-song').style('visibility', 'hidden');
       drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
       drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
 
@@ -738,7 +744,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
               listElement.scrollIntoView({ 
                 behavior: 'smooth' 
               });
-              listElement.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="450" height="82" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+              listElement.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="400" height="82" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
               // listElement.style.color = colors[3];
               // listElement.style.border = `1px solid ${colors[3]}`;
               // listElement.style['font-weight'] = '900';
@@ -806,13 +812,26 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         //     .style("fill", function(d){ return getDarkerByColor(this.style.fill)})
         // })
 
-    let playlist = document.getElementById('songs');
-    for (track of currentPlaylist['track_ids']) {
-      let song = document.createElement('li');
-      song.className = "list-group-item list-group-item-dark";
-      song.id = track;
-      song.innerHTML = trackData[track].title;
-      playlist.appendChild(song);
+    if (svg_id === 'svg#playlist'){
+      let playlist = document.getElementById('songs');
+      playlist.innerHTML = ''
+      for (track of currentPlaylist['track_ids']) {
+        let song = document.createElement('li');
+        song.className = "list-group-item list-group-item-dark";
+        song.id = track;
+        song.innerHTML = trackData[track].title;
+        playlist.appendChild(song);
+      }
+    } else {
+      let playlist = document.getElementById('custom-songs');
+      playlist.innerHTML = ''
+      for (track of currentPlaylist['track_ids']) {
+        let song = document.createElement('li');
+        song.className = "list-group-item list-group-item-dark";
+        song.id = `${track}-custom`;
+        song.innerHTML = `${trackData[track].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
+        playlist.appendChild(song);
+      }
     }
 
   }
