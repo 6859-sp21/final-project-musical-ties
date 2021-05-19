@@ -329,6 +329,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     let values = e.value.split(',');
     valueDiv.innerHTML = `${values[0]} - ${values[1]}`;
 
+    document.getElementById('left-song-plot').innerHTML = '';
+    document.getElementById('right-song-plot').innerHTML = '';
+    d3.select('#add-song').style('visibility', 'hidden');
     // showPlaylists();
     if (!yours){
       // d3.selectAll('path').remove(); 
