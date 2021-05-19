@@ -646,27 +646,37 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
               oldElement.style.border = 'initial';
               oldElement.style['font-weight'] = 'initial';
             }
-            
-            selectedSong = d;
-            svg.selectAll("path")
-              .filter(d => d == selectedSong)
-              .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
 
-            if (currentPlaylist === examplePlaylist){
-              if (!yourPlaylist.track_ids.includes(selectedSong))
-                d3.select('#add-song').style('visibility', 'visible')
-            } 
+            if (d === selectedSong){
+              document.getElementById('song-plot').innerHTML = '';
+              svg.selectAll("path")
+                .style("fill", function(d){ return getBrighterByColor(this.style.fill)}) 
+              selectedSong = '';
+              d3.select('#add-song').style('visibility', 'hidden');
+              let player = document.getElementById('left-player');
+              player.innerHTML = '';
+            } else {
+              selectedSong = d;
+              svg.selectAll("path")
+                .filter(d => d == selectedSong)
+                .style("fill", function(d){ return getBrighterByColor(this.style.fill)})
 
-            let player = document.getElementById('left-player');
-            player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+              if (currentPlaylist === examplePlaylist){
+                if (!yourPlaylist.track_ids.includes(selectedSong))
+                  d3.select('#add-song').style('visibility', 'visible')
+              } 
 
-            let listElement = document.getElementById(d);
-            listElement.scrollIntoView({ 
-              behavior: 'smooth' 
-            });
-            listElement.style.color = colors[3];
-            listElement.style.border = `1px solid ${colors[3]}`;
-            listElement.style['font-weight'] = '900';
+              let player = document.getElementById('left-player');
+              player.innerHTML = `<iframe  src="https://open.spotify.com/embed/track/${d}" width="250" height="100" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+
+              let listElement = document.getElementById(d);
+              listElement.scrollIntoView({ 
+                behavior: 'smooth' 
+              });
+              listElement.style.color = colors[3];
+              listElement.style.border = `1px solid ${colors[3]}`;
+              listElement.style['font-weight'] = '900';
+            }
           } 
 
           else {
