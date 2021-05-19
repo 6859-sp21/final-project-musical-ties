@@ -113,6 +113,8 @@
 var examplePlaylist = JSON.parse(sessionStorage.playlist);
 var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 
+var visibleFeature = "all"; 
+
 var infoBarVisible = false; 
 function toggleInfoBar(){
   infoBarVisible = !infoBarVisible; 
@@ -145,7 +147,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     song.parentElement.remove();
     yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
     console.log(yourPlaylist);
-    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
+    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
   }
   var ourWhite = "#ECEAF2"; 
 
@@ -237,7 +239,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     feature_sliders.sliders.push(current_slider);
   }
   // instantiate the slider
-  const slider = new Slider(feature_sliders, sortSelection);
+  const slider = new Slider(feature_sliders, sortSelection, featureSelection);
   slider.draw();
 
   // const placeholder = {
@@ -246,6 +248,22 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // };
   // const slider = new Slider(placeholder, sortSelection);
   // slider.draw();
+
+  function featureSelection(){
+    visibleFeature = 'all'; 
+    for(var feat of features){
+      if(document.getElementById('featureSelection' + feat).checked){
+        visibleFeature = feat; 
+        break; 
+      }
+    }
+
+
+    d3.selectAll('path').remove(); 
+    
+    drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
+    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
+  }
 
   function sortSelection(){
     console.log("fuck off"); 
@@ -272,32 +290,36 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
       d3.selectAll('path').remove(); 
       
-      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', selectedSortFeature); 
-      drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', selectedSortFeature);
+      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
+      drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
 
       // svg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
       // yourSvg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
 
-      // var t = d3.transition()
-      //   .duration(1500)
-      //   .ease(d3.easeExpIn);
+      if(visibleFeature != "all"){
+        return; 
+      }
+      var t = d3.transition()
+        .duration(1500)
+        .ease(d3.easeExpIn);
 
-      // for(var feat of features){
-      //   objClass = "path." + feat;
+      for(var feat of features){
+        objClass = "path." + feat;
 
-      //   if(feat == selectedSortFeature){
-      //     svg.selectAll(objClass).style("fill", getBrighterByFeature(feat)); 
-      //     yourSvg.selectAll(objClass).style("fill", getBrighterByFeature(feat)); 
-      //   }
-      //   else{
-      //     svg.selectAll(objClass).style("fill", getDarkerByFeature(feat)).transition(t).style("fill", getBrighterByFeature(feat));
-      //     yourSvg.selectAll(objClass).style("fill", getDarkerByFeature(feat)).transition(t).style("fill", getBrighterByFeature(feat));;
-      //   }
-      // }
+        if(feat == selectedSortFeature){
+          svg.selectAll(objClass).style("fill", getBrighterByFeature(feat)); 
+          yourSvg.selectAll(objClass).style("fill", getBrighterByFeature(feat)); 
+        }
+        else{
+          svg.selectAll(objClass).style("fill", getDarkerByFeature(feat)).transition(t).style("fill", getBrighterByFeature(feat));
+          yourSvg.selectAll(objClass).style("fill", getDarkerByFeature(feat)).transition(t).style("fill", getBrighterByFeature(feat));;
+        }
+      }
     }
     else{
-      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
-      drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
+      d3.selectAll('path').remove(); 
+      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
+      drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
     }
   }
 
@@ -375,9 +397,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // yourG = svg.append("g")
     //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
 
-  drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
+  drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
   if (yourPlaylist.track_ids.length > 0)
-    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
+    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
   
 
   function getBrighterByFeature(feature){
@@ -413,11 +435,12 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var selectedRightSong = "";
 
   function drawPlaylist(currentPlaylist, svg, svg_id, panel_id, selectedSortFeature){
-    if(selectedSortFeature != null){
-      selectedSortFeature = [selectedSortFeature];
+    if(selectedSortFeature == 'all')
+    {
+      selectedSortFeature = features;
     }
     else{
-      selectedSortFeature = features;
+      selectedSortFeature = [selectedSortFeature];
     }
 
     width = $(svg_id).width(),
@@ -660,7 +683,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     song.innerHTML = `${trackData[selectedSong].title}<span class="material-icons" onclick="removeSong(this)">delete</span>`;
     playlist.appendChild(song);
     yourPlaylist.track_ids.push(selectedSong);
-    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title');
+    drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
     d3.select('#add-song').style('visibility', 'hidden')
   }
 

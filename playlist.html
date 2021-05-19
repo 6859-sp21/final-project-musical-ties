@@ -262,6 +262,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       examplePlaylist['track_ids'] =  sortByFeature(examplePlaylist, examplePlaylist['track_ids'], selectedSortFeature); 
       yourPlaylist['track_ids'] = sortByFeature(yourPlaylist, yourPlaylist['track_ids'], selectedSortFeature); 
       
+      d3.selectAll('path').remove(); 
       drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
 
       svg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
