@@ -295,21 +295,16 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
 
   function sortPlaylistsByFeature(feature){
-
   }
 
-  // const placeholder = {
-  //   DOMselector: '#sliders',
-  //   sliders: [], 
-  // };
   const slider = new Slider(feature_sliders, sortSelection);
   slider.draw2();
 
   const slider_div = document.getElementById('sliders');
-  let slider_radius = 50;
+  let slider_radius = 23;
   let shift = (features.length-1) * 10;
   for (let i=0; i < features.length; i++) {
-    slider_radius += 15;
+    slider_radius += 18;
     const div = document.createElement('div');
     div.id = 'slider-' + i.toString();
     slider_div.appendChild(div);
@@ -330,7 +325,6 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     });
     shift-=10;
   }
-  // d3.select("svg#slider-0").attr("color", "black" ); 
 
   var filteredBubbles = [];
   function filterBubbles(e) {
