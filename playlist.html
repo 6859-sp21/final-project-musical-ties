@@ -108,6 +108,8 @@
 var examplePlaylist = JSON.parse(sessionStorage.playlist);
 var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 
+var visibleFeature = "all"; 
+
 function removeSong(song) {
   song.parentElement.remove();
   yourPlaylist.track_ids = yourPlaylist.track_ids.filter(s => s !== song.parentElement.id);
@@ -232,7 +234,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     feature_sliders.sliders.push(current_slider);
   }
   // instantiate the slider
-  const slider = new Slider(feature_sliders, sortSelection);
+  const slider = new Slider(feature_sliders, sortSelection, featureSelection);
   slider.draw();
 
   // const placeholder = {
@@ -241,6 +243,21 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   // };
   // const slider = new Slider(placeholder, sortSelection);
   // slider.draw();
+
+  function featureSelection(){
+    visibleFeature = 'all'; 
+    for(var feat of features){
+      if(document.getElementById('featureSelection' + feat).checked){
+        visibleFeature = feat; 
+        break; 
+      }
+    }
+
+    d3.selectAll('path').remove(); 
+    
+    drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
+    // drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
+  }
 
   function sortSelection(){
     console.log("fuck off"); // haha youre so funny
@@ -263,10 +280,14 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       yourPlaylist['track_ids'] = sortByFeature(yourPlaylist, yourPlaylist['track_ids'], selectedSortFeature); 
       
       d3.selectAll('path').remove(); 
-      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
+      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
 
       svg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
       yourSvg.selectAll(objClass).style("fill", getBrighterByFeature(selectedSortFeature)); 
+
+      if(visibleFeature != "all"){
+        return; 
+      }
 
       var t = d3.transition()
         .duration(1500)
@@ -286,7 +307,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       }
     }
     else{
-      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
+      drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
     }
   }
 
@@ -364,7 +385,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     // yourG = svg.append("g")
     //   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")"); 
 
-  drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title'); 
+  drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
   
 
   function getBrighterByFeature(feature){
@@ -399,7 +420,15 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var selectedSong = ""; 
   var selectedRightSong = "";
 
-  function drawPlaylist(currentPlaylist, svg, svg_id, panel_id){
+  function drawPlaylist(currentPlaylist, svg, svg_id, panel_id, selectedSortFeature){
+    if(selectedSortFeature == 'all')
+    {
+      selectedSortFeature = features;
+    }
+    else{
+      selectedSortFeature = [selectedSortFeature];
+    }
+
     width = $(svg_id).width(),
     height = $(svg_id).height(); 
     let factor = 0.8; 
@@ -422,7 +451,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     .align(0)
     .domain(currentPlaylist["track_ids"]);
 
-    features.forEach((feature, i) => {
+    selectedSortFeature.forEach((feature, i) => {
       g.append('g')
         .selectAll('path')
         .data(currentPlaylist['track_ids'])
@@ -432,10 +461,30 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           exit   => exit.remove()
         )
         .classed(feature, true)
-        .style("fill", colors[i])
+        .style("fill", function(d) {
+            if(selectedSortFeature.length > 1){
+              return colors[i] 
+            }
+            else{
+              return colors[features.indexOf(selectedSortFeature[0])]
+            }
+          
+          })
           .attr("d", d3.arc() 
-              .innerRadius(function(d) { return y(getFeatureStartPos(d, i)); })
-              .outerRadius(function(d) { return y(getFeatureEndPos(d, i)); })
+              .innerRadius(function(d) { 
+                if(selectedSortFeature.length > 1){
+                  return y(getFeatureStartPos(d, i));
+                }
+                else{
+                  return y(getFeatureStartPos(d, 0));
+                }})
+              .outerRadius(function(d) { 
+                if(selectedSortFeature.length > 1){
+                  return y(getFeatureEndPos(d, i));
+                }
+                else{
+                  return y(getOneFeatureEndPos(d, features.indexOf(selectedSortFeature[0])));
+                }})
               .startAngle(function(d) { return x(d); })
               .endAngle(function(d) { return x(d) + x.bandwidth(); })
               .padAngle(0.005)
@@ -734,6 +783,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     var total = getFeatureStartPos(songId, featureIndex);  
     total += trackData[songId]["features"][features[featureIndex]];
     return total; 
+  }
+
+  function getOneFeatureEndPos(songId, featureIndex){
+    return trackData[songId]["features"][features[featureIndex]];
   }
 
 
