@@ -75,11 +75,36 @@ div.tooltip {
 }
 
 .tippy-box[data-theme~='speechiness'] {
+  background-color: #b5d33d;
+  color: white;
+}
+
+.tippy-box[data-theme~='acousticness'] {
+  background-color: #6ca2ea;
+  color: white;
+}
+
+.tippy-box[data-theme~='valence'] {
+  background-color: #7C30FF;
+  color: white;
+}
+
+.tippy-box[data-theme~='energy'] {
+  background-color: #FF29D8;
+  color: white;
+}
+
+.tippy-box[data-theme~='danceability'] {
+  background-color: #f77e01;
+  color: white;
+}
+
+/*.tippy-box[data-theme~='speechiness'] {
   background-color: #ffb0c2;
   color: white;
 }
 
-.tippy-box[data-theme~='liveness'] {
+.tippy-box[data-theme~='acousticness'] {
   background-color: #FF6DB5;
   color: white;
 }
@@ -97,7 +122,7 @@ div.tooltip {
 .tippy-box[data-theme~='danceability'] {
   background-color: #7c30ff;
   color: white;
-}
+}*/
 
 
 
@@ -198,7 +223,28 @@ div.tooltip {
   z-index: 1;
 }
 
+/*var colors = ["#f77e01","#FF29D8","#7C30FF","#6ca2ea","#b5d33d"].reverse();  */
 #slider-0 .rs-range-color {
+    background-color: #b5d33d;
+}
+
+#slider-1 .rs-range-color  {
+    background-color: #6ca2ea;
+}
+
+#slider-2 .rs-range-color  {
+    background-color: #7C30FF;
+}
+
+#slider-3 .rs-range-color  {
+    background-color: #FF29D8;
+}
+
+#slider-4 .rs-range-color  {
+    background-color: #f77e01;
+}
+
+/*#slider-0 .rs-range-color {
     background-color: #FFB0C2;
 }
 
@@ -216,7 +262,7 @@ div.tooltip {
 
 #slider-4 .rs-range-color  {
     background-color: #7C30FF;
-}
+}*/
 
 /*#slider-0 .rs-handle {
     background-color: #FFB0C2;

@@ -158,7 +158,8 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   // COLORS AND VISUAL VARIABLES
   // colors of features
-  var colors = ["#FFB0C2", "#FF6DB5", "#FF29D8", "#C02CE6", "#7C30FF"]; 
+  var colors = ["#f77e01","#FF29D8","#7C30FF","#6ca2ea","#b5d33d"].reverse();  
+  // var colors = ["#FFB0C2", "#FF6DB5", "#FF29D8", "#C02CE6", "#7C30FF"]; 
     // var colors = ["#ffe942", "#ff7e38", "#FF29D8", "#C02CE6", "#7C30FF"]; 
 
   // colors = colors.reverse(); 
@@ -181,7 +182,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   var centerBubbleSize = bubbleSize / 3; 
 
   // order and values can be changed
-  var features = [ "danceability", "energy", "valence", "liveness", "speechiness"]; 
+  var features = [ "danceability", "energy", "valence", "acousticness", "speechiness"]; 
   features = features.reverse(); 
 
   var tooltip = d3.select("body").append("div")   
@@ -524,7 +525,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           exit   => exit.remove()
         )
           .text(function(d) { return d})
-          .style('font-size', "14px")
+          .style('font-size', "25px")
           .style('fill', "white")
           .style("opacity", "1")
           .attr("x", function(d) { return y(d + 0.02);})
