@@ -77,11 +77,14 @@
   <div class="col-3 section-view " id="right-panel" style="overflow-y:scroll">
     <div class="full-height-div">
       <div class="section-title" id="right-title"></div>
-      <div class="fill-remaining-space-div" style="overflow-y:auto">
+      <div class="fill-remaining-space-div" style="overflow-y:auto; overflow-x: hidden">
         <div style="padding-left: 10px;" style="overflow-y:scroll">
           <div id="sorting"></div>
           <div class="section-title">filter playlists</div>
-          <div id="sliders" style="max-height: 300px;"></div>
+          <div class="row">
+            <div class="col-9" id="sliders"></div>
+            <div class="col" id="slider-values"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -323,27 +326,39 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       width: 12,
       change: function (e) {
         filterBubbles(e);
-      }
+      },
+      showTooltip: false
       // svgMode: true
     });
     shift-=10;
   }
 
+  const valuesDiv = document.getElementById('slider-values');
+  for (let i = 0; i < features.length; i++) {
+    let div = document.createElement('div');
+    div.class = 'row';
+    div.id = `${features[i]}-filter`;
+    div.innerHTML = `${0.0} - ${1.0}`;
+    div.style.color = colors[i];
+    valuesDiv.appendChild(div);
+  }
+
   var filteredBubbles = [];
   function filterBubbles(e) {
+    let valueDiv = document.getElementById(`${features[e.id.slice(-1)]}-filter`);
+    let values = e.value.split(',');
+    valueDiv.innerHTML = `${values[0]} - ${values[1]}`;
+
     filteredBubbles = [];
-    console.log(bubbleData);
     showPlaylists();
     
     var included = [];
     var notIncluded = [];
     for (let p of bubbleData) {
-      console.log(p);
       var include = true; 
       for (let i = 0; i < features.length; i++){
         const sliderID = `#slider-${i}`;
         let constraints = $(sliderID).roundSlider("getValue").split(',');
-        // console.log(constraints);
         if ((getAverage(p, features[i]) < parseFloat(constraints[0])) || (getAverage(p, features[i]) > parseFloat(constraints[1]))) {
           include = false;
           break;
