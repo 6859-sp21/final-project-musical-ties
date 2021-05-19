@@ -6,7 +6,7 @@ class Slider {
      * @param {string} DOM selector
      * @param {array} sliders
      */
-    constructor({ DOMselector, sliders }, doThis) {
+    constructor({ DOMselector, sliders }, doThis, selectFeature) {
     // constructor(DOMselector, doThis) {
         this.DOMselector = DOMselector;
         this.container = document.querySelector(this.DOMselector);  // Slider container
@@ -29,6 +29,7 @@ class Slider {
         // console.log("mer mer"); 
         // console.log(doThis); 
         this.doThis = doThis; 
+        this.selectFeature = selectFeature; 
         // console.log(doThis); 
     }
 
@@ -36,10 +37,10 @@ class Slider {
      * Draw sliders on init
      * 
      */
-    draw() {
+    draw(mainView = false) {
 
         // Create legend UI
-        this.createLegendUI();
+        // this.createLegendUI();
         // this.makeTitle("filter playlists"); 
 
         // // Create and append SVG holder
@@ -56,6 +57,12 @@ class Slider {
 
         this.makeTitle("sort playlists"); 
         this.createRadioSelection(); 
+
+        if(!mainView){
+            this.makeTitle("select focus feature"); 
+            this.createFeatureSelection(); 
+        }
+       
 
         // Event listeners
         // svgContainer.addEventListener('mousedown', this.mouseTouchStart.bind(this), false);
@@ -184,7 +191,7 @@ class Slider {
             label.classList.add("form-check-label"); 
             label.className = "form-check-label"; 
             label.for = 'sortSelection-default'; 
-            label.innerHTML = 'no sorting'; 
+            label.innerHTML = 'default'; 
             label.style.fontSize = '20px'; 
             label.style.marginTop = '-2px'; 
             label.style.textShadow = "2px 2px #000000";
@@ -196,7 +203,7 @@ class Slider {
         display.classList.add('slider__legend'); 
 
         this.sliders.forEach((slider, index) => {
-            form = document.createElement('div'); 
+            var form = document.createElement('div'); 
             form.classList.add("form-check"); 
 
             // console.log("whyyyyyyyyyyyy"); 
@@ -205,7 +212,7 @@ class Slider {
             // firstSpan.style.backgroundColor = slider.color ?? '#FF5733';
             // firstSpan.classList.add('colorSquare');
 
-            input = document.createElement('input'); 
+            var input = document.createElement('input'); 
             input.classList.add("form-check-input"); 
             input.setAttribute('type', 'radio'); 
             input.setAttribute('name', 'selectionRadio'); 
@@ -222,6 +229,82 @@ class Slider {
             label.classList.add("form-check-label"); 
             label.className = "form-check-label"; 
             label.for = 'sortSelection' + slider.displayName; 
+            label.innerHTML = slider.displayName; 
+            console.log(slider.color); 
+            label.style.color = slider.color ?? '#FF5733';
+            label.style.fontSize = '20px'; 
+            label.style.textShadow = "2px 2px #000000";
+
+
+            form.appendChild(input); 
+            form.appendChild(label); 
+            // form.appendChild(firstSpan); 
+            display.appendChild(form); 
+
+        }); 
+        display.style.marginLeft = "30px";
+        display.style.marginTop = "-5px";
+        this.container.appendChild(display);
+    }
+
+    createFeatureSelection(){
+        const display = document.createElement('div');
+        display.classList.add('form-selector');
+
+        var form = document.createElement('div'); 
+        form.classList.add("form-check"); 
+
+        var input = document.createElement('input'); 
+            input.classList.add("form-check-input"); 
+            input.setAttribute('type', 'radio'); 
+            input.setAttribute('name', 'featureSelectionRadio'); 
+            input.setAttribute('id', 'featureSelection-default'); 
+            input.setAttribute('value', 'option-default'); 
+            input.checked = true; 
+            input.onclick = this.selectFeature; 
+
+        var label = document.createElement('label');  
+            label.classList.add("form-check-label"); 
+            label.className = "form-check-label"; 
+            label.for = 'featureSelection-default'; 
+            label.innerHTML = 'all features'; 
+            label.style.fontSize = '20px'; 
+            label.style.marginTop = '-2px'; 
+            label.style.textShadow = "2px 2px #000000";
+
+        form.appendChild(input); 
+        form.appendChild(label); 
+
+        display.appendChild(form); 
+        display.classList.add('slider__legend'); 
+
+        this.sliders.forEach((slider, index) => {
+            var form = document.createElement('div'); 
+            form.classList.add("form-check"); 
+
+            // console.log("whyyyyyyyyyyyy"); 
+
+            // const firstSpan = document.createElement('button');
+            // firstSpan.style.backgroundColor = slider.color ?? '#FF5733';
+            // firstSpan.classList.add('colorSquare');
+
+            var input = document.createElement('input'); 
+            input.classList.add("form-check-input"); 
+            input.setAttribute('type', 'radio'); 
+            input.setAttribute('name', 'featureSelectionRadio'); 
+            input.setAttribute('id', 'featureSelection' + slider.displayName); 
+            input.setAttribute('value', 'option-' + slider.displayName); 
+            input.checked = false; 
+            input.onclick = this.selectFeature; 
+            
+
+            console.log(slider.displayName); 
+            // this.doThis(); 
+
+            var label = document.createElement('label');  
+            label.classList.add("form-check-label"); 
+            label.className = "form-check-label"; 
+            label.for = 'featureSelection' + slider.displayName; 
             label.innerHTML = slider.displayName; 
             console.log(slider.color); 
             label.style.color = slider.color ?? '#FF5733';
