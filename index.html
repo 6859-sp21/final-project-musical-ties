@@ -786,6 +786,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
         // console.log("ring" + yourPlaylist.id + "-" + d); 
         return "ring" + yourPlaylist.id + "-" + d})
       .style("opacity",  0)
+      .style('cursor', 'pointer')
       .attr('r', function(d) {return myy(d)})
       .on("mouseenter", function(event, d){
         // console.log("HEYYYYYY"); 
@@ -801,6 +802,12 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
           d3.select('#p' + yourPlaylist.id).select("#" + features[d - 1]).style('fill', colors[d - 1])
         }
         
+      })
+      .on("click", function(event, d){
+        // examplePlaylist = playlistData.filter(p => p.id === d.name)[0];
+        sessionStorage.playlist = JSON.stringify(yourPlaylist);
+        sessionStorage.yourPlaylist = JSON.stringify(yourPlaylist);
+        window.location = 'playlist.html';
       })
 
     yourNode.attr("transform", "translate(" + (gridLeftOffset) + "," + (gridTopOffset) + ")");

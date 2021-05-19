@@ -85,7 +85,7 @@
 
   <div class="col-3 section-view section-view-right" style="overflow-y:scroll">
     <div class="full-height-div">
-      <div class='row' style="margin-top: 15px; margin-bottom: -15px;">
+      <div class='row' style="margin-top: 15px; margin-bottom: -15px;" id="compare-button">
         <div class='col' style="font-size: 20px;">
           compare with your playlist
         </div>
@@ -123,6 +123,15 @@
 
 var examplePlaylist = JSON.parse(sessionStorage.playlist);
 var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
+console.log(examplePlaylist); 
+console.log(yourPlaylist); 
+
+if(examplePlaylist.id == yourPlaylist.id){
+  d3.select("#compare-button").style('visibility', 'hidden'); 
+}
+else{
+  d3.select("#compare-button").style('visibility', 'visible');
+}
 
 var visibleFeature = "all"; 
 
