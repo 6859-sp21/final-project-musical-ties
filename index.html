@@ -106,7 +106,6 @@
 
 <script>
 
-
 if (sessionStorage.init !== 'true'){
   var yourPlaylist = {
     'id' : "new1",
@@ -117,7 +116,6 @@ if (sessionStorage.init !== 'true'){
 } else {
   var yourPlaylist = JSON.parse(sessionStorage.yourPlaylist);
 }
-console.log(yourPlaylist);
 
 var infoBarVisible = false; 
 function toggleInfoBar(){
@@ -137,9 +135,20 @@ function toggleInfoBar(){
 }
 
 
-d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlistData => {
+d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/playListDataList.json").then(playlists => {
 d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/main/data/trackData.json").then(trackData => {
-  console.log(trackData);
+  // if (sessionStorage.init !== 'true'){
+  //   sessionStorage.allPlaylists = JSON.stringify(playlistData);
+  //   sessionStorage.init = true;
+  // } else {
+  //   var playlistData = JSON.parse(sessionStorage.allPlaylists);
+  // }
+  var playlistData = playlists;
+  if (sessionStorage.published === 'true'){
+    playlistData = playlists.concat(JSON.parse(sessionStorage.addedPlaylists));
+  } 
+  console.log(yourPlaylist);
+  console.log(playlistData);
   var ourWhite = "#ECEAF2"; 
 
   // append the svg object to the body of the page
