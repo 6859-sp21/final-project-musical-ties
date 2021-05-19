@@ -73,6 +73,43 @@ class Slider {
         // window.addEventListener('touchend', this.mouseTouchEnd.bind(this), false);
     }
 
+    draw2(mainView = true) {
+
+        // Create legend UI
+        // this.createLegendUI();
+        // this.makeTitle("filter playlists"); 
+
+        // // Create and append SVG holder
+        // const svgContainer = document.createElement('div');
+        // svgContainer.classList.add('slider__data');
+        // const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        // svg.setAttribute('height', this.sliderWidth);
+        // svg.setAttribute('width', this.sliderHeight);
+        // svgContainer.appendChild(svg);
+        // this.container.appendChild(svgContainer);
+
+        // // Draw sliders
+        // this.sliders.forEach((slider, index) => this.drawSingleSliderOnInit(svg, slider, index));
+
+        this.makeTitle("sort playlists"); 
+        this.createRadioSelection(); 
+
+        if(!mainView){
+            this.makeTitle("select focus feature"); 
+            this.createFeatureSelection(); 
+        }
+       
+
+        // Event listeners
+        // svgContainer.addEventListener('mousedown', this.mouseTouchStart.bind(this), false);
+        // svgContainer.addEventListener('touchstart', this.mouseTouchStart.bind(this), false);
+        // svgContainer.addEventListener('mousemove', this.mouseTouchMove.bind(this), false);
+        // svgContainer.addEventListener('touchmove', this.mouseTouchMove.bind(this), false);
+        // window.addEventListener('mouseup', this.mouseTouchEnd.bind(this), false);
+        // window.addEventListener('touchend', this.mouseTouchEnd.bind(this), false);
+    }
+
+
     /**
      * Draw single slider on init
      * 
