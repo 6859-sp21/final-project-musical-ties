@@ -113,7 +113,7 @@
           <button class="btn btn-outline-secondary" type="button" id="name-button">change</button>
         </div>
         <p style="margin-top: 10px; margin-bottom: 5px">publish your playlist</p>
-        <button type="button" class="btn btn-secondary" id="publish" style="visibility: hidden; margin-bottom: 10px;">publish!</button>
+        <button type="button" class="btn btn-secondary" id="publish" style="visibility: visible; margin-bottom: 10px;">publish!</button>
       </div>
     </div>
   </div>
@@ -181,7 +181,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
     allYourSongs = JSON.parse(JSON.stringify(yourPlaylist));
   }
-  
+
   var ourWhite = "#ECEAF2"; 
 
   // append the svg object to the body of the page
@@ -559,9 +559,9 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   drawPlaylist(examplePlaylist, svg, 'svg#playlist', '#left-title', visibleFeature); 
   drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
-  if (yourPlaylist.track_ids.length > 0){
-    d3.select('#publish').style('visibility', 'visible');
-  }
+  // if (yourPlaylist.track_ids.length > 0){
+  //   d3.select('#publish').style('visibility', 'visible');
+  // }
   
 
   function getBrighterByFeature(feature){
@@ -832,7 +832,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
     if (svg_id === 'svg#playlist'){
       let playlist = document.getElementById('songs');
-      playlist.innerHTML = ''
+      playlist.innerHTML = '';
       for (track of currentPlaylist['track_ids']) {
         let song = document.createElement('li');
         song.className = "list-group-item list-group-item-dark";
@@ -842,7 +842,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       }
     } else {
       let playlist = document.getElementById('custom-songs');
-      playlist.innerHTML = ''
+      playlist.innerHTML = '';
       for (track of currentPlaylist['track_ids']) {
         let song = document.createElement('li');
         song.className = "list-group-item list-group-item-dark";
@@ -918,9 +918,10 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
   }
 
 
+  let playlist = document.getElementById('custom-songs');
+  playlist.innerHTML = '';
   // init song list for your playlist
   for (track of yourPlaylist.track_ids){
-    let playlist = document.getElementById('custom-songs');
     let song = document.createElement('li');
     song.className = "list-group-item list-group-item-dark";
     song.id = `${track}-custom`;
@@ -947,11 +948,11 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
 
   const nameButton = document.getElementById('name-button');
   nameButton.onclick = function() {
-    console.log(yourPlaylist);
+    // console.log(yourPlaylist);
     let nameDiv = document.getElementById('name');
     yourPlaylist.name = nameDiv.value;
     d3.select('#right-title').text(nameDiv.value);
-    console.log(yourPlaylist);
+    // console.log(yourPlaylist);
   }
   
   const publishButton = document.getElementById('publish');
@@ -975,7 +976,7 @@ d3.json("https://raw.githubusercontent.com/6859-sp21/final-project-musical-ties/
       'track_ids' : []
     };
     drawPlaylist(yourPlaylist, yourSvg, 'svg#your-playlist', '#right-title', visibleFeature);
-    d3.select('#publish').style('visibility', 'hidden');
+    // d3.select('#publish').style('visibility', 'hidden');
     // console.log(examplePlaylist);
     // console.log(yourPlaylist);
   }
