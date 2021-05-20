@@ -2,7 +2,7 @@
 It can be difficult to find the perfect playlist for a given mood or occasion. Existing visualizations of music do not organize information in a way that allows the user to easily navigate the data and create their own playlists. Musical Ties is a platform that provides visualizations for musical playlists and songs. It guides the user through the process of exploring new music and understanding metrics that make up different playlists. With this platform, they are able to curate a new playlist that fits their desires.
 
 Visualization:  https://6859-sp21.github.io/final-project-musical-ties/  
-Paper: (/final/muslical_ties.pdf)
+Paper: (/final/musical_ties.pdf)
 Video: https://www.youtube.com/watch?v=JnEeRpoNXQI&feature=youtu.be  
 
 By Violetta Jusiega and Shariqah Hossain  
