@@ -1,10 +1,8 @@
-link to the paper
-
 # Musical Ties
 It can be difficult to find the perfect playlist for a given mood or occasion. Existing visualizations of music do not organize information in a way that allows the user to easily navigate the data and create their own playlists. Musical Ties is a platform that provides visualizations for musical playlists and songs. It guides the user through the process of exploring new music and understanding metrics that make up different playlists. With this platform, they are able to curate a new playlist that fits their desires.
 
 Visualization:  https://6859-sp21.github.io/final-project-musical-ties/  
-Paper:
+Paper: (/final/muslical_ties.pdf)
 Video: https://www.youtube.com/watch?v=JnEeRpoNXQI&feature=youtu.be  
 
 By Violetta Jusiega and Shariqah Hossain  
@@ -23,7 +21,7 @@ We originally thought that our project would fit on a single page view, but deci
 ### Shared Work 
 Together, Shariqah and Violetta spent a lot of time working on their design on Figma so that they could have a strong plan of what they wanted to implement. This helped them create a color scheme as well as to think through some of the more abstract parts of their design. 
 
-In the next two sections we list components of the project we worked on. 
+In the next two sections we list components of the project we worked on, with each person. 
 
 ### Shariqah's Work 
 * Playlist Exploration Page 
@@ -41,7 +39,7 @@ In the next two sections we list components of the project we worked on.
    * scroll to song in list
    * bar graph
    * add song to your playlist
-* page layout and communicating data between pages
+* Page layout and communicating data between pages
  
 ### Violetta's Work 
 * Data gathering from Spotify API
