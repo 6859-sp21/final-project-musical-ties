@@ -1,12 +1,18 @@
-Project Page: List title, team members, summary image, abstract, link to the paper, video, running instructions for the software, and other optional materials. Preferrably host the page with Github Pages.
+Project Page: summary image,link to the paper
 
 Readme File: In the repository’s readme.md, include a breakdown of how the work was split among the group members and a commentary on the project process.
 
 # Musical Ties
-https://6859-sp21.github.io/final-project-musical-ties/
-This visualization aims to help users visualize playlists and curate their own. 
+It can be difficult to find the perfect playlist for a given mood or occasion. Existing visualizations of music do not organize information in a way that allows the user to easily navigate the data and create their own playlists. Musical Ties is a platform that provides visualizations for musical playlists and songs. It guides the user through the process of exploring new music and understanding metrics that make up different playlists. With this platform, they are able to curate a new playlist that fits their desires.
 
+Visualization:  https://6859-sp21.github.io/final-project-musical-ties/
+Paper:
+Video: https://www.youtube.com/watch?v=JnEeRpoNXQI&feature=youtu.be
+
+By Violetta Jusiega and Shariqah Hossain
 The [Spotify API](https://developer.spotify.com/) was used to get top Spotify playlists and metrics about the songs within the playlists. 
+
+![Musical Ties](/images/home.png)
 
 ## Development Process 
 One of the hardest thing about this project was creating our custom visualizations. Although many components started as references from existing D3 examples, they required a lot of modification to reach the level of cohesive design and interactivity that we were aimining for. 
