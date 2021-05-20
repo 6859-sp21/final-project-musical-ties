@@ -3,6 +3,7 @@ Project Page: List title, team members, summary image, abstract, link to the pap
 Readme File: In the repository’s readme.md, include a breakdown of how the work was split among the group members and a commentary on the project process.
 
 # Musical Ties
+https://6859-sp21.github.io/final-project-musical-ties/
 This visualization aims to help users visualize playlists and curate their own. 
 
 The [Spotify API](https://developer.spotify.com/) was used to get top Spotify playlists and metrics about the songs within the playlists. 
